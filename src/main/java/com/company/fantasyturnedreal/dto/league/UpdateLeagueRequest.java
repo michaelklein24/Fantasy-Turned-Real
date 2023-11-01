@@ -1,4 +1,4 @@
-package com.company.fantasyturnedreal.dto;
+package com.company.fantasyturnedreal.dto.league;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AddUserToLeagueRequest {
-    @NotNull(message = "userId must not be null")
-    private Long userId;
-    @NotNull(message = "leagueId must not be null")
+public class UpdateLeagueRequest {
+    @NotNull(message = "leagueId cannot be null")
     private Long leagueId;
+    private String leagueName;
+
 }

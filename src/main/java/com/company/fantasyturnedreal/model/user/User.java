@@ -14,7 +14,7 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name = "users")
-@EqualsAndHashCode(exclude = {"leagues", "roles"})
+@EqualsAndHashCode(exclude = {"leagues", "roles", "answers"})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,6 +22,9 @@ public class User {
 
     @Column(unique = true)
     private String username;
+
+    @Column(unique = true)
+    private String email;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference("user-password")

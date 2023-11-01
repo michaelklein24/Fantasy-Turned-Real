@@ -1,4 +1,4 @@
-package com.company.fantasyturnedreal.dto;
+package com.company.fantasyturnedreal.dto.league;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

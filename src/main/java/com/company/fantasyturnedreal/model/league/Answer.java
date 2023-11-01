@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(exclude = "question")
+@EqualsAndHashCode(exclude = {"question", "user"})
 @Entity
 @Table(name = "answer")
 public class Answer {

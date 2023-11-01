@@ -1,16 +1,14 @@
 package com.company.fantasyturnedreal.controller;
 
-import com.company.fantasyturnedreal.dto.AddUserToLeagueRequest;
-import com.company.fantasyturnedreal.dto.CreateLeagueRequest;
-import com.company.fantasyturnedreal.dto.RemoveUserFromLeagueRequest;
-import com.company.fantasyturnedreal.dto.UpdateLeagueRequest;
+import com.company.fantasyturnedreal.dto.league.AddUserToLeagueRequest;
+import com.company.fantasyturnedreal.dto.league.CreateLeagueRequest;
+import com.company.fantasyturnedreal.dto.league.RemoveUserFromLeagueRequest;
+import com.company.fantasyturnedreal.dto.league.UpdateLeagueRequest;
 import com.company.fantasyturnedreal.exception.MismatchingIdsException;
 import com.company.fantasyturnedreal.model.league.League;
 import com.company.fantasyturnedreal.model.user.User;
 import com.company.fantasyturnedreal.service.league.LeagueService;
-import io.swagger.v3.oas.annotations.info.Info;
 import jakarta.validation.Valid;
-import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +16,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Set;
 
+import static com.company.fantasyturnedreal.util.RestApiSupport.REST_API_CONTEXT_PATH;
+
+@CrossOrigin("*")
 @RestController
-@RequestMapping("/league")
+@RequestMapping(REST_API_CONTEXT_PATH + "/league")
 public class LeagueController {
 
     @Autowired

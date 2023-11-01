@@ -1,7 +1,7 @@
 package com.company.fantasyturnedreal.service.league;
 
-import com.company.fantasyturnedreal.dto.CreateLeagueRequest;
-import com.company.fantasyturnedreal.dto.UpdateLeagueRequest;
+import com.company.fantasyturnedreal.dto.league.CreateLeagueRequest;
+import com.company.fantasyturnedreal.dto.league.UpdateLeagueRequest;
 import com.company.fantasyturnedreal.exception.DataNotFoundException;
 import com.company.fantasyturnedreal.exception.MismatchingIdsException;
 import com.company.fantasyturnedreal.model.league.League;

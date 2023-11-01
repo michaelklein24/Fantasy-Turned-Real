@@ -1,5 +1,6 @@
 package com.company.fantasyturnedreal.model.season;
 
+import com.company.fantasyturnedreal.enums.Show;
 import com.company.fantasyturnedreal.model.contestant.Contestant;
 import com.company.fantasyturnedreal.model.contestant.ContestantStatus;
 import com.company.fantasyturnedreal.model.league.League;
@@ -10,7 +11,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -20,28 +21,32 @@ import java.util.Set;
 public class Season {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private String seasonId;
+    private Long seasonId;
     private String title;
+    private Long seasonNumber;
 
     @OneToMany(mappedBy = "season", cascade = CascadeType.ALL)
     @JsonManagedReference("season-episodes")
-    private List<Episode> episodes;
+    private Set<Episode> episodes = new HashSet<>();
+
+    @Enumerated(value = EnumType.STRING)
+    private Show show;
 
     @ManyToMany
     @JoinColumn(
             name = "season_contestant",
             referencedColumnName = "season_id"
     )
-    private Set<Contestant> contestants;
+    private Set<Contestant> contestants = new HashSet<>();
 
     @OneToMany(mappedBy = "season", cascade = CascadeType.ALL)
     @JsonManagedReference("season-statuses")
-    private Set<ContestantStatus> statuses;
+    private Set<ContestantStatus> statuses = new HashSet<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "season", cascade = CascadeType.ALL)
     @JsonBackReference("season-leagues")
-    private Set<League> leagues;
+    private Set<League> leagues = new HashSet<>();
 
 
 }

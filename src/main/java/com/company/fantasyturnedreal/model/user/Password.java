@@ -13,7 +13,7 @@ public class Password {
    @Id
    @GeneratedValue(strategy = GenerationType.AUTO)
    private Long passwordId;
-   private String encodedPassword;
+   private String encryptedPassword;
    @Temporal(TemporalType.TIMESTAMP)
    private Date lastChanged;
 

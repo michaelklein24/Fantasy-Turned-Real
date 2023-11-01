@@ -1,7 +1,7 @@
-INSERT INTO season (season_id, title)
+INSERT INTO season (season_id, title, show, season_number)
 VALUES
-(100, 'Survivor: Winners at War'),
-(200, 'Vanuatu - Islands of Fire');
+(100, 'Survivor: Winners at War', 'SURVIVOR', 40),
+(200, 'Vanuatu - Islands of Fire', 'SURVIVOR', 9);
 
 INSERT INTO contestant (contestant_id, first_name, last_name, occupation, origin_city, origin_state, nick_name, biography, image)
 VALUES
