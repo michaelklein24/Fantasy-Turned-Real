@@ -1,14 +1,20 @@
 package com.company.fantasyturnedreal.model.user;
 
+import com.company.fantasyturnedreal.model.contestant.Contestant;
 import com.company.fantasyturnedreal.model.league.Answer;
+import com.company.fantasyturnedreal.model.league.League;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.Set;
 
 @Data
 @Entity
 @Table(name = "users")
+@EqualsAndHashCode(exclude = {"leagues"})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -16,7 +22,9 @@ public class User {
 
     @Column(unique = true)
     private String username;
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference("user-password")
     private Password password;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -27,5 +35,10 @@ public class User {
     private Set<Role> roles;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonManagedReference("user-answers")
     private Set<Answer> answers;
+
+    @ManyToMany(mappedBy = "users", cascade = CascadeType.DETACH)
+    @JsonBackReference("league-users-back")
+    private Set<League> leagues;
 }

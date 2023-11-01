@@ -1,6 +1,8 @@
 package com.company.fantasyturnedreal.model.season;
 
 import com.company.fantasyturnedreal.model.league.Question;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -20,8 +22,10 @@ public class Episode {
 
     @ManyToOne
     @JoinColumn(name = "season_id")
+    @JsonBackReference("season-episodes")
     private Season season;
 
     @OneToMany(mappedBy = "episode", cascade = CascadeType.ALL)
+    @JsonManagedReference("episode-questions")
     private Set<Question> questions;
 }

@@ -1,4 +1,4 @@
-package com.company.fantasyturnedreal.repository.contestant;
+package com.company.fantasyturnedreal.repository.season.contestant;
 
 import com.company.fantasyturnedreal.model.contestant.ContestantStatus;
 import org.springframework.data.jpa.repository.JpaRepository;

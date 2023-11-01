@@ -1,5 +1,6 @@
 package com.company.fantasyturnedreal.model.user;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -18,5 +19,6 @@ public class Password {
 
    @OneToOne
    @JoinColumn(name = "user_id")
+   @JsonBackReference("user-password")
    private User user;
 }

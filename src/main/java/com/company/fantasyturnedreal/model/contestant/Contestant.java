@@ -1,6 +1,7 @@
 package com.company.fantasyturnedreal.model.contestant;
 
 import com.company.fantasyturnedreal.model.season.Season;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -32,9 +33,11 @@ public class Contestant {
     private Set<Season> seasons = new HashSet<>();
 
     @OneToMany(mappedBy = "contestant", cascade = CascadeType.ALL)
+    @JsonManagedReference("contestant-statuses")
     private Set<ContestantStatus> statuses;
 
     @OneToMany(mappedBy = "contestant", cascade = CascadeType.ALL)
+    @JsonManagedReference("contestant-socialAccounts")
     private Set<SocialAccount> socialAccounts;
 
 }

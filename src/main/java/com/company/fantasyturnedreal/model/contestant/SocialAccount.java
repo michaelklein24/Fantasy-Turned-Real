@@ -1,6 +1,7 @@
 package com.company.fantasyturnedreal.model.contestant;
 
 import com.company.fantasyturnedreal.enums.SocialPlatform;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -17,5 +18,6 @@ public class SocialAccount {
 
     @ManyToOne
     @JoinColumn(name = "contestant_id")
+    @JsonBackReference("contestant-socialAccounts")
     private Contestant contestant;
 }

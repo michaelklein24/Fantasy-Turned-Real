@@ -1,10 +1,13 @@
 package com.company.fantasyturnedreal.model.league;
 
 import com.company.fantasyturnedreal.model.user.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(exclude = "question")
 @Entity
 @Table(name = "answer")
 public class Answer {
@@ -17,9 +20,11 @@ public class Answer {
 
     @ManyToOne
     @JoinColumn(name = "question_id")
+    @JsonBackReference("question-answers")
     private Question question;
 
     @ManyToOne
-    @JoinColumn(name = "`user`")
+    @JoinColumn(name = "user_id")
+    @JsonBackReference("user-answers")
     private User user;
 }
