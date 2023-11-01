@@ -106,3 +106,8 @@ INSERT INTO answer (answer_id, answer, is_correct, question_id, user_id)
 VALUES
 (100,'C', null, 100, 100),
 (200, 'True', null, 200, 200);
+
+INSERT INTO league_users (leagues_league_id, users_user_id)
+VALUES
+(100, 200),
+(100, 100);

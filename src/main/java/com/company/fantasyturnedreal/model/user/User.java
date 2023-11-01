@@ -14,7 +14,7 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name = "users")
-@EqualsAndHashCode(exclude = {"leagues"})
+@EqualsAndHashCode(exclude = {"leagues", "roles"})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -32,6 +32,7 @@ public class User {
             name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JsonManagedReference("users-roles-managed")
     private Set<Role> roles;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
