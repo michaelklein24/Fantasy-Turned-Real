@@ -1,5 +1,6 @@
 package com.company.fantasyturnedreal.model.season;
 
+import com.company.fantasyturnedreal.model.contestant.ContestantStatus;
 import com.company.fantasyturnedreal.model.league.Question;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -7,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -15,10 +17,14 @@ import java.util.Set;
 public class Episode {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long episode_id;
+    private Long episodeId;
 
     private String title;
     private Date airDate;
+
+    @OneToMany(mappedBy = "episode", cascade = CascadeType.DETACH)
+    @JsonBackReference("episode-statuses")
+    private List<ContestantStatus> contestantStatuses;
 
     @ManyToOne
     @JoinColumn(name = "season_id")

@@ -29,7 +29,7 @@ public class LeagueController {
     @GetMapping
     @ResponseStatus(code = HttpStatus.OK)
 
-    public List<League> getAllLeagues() {
+    public List<League> getLeagues() {
         return leagueService.getAllLeagues();
     }
 

@@ -1,7 +1,10 @@
 package com.company.fantasyturnedreal.model.contestant;
 
+import com.company.fantasyturnedreal.enums.Status;
+import com.company.fantasyturnedreal.model.season.Episode;
 import com.company.fantasyturnedreal.model.season.Season;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -13,17 +16,22 @@ public class ContestantStatus {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long contestantStatusId;
 
-    private Boolean eliminated;
-    private Boolean winner;
+    @Enumerated(value = EnumType.STRING)
+    private Status status;
 
     @ManyToOne
     @JoinColumn(name = "contestant_id")
-    @JsonBackReference("contestant-statuses")
+    @JsonManagedReference("contestant-statuses")
     private Contestant contestant;
 
     @ManyToOne
+    @JoinColumn(name = "episode_id")
+    @JsonManagedReference("episode-statuses")
+    private Episode episode;
+
+    @ManyToOne
     @JoinColumn(name = "season_id")
-    @JsonBackReference("season-statuses")
+    @JsonManagedReference("season-statuses")
     private Season season;
 
 }

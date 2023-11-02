@@ -1,4 +1,4 @@
-package com.company.fantasyturnedreal.repository.season.contestant;
+package com.company.fantasyturnedreal.repository.contestant;
 
 import com.company.fantasyturnedreal.model.contestant.SocialAccount;
 import org.springframework.data.jpa.repository.JpaRepository;

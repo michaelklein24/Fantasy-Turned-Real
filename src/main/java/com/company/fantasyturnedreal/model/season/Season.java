@@ -32,21 +32,16 @@ public class Season {
     @Enumerated(value = EnumType.STRING)
     private Show show;
 
-    @ManyToMany
-    @JoinColumn(
-            name = "season_contestant",
-            referencedColumnName = "season_id"
-    )
+    @ManyToMany(mappedBy = "seasons", cascade = CascadeType.REMOVE)
     private Set<Contestant> contestants = new HashSet<>();
 
     @OneToMany(mappedBy = "season", cascade = CascadeType.ALL)
-    @JsonManagedReference("season-statuses")
+    @JsonBackReference("season-statuses")
     private Set<ContestantStatus> statuses = new HashSet<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "season", cascade = CascadeType.ALL)
     @JsonBackReference("season-leagues")
     private Set<League> leagues = new HashSet<>();
-
-
+    
 }

@@ -49,18 +49,18 @@ VALUES
 
 
 -- Insert contestant status for each contestant in each season
-INSERT INTO contestant_status (contestant_status_id, eliminated, winner, contestant_id, season_id)
+INSERT INTO contestant_status (contestant_status_id, status, contestant_id, episode_id, season_id)
 VALUES
-(100, false, true, 1400, 200),
-(200, false, false, 1500, 200),
-(300, true, false, 1600, 200),
-(400, true, false, 1700, 200),
-(500, true, false, 1800, 200),
-(600, true, false, 1900, 200),
-(700, true, false, 2000, 200),
-(800, true, false, 2100, 200),
-(900, true, false, 2200, 200),
-(1000, true, false, 2300, 200);
+(100, 'ALIVE', 1400, 100, 200),
+(200, 'ALIVE', 1500, 100, 200),
+(300, 'ALIVE', 1600, 100, 200),
+(400, 'ALIVE', 1700, 100, 200),
+(500, 'ALIVE', 1800, 100, 200),
+(600, 'ALIVE', 1900, 100, 200),
+(700, 'ALIVE', 2000, 100, 200),
+(800, 'ALIVE', 2100, 100, 200),
+(900, 'ALIVE', 2200, 100, 200),
+(1000, 'ALIVE', 2300, 100, 200);
 
 
 -- Insert social accounts for contestants
