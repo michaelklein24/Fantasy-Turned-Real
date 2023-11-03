@@ -15,8 +15,11 @@ public class Score {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long scoreId;
 
-    private Integer totalPoints;
-    private Integer pointsEarnedInEpisode;
+    private int totalPoints;
+    private int pointsEarnedInEpisode;
+
+    @OneToOne
+    private Answer answer;
 
     @ManyToOne
     @JsonBackReference("user-scores")

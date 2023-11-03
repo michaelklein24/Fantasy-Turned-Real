@@ -3,6 +3,7 @@ package com.company.fantasyturnedreal.model.league;
 import com.company.fantasyturnedreal.enums.QuestionStatus;
 import com.company.fantasyturnedreal.enums.QuestionType;
 import com.company.fantasyturnedreal.model.season.Episode;
+import com.company.fantasyturnedreal.model.user.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -32,6 +33,9 @@ public class Question {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 
+    private LocalDateTime timeSubmitted = LocalDateTime.now();
+    private LocalDateTime timeUpdated;
+
     private String correctAnswer;
 
     @Enumerated(EnumType.STRING)
@@ -52,5 +56,9 @@ public class Question {
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
     @JsonManagedReference("question-answers")
     private Set<Answer> answers;
+
+    @ManyToOne
+    @JsonManagedReference("user-questions")
+    private User submitter;
 
 }

@@ -7,6 +7,7 @@ import com.company.fantasyturnedreal.enums.QuestionType;
 import com.company.fantasyturnedreal.enums.Status;
 import com.company.fantasyturnedreal.exception.CannotUpdateEntityException;
 import com.company.fantasyturnedreal.exception.DataNotFoundException;
+import com.company.fantasyturnedreal.model.league.Answer;
 import com.company.fantasyturnedreal.model.league.Question;
 import com.company.fantasyturnedreal.repository.league.QuestionRepository;
 import com.company.fantasyturnedreal.service.AbstractService;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,6 +35,12 @@ public class QuestionService extends AbstractService {
 
     @Autowired
     ContestantService contestantService;
+
+    @Autowired
+    AnswerService answerService;
+
+    @Autowired
+    ScoreService scoreService;
 
     @Autowired
     QuestionRepository questionRepo;
@@ -59,7 +67,7 @@ public class QuestionService extends AbstractService {
     public Question getQuestionById(Long questionId) {
         Question foundQuestion = questionRepo.findById(questionId).orElse(null);
         if (foundQuestion == null) {
-            throw new DataNotFoundException(String.format("Question with id '%s' does not exist.", foundQuestion));
+            throw new DataNotFoundException(String.format("Question with id '%s' does not exist.", questionId));
         }
         return foundQuestion;
     }
@@ -72,7 +80,7 @@ public class QuestionService extends AbstractService {
                     questionFromRequest.getEndTime() == null ||
                     questionFromRequest.getLeagueId() == null ||
                     questionFromRequest.getPoints() == null) {
-                throw new NullPointerException("The following fields cannot be null: questionText, questionType, endTime, leagueId, points")
+                throw new NullPointerException("The following fields cannot be null: questionText, questionType, endTime, leagueId, points");
             }
             Question question = new Question();
 
@@ -122,18 +130,25 @@ public class QuestionService extends AbstractService {
         updateIfNotNull(updateQuestionRequest.getQuestionType(), foundQuestion::setQuestionType);
         updateIfNotNull(updateQuestionRequest.getPotentialAnswers(), foundQuestion::setPotentialAnswers);
         updateIfNotNull(updateQuestionRequest.getStartTime(), foundQuestion::setStartTime);
+        foundQuestion.setTimeUpdated(currentTime);
 
         setQuestionStatus(foundQuestion);
-
         questionRepo.save(foundQuestion);
     }
 
+    @Transactional
     public void updateQuestionWithCorrectAnswer(Long questionId, String correctAnswer) {
         Question foundQuestion = getQuestionById(questionId);
         foundQuestion.setCorrectAnswer(correctAnswer);
-
         setQuestionStatus(foundQuestion);
 
+        Set<Answer> answers = foundQuestion.getAnswers();
+        answers.stream().forEach(answer -> {
+            answerService.setAnswerCorrectness(answer.getAnswerId(), correctAnswer);
+        });
+        foundQuestion.setTimeUpdated(LocalDateTime.now());
+
+        foundQuestion.setStatus(QuestionStatus.RESOLVED);
         questionRepo.save(foundQuestion);
     }
 

@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Data
 @EqualsAndHashCode(exclude = {"question", "user"})
@@ -15,10 +15,13 @@ import java.util.List;
 public class Answer {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private String answerId;
+    private Long answerId;
 
     private String answer;
     private Boolean isCorrect;
+
+    private LocalDateTime timeSubmitted = LocalDateTime.now();
+    private LocalDateTime timeUpdated;
 
     @ManyToOne
     @JoinColumn(name = "question_id")
@@ -29,4 +32,8 @@ public class Answer {
     @JoinColumn(name = "user_id")
     @JsonBackReference("user-answers")
     private User user;
+
+    @OneToOne(mappedBy = "answer", cascade = CascadeType.ALL)
+    @JsonBackReference("answer-score")
+    private Score score;
 }

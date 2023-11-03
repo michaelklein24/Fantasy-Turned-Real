@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.company.fantasyturnedreal.util.RestApiSupport.REST_API_CONTEXT_PATH;
+
 @RestController
-@RequestMapping
+@RequestMapping(REST_API_CONTEXT_PATH + "/question")
 public class QuestionController {
 
     @Autowired
