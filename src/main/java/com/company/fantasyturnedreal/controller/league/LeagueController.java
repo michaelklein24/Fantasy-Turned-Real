@@ -1,4 +1,4 @@
-package com.company.fantasyturnedreal.controller;
+package com.company.fantasyturnedreal.controller.league;
 
 import com.company.fantasyturnedreal.dto.league.AddUserToLeagueRequest;
 import com.company.fantasyturnedreal.dto.league.CreateLeagueRequest;
@@ -28,7 +28,6 @@ public class LeagueController {
 
     @GetMapping
     @ResponseStatus(code = HttpStatus.OK)
-
     public List<League> getLeagues() {
         return leagueService.getAllLeagues();
     }

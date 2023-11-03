@@ -1,4 +1,4 @@
-package com.company.fantasyturnedreal.controller;
+package com.company.fantasyturnedreal.controller.season;
 
 import com.company.fantasyturnedreal.dto.season.CreateEpisodeRequest;
 import com.company.fantasyturnedreal.dto.season.UpdateEpisodeRequest;

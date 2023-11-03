@@ -3,10 +3,13 @@ package com.company.fantasyturnedreal.service.contestant;
 import com.company.fantasyturnedreal.dto.contestant.CreateContestantRequest;
 import com.company.fantasyturnedreal.dto.contestant.UpdateContestantRequest;
 import com.company.fantasyturnedreal.enums.Show;
+import com.company.fantasyturnedreal.enums.Status;
 import com.company.fantasyturnedreal.exception.DataNotFoundException;
 import com.company.fantasyturnedreal.model.contestant.Contestant;
+import com.company.fantasyturnedreal.model.contestant.ContestantStatus;
 import com.company.fantasyturnedreal.model.season.Season;
 import com.company.fantasyturnedreal.repository.contestant.ContestantRepository;
+import com.company.fantasyturnedreal.service.AbstractService;
 import com.company.fantasyturnedreal.service.season.SeasonService;
 import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +20,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class ContestantService {
+public class ContestantService extends AbstractService {
 
     @Autowired
     ContestantRepository contestantRepo;
@@ -72,36 +75,33 @@ public class ContestantService {
 
     public void updateContestant(UpdateContestantRequest updateContestantRequest) {
         Contestant foundContestant = getContestantById(updateContestantRequest.getContestantId());
-        if (updateContestantRequest.getFirstName() != null) {
-            foundContestant.setFirstName(updateContestantRequest.getFirstName());
-        }
-        if (updateContestantRequest.getLastName() != null) {
-            foundContestant.setLastName(updateContestantRequest.getLastName());
-        }
-        if (updateContestantRequest.getOccupation() != null) {
-            foundContestant.setOccupation(updateContestantRequest.getOccupation());
-        }
-        if (updateContestantRequest.getOriginCity() != null) {
-            foundContestant.setOriginCity(updateContestantRequest.getOriginCity());
-        }
-        if (updateContestantRequest.getOriginState() != null) {
-            foundContestant.setOriginState(updateContestantRequest.getOriginState());
-        }
-        if (updateContestantRequest.getBirthday() != null) {
-            foundContestant.setBirthday(updateContestantRequest.getBirthday());
-        }
-        if (updateContestantRequest.getNickname() != null) {
-            foundContestant.setNickName(updateContestantRequest.getNickname());
-        }
-        if (updateContestantRequest.getBiography() != null) {
-            foundContestant.setBiography(updateContestantRequest.getBiography());
-        }
+
+        updateIfNotNull(updateContestantRequest.getFirstName(), foundContestant::setFirstName);
+        updateIfNotNull(updateContestantRequest.getLastName(), foundContestant::setLastName);
+        updateIfNotNull(updateContestantRequest.getOccupation(), foundContestant::setOccupation);
+        updateIfNotNull(updateContestantRequest.getOriginCity(), foundContestant::setOriginCity);
+        updateIfNotNull(updateContestantRequest.getOriginState(), foundContestant::setOriginState);
+        updateIfNotNull(updateContestantRequest.getBirthday(), foundContestant::setBirthday);
+        updateIfNotNull(updateContestantRequest.getNickname(), foundContestant::setNickName);
+        updateIfNotNull(updateContestantRequest.getBiography(), foundContestant::setBiography);
+
         contestantRepo.save(foundContestant);
     }
 
     public void deleteContestant(Long contestantId) {
         Contestant foundContestant = getContestantById(contestantId);
         contestantRepo.deleteById(contestantId);
+    }
+
+    public List<Contestant> getContestantsByStatus(Status status) {
+        return contestantRepo.findByStatusesStatus(status);
+    }
+
+    public List<String> getContestantNamesByStatus(Status status) {
+        List<Contestant> contestants = getContestantsByStatus(status);
+        return contestants.stream()
+                .map(contestant -> contestant.getFirstName() + contestant.getNickName() + contestant.getLastName())
+                .collect(Collectors.toList());
     }
 
 }

@@ -1,4 +1,4 @@
-package com.company.fantasyturnedreal.controller;
+package com.company.fantasyturnedreal.controller.contestant;
 
 import com.company.fantasyturnedreal.dto.contestant.CreateContestantStatusRequest;
 import com.company.fantasyturnedreal.dto.contestant.UpdateContestantStatusRequest;

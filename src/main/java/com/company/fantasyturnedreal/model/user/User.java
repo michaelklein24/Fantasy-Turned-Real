@@ -3,6 +3,7 @@ package com.company.fantasyturnedreal.model.user;
 import com.company.fantasyturnedreal.model.contestant.Contestant;
 import com.company.fantasyturnedreal.model.league.Answer;
 import com.company.fantasyturnedreal.model.league.League;
+import com.company.fantasyturnedreal.model.league.Score;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -45,4 +46,8 @@ public class User {
     @ManyToMany(mappedBy = "users", cascade = CascadeType.DETACH)
     @JsonBackReference("league-users-back")
     private Set<League> leagues;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonManagedReference("user-scores")
+    private Set<Score> scores;
 }

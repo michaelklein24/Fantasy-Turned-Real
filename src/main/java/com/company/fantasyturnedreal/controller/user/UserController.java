@@ -1,4 +1,4 @@
-package com.company.fantasyturnedreal.controller;
+package com.company.fantasyturnedreal.controller.user;
 
 import com.company.fantasyturnedreal.dto.user.RegisterUserRequest;
 import com.company.fantasyturnedreal.model.user.User;

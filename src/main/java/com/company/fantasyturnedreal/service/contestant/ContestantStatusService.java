@@ -29,14 +29,6 @@ public class ContestantStatusService {
     EpisodeService episodeService;
 
     public List<ContestantStatus> getContestantStatuses(Status status, Long seasonId, Long episodeId, Long contestantId) {
-//        if (status == null && seasonId == null && episodeId == null && contestantId == null) {
-//            return contestantStatusRepo.findAll();
-//        }
-//
-//        if (status != null && seasonId != null && episodeId != null && contestantId != null) {
-//            return contestantStatusRepo.findByStatusAndSeasonSeasonIdAndEpisodeEpisodeIdAndContestantContestantId(status, seasonId, episodeId, contestantId);
-//        }
-
         Specification<ContestantStatus> spec = Specification.where(null);
 
         if (status != null) {

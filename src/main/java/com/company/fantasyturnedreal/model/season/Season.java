@@ -43,5 +43,5 @@ public class Season {
     @OneToMany(mappedBy = "season", cascade = CascadeType.ALL)
     @JsonBackReference("season-leagues")
     private Set<League> leagues = new HashSet<>();
-    
+
 }

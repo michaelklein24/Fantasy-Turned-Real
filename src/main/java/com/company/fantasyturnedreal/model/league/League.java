@@ -37,4 +37,8 @@ public class League {
     )
     @JsonManagedReference("league-users-managed")
     private Set<User> users = new HashSet<>();
+
+    @OneToMany(mappedBy = "league", cascade = CascadeType.ALL)
+    @JsonManagedReference("league-scores")
+    private Set<Score> scores;
 }

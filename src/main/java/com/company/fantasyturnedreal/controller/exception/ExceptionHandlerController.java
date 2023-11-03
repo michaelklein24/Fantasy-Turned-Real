@@ -1,4 +1,4 @@
-package com.company.fantasyturnedreal.controller;
+package com.company.fantasyturnedreal.controller.exception;
 
 import com.company.fantasyturnedreal.exception.DataNotFoundException;
 import com.company.fantasyturnedreal.exception.MismatchingIdsException;

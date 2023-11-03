@@ -2,6 +2,7 @@ package com.company.fantasyturnedreal.model.season;
 
 import com.company.fantasyturnedreal.model.contestant.ContestantStatus;
 import com.company.fantasyturnedreal.model.league.Question;
+import com.company.fantasyturnedreal.model.league.Score;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -34,4 +35,8 @@ public class Episode {
     @OneToMany(mappedBy = "episode", cascade = CascadeType.ALL)
     @JsonManagedReference("episode-questions")
     private Set<Question> questions;
+
+    @OneToMany(mappedBy = "episode", cascade = CascadeType.ALL)
+    @JsonBackReference("episode-scores")
+    private Set<Score> scores;
 }

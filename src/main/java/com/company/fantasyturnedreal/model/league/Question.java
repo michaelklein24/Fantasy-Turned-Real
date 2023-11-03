@@ -1,5 +1,6 @@
 package com.company.fantasyturnedreal.model.league;
 
+import com.company.fantasyturnedreal.enums.QuestionStatus;
 import com.company.fantasyturnedreal.enums.QuestionType;
 import com.company.fantasyturnedreal.model.season.Episode;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -7,6 +8,9 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -18,9 +22,22 @@ public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long questionId;
-    private Double points;
+    private Integer points;
+
     @Enumerated(value = EnumType.STRING)
     private QuestionType questionType;
+
+    private String questionText;
+
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
+
+    private String correctAnswer;
+
+    @Enumerated(EnumType.STRING)
+    private QuestionStatus status = QuestionStatus.INACTIVE;
+
+    private List<String> potentialAnswers;
 
     @ManyToOne
     @JoinColumn(name = "episode_id")
