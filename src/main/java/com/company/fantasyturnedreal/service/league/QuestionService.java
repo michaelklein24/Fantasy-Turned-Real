@@ -21,6 +21,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -151,7 +152,7 @@ public class QuestionService extends AbstractService {
         questionRepo.deleteById(questionId);
     }
 
-    private void setQuestionStatus(Question question) {
+    private Question setQuestionStatus(Question question) {
         LocalDateTime currentTime = LocalDateTime.now();
         if (currentTime.isAfter(question.getStartTime()) && currentTime.isBefore(question.getEndTime())) {
             question.setStatus(QuestionStatus.OPEN);
@@ -162,11 +163,38 @@ public class QuestionService extends AbstractService {
         } else {
             question.setStatus(QuestionStatus.INACTIVE);
         }
+        return question;
+    }
+
+    private boolean doesQuestionStatusNeedUpdating(Question question) {
+        LocalDateTime currentTime = LocalDateTime.now();
+
+        if (question.getStatus().equals(QuestionStatus.INACTIVE) && question.getStartTime().isBefore(LocalDateTime.now())) {
+            return true;
+        }
+        if (question.getStatus().equals(QuestionStatus.OPEN) && question.getEndTime().isBefore(currentTime)) {
+            return true;
+        }
+        return false;
     }
 
     public void resolveQuestion(Question question) {
         question.setStatus(QuestionStatus.RESOLVED);
         question.setTimeUpdated(LocalDateTime.now());
         questionRepo.save(question);
+    }
+
+    @Transactional
+    public void validateQuestionStatus() throws Exception {
+        List<Question> questionsToCheck = new ArrayList<>();
+        questionsToCheck.addAll(questionRepo.findByStatus(QuestionStatus.OPEN));
+        questionsToCheck.addAll(questionRepo.findByStatus(QuestionStatus.OPEN));
+        questionsToCheck.addAll(questionRepo.findByStatus(QuestionStatus.OPEN));
+
+        List<Question> questionsToBeSaved = questionsToCheck.stream()
+                .filter(question -> doesQuestionStatusNeedUpdating(question))
+                .map(question -> setQuestionStatus(question))
+                .collect(Collectors.toList());
+        questionRepo.saveAll(questionsToBeSaved);
     }
 }
