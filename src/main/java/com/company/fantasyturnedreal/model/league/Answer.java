@@ -2,6 +2,7 @@ package com.company.fantasyturnedreal.model.league;
 
 import com.company.fantasyturnedreal.model.user.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -30,7 +31,7 @@ public class Answer {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonBackReference("user-answers")
+    @JsonManagedReference("user-answers")
     private User user;
 
     @OneToOne(mappedBy = "answer", cascade = CascadeType.ALL)

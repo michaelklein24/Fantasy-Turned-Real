@@ -29,7 +29,7 @@ public class User {
     private String email;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference("user-password")
+    @JsonBackReference("user-password")
     private Password password;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -41,7 +41,7 @@ public class User {
     private Set<Role> roles;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    @JsonManagedReference("user-answers")
+    @JsonBackReference("user-answers")
     private Set<Answer> answers;
 
     @ManyToMany(mappedBy = "users", cascade = CascadeType.DETACH)
@@ -49,7 +49,7 @@ public class User {
     private Set<League> leagues;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    @JsonManagedReference("user-scores")
+    @JsonBackReference("user-scores")
     private Set<Score> scores;
 
     @OneToMany(mappedBy = "submitter", cascade = CascadeType.DETACH)

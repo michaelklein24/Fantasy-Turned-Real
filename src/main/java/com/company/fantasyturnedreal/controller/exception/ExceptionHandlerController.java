@@ -1,5 +1,6 @@
 package com.company.fantasyturnedreal.controller.exception;
 
+import com.company.fantasyturnedreal.exception.CannotUpdateEntityException;
 import com.company.fantasyturnedreal.exception.DataNotFoundException;
 import com.company.fantasyturnedreal.exception.MismatchingIdsException;
 import com.company.fantasyturnedreal.model.CustomErrorResponse;
@@ -61,6 +62,16 @@ public class ExceptionHandlerController {
         error.setStatus((HttpStatus.BAD_REQUEST.value()));
         error.setTimestamp(LocalDateTime.now());
         ResponseEntity<CustomErrorResponse> responseEntity = new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        return responseEntity;
+    }
+
+    @ExceptionHandler(value = {CannotUpdateEntityException.class})
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<CustomErrorResponse> cannotUpdateEntityException(CannotUpdateEntityException e) {
+        CustomErrorResponse error = new CustomErrorResponse(HttpStatus.CONFLICT.toString(), e.getMessage());
+        error.setStatus((HttpStatus.CONFLICT.value()));
+        error.setTimestamp(LocalDateTime.now());
+        ResponseEntity<CustomErrorResponse> responseEntity = new ResponseEntity<>(error, HttpStatus.CONFLICT);
         return responseEntity;
     }
 }

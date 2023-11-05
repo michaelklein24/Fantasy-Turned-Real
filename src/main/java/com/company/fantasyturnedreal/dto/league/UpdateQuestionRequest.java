@@ -20,5 +20,6 @@ public class UpdateQuestionRequest {
     private Integer points;
     private QuestionType questionType;
     private LocalDateTime startTime;
+    private LocalDateTime endTime;
     private List<String> potentialAnswers;
 }

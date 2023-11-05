@@ -37,14 +37,14 @@ public class Contestant {
             name = "season_contestant",
             referencedColumnName = "season_id"
     )
-    private Set<Season> seasons;
+    private Set<Season> seasons = new HashSet<>();
 
     @OneToMany(mappedBy = "contestant", cascade = CascadeType.ALL)
     @JsonBackReference("contestant-statuses")
-    private Set<ContestantStatus> statuses;
+    private Set<ContestantStatus> statuses = new HashSet<>();
 
     @OneToMany(mappedBy = "contestant", cascade = CascadeType.ALL)
     @JsonManagedReference("contestant-socialAccounts")
-    private Set<SocialAccount> socialAccounts;
+    private Set<SocialAccount> socialAccounts = new HashSet<>();
 
 }

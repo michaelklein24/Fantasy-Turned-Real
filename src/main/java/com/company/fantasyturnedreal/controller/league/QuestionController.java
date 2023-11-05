@@ -44,15 +44,6 @@ public class QuestionController {
         return questionService.createQuestions(request);
     }
 
-    @PutMapping("/{questionId}/answer")
-    @ResponseStatus(code = HttpStatus.NO_CONTENT)
-    public void updateQuestionWithCorrectAnswer(@PathVariable Long questionId, @Valid @RequestBody UpdateQuestionWithCorrectAnswerRequest request) {
-        if (!request.getQuestionId().equals(questionId)) {
-            throw new MismatchingIdsException(String.format("The question id found in the request body (%s) does not match the question id found in the path (%d).", request.getQuestionId(), questionId));
-        }
-        questionService.updateQuestionWithCorrectAnswer(request.getQuestionId(), request.getCorrectAnswer());
-    }
-
     @PutMapping("/{questionId}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void updateQuestionDetails(@PathVariable Long questionId, @Valid @RequestBody UpdateQuestionRequest request) {

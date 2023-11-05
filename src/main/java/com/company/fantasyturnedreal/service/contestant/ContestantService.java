@@ -65,11 +65,12 @@ public class ContestantService extends AbstractService {
         contestant.setNickName(createContestantRequest.getFirstName());
         contestant.setBiography(createContestantRequest.getBiography());
 
-        Set<Season> seasons = createContestantRequest.getSeasons().stream()
-                .map(seasonId -> seasonService.getSeasonById(seasonId))
-                .collect(Collectors.toSet());
-        contestant.setSeasons(seasons);
-
+        if (createContestantRequest.getSeasons() != null) {
+            Set<Season> seasons = createContestantRequest.getSeasons().stream()
+                    .map(seasonId -> seasonService.getSeasonById(seasonId))
+                    .collect(Collectors.toSet());
+            contestant.setSeasons(seasons);
+        }
         return contestantRepo.save(contestant);
     }
 
@@ -100,7 +101,7 @@ public class ContestantService extends AbstractService {
     public List<String> getContestantNamesByStatus(Status status) {
         List<Contestant> contestants = getContestantsByStatus(status);
         return contestants.stream()
-                .map(contestant -> contestant.getFirstName() + contestant.getNickName() + contestant.getLastName())
+                .map(contestant -> String.format("%s %s", contestant.getFirstName(), contestant.getLastName()))
                 .collect(Collectors.toList());
     }
 

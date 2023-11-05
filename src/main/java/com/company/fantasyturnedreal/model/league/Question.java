@@ -11,6 +11,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -55,7 +56,7 @@ public class Question {
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
     @JsonManagedReference("question-answers")
-    private Set<Answer> answers;
+    private Set<Answer> answers = new HashSet<>();
 
     @ManyToOne
     @JsonManagedReference("user-questions")

@@ -2,6 +2,7 @@ package com.company.fantasyturnedreal.controller.league;
 
 import com.company.fantasyturnedreal.dto.league.CreateAnswerRequest;
 import com.company.fantasyturnedreal.dto.league.UpdateAnswerRequest;
+import com.company.fantasyturnedreal.dto.league.UpdateQuestionWithCorrectAnswerRequest;
 import com.company.fantasyturnedreal.exception.MismatchingIdsException;
 import com.company.fantasyturnedreal.model.league.Answer;
 import com.company.fantasyturnedreal.service.league.AnswerService;
@@ -48,5 +49,14 @@ public class AnswerController {
             throw new MismatchingIdsException(String.format("The answer id found in the request body (%s) does not match the answer id found in the path (%d).", request.getAnswerId(), answerId));
         }
         answerService.updateAnswer(request);
+    }
+
+    @PutMapping("/question/{questionId}")
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    public void updateQuestionWithCorrectAnswer(@PathVariable Long questionId, @Valid @RequestBody UpdateQuestionWithCorrectAnswerRequest request) {
+        if (!request.getQuestionId().equals(questionId)) {
+            throw new MismatchingIdsException(String.format("The question id found in the request body (%s) does not match the question id found in the path (%d).", request.getQuestionId(), questionId));
+        }
+        answerService.updateQuestionWithCorrectAnswer(request.getQuestionId(), request.getCorrectAnswer());
     }
 }

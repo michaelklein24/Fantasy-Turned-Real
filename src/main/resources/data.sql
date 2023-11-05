@@ -97,15 +97,16 @@ VALUES
 (100, 200),
 (200, 200);
 
-INSERT INTO question (question_id, points, question_type, episode_id, league_id)
-VALUES
-(100, 8.0, 'CONTESTANT_PICK', 300, 100),
-(200, 12.0, 'TRIBE_PICK', 400, 100);
+INSERT INTO question (question_id, points, question_type, question_text, start_time, end_time, time_submitted, status, episode_id, league_id, submitter_user_id)
+VALUES (100, 8.0, 'CONTESTANT_PICK', 'Which contestant will get voted off?', '2023-11-16 07:00:00', '2023-11-23 07:00:00', '2023-11-05 11:00:00', 'OPEN', 300, 100, 100),
+       (200, 12.0, 'TRIBE_PICK', 'Which tribe will win immunity?', '2023-11-16 07:00:00', '2023-11-23 07:00:00', '2023-11-05 11:00:00', 'INACTIVE', 300, 100, 100);
 
-INSERT INTO answer (answer_id, answer, is_correct, question_id, user_id)
+
+INSERT INTO answer (answer_id, answer, is_correct, time_submitted, question_id, user_id)
 VALUES
-(100,'C', null, 100, 100),
-(200, 'True', null, 200, 200);
+(100,'Contestant A', null, '2023-11-24 07:00:00', 100, 100),
+(200,'Contestant B', null, '2023-11-24 07:00:00', 100, 200),
+(300, 'True', null, '2023-11-24 07:00:00', 200, 200);
 
 INSERT INTO league_users (leagues_league_id, users_user_id)
 VALUES

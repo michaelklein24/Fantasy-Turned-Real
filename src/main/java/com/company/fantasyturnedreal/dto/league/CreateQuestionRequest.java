@@ -29,5 +29,7 @@ public class CreateQuestionRequest {
     @NotNull
     private Long leagueId;
     private List<String> potentialAnswers;
+    @NotNull
+    private Long submitterUserId;
 
 }

@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class CreateAnswerRequest {
     private String answer;
     private Long userId;
+    private Long questionId;
 }

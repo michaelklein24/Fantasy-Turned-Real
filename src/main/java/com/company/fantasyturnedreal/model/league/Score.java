@@ -3,6 +3,7 @@ package com.company.fantasyturnedreal.model.league;
 import com.company.fantasyturnedreal.model.season.Episode;
 import com.company.fantasyturnedreal.model.user.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -22,7 +23,7 @@ public class Score {
     private Answer answer;
 
     @ManyToOne
-    @JsonBackReference("user-scores")
+    @JsonManagedReference("user-scores")
     private User user;
 
     @ManyToOne

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -21,5 +22,5 @@ public class CreateContestantRequest {
     private Date birthday;
     private String nickname;
     private String biography;
-    private List<Long> seasons;
+    private List<Long> seasons = new ArrayList<>();
 }
