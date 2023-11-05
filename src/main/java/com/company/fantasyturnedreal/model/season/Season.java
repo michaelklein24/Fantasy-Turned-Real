@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -18,6 +19,7 @@ import java.util.Set;
 @Entity
 @Table(name = "season")
 @EqualsAndHashCode(exclude = "leagues")
+@ToString(exclude = {"leagues", "statuses", "contestants", "episodes"})
 public class Season {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

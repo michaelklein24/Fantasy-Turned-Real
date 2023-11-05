@@ -104,7 +104,7 @@ public class AnswerService extends AbstractService {
         boolean isCorrect = isAnswerCorrect(foundAnswer, correctAnswer);
         foundAnswer.setIsCorrect(isCorrect);
         if (isCorrect) {
-            scoreService.calculateScore(foundAnswer);
+            scoreService.addScore(foundAnswer);
         }
         return foundAnswer;
     }

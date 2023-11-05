@@ -14,6 +14,7 @@ import java.util.List;
 public interface ScoreRepository extends JpaRepository<Score, Long>, JpaSpecificationExecutor<Score> {
     Score findByUserAndLeagueAndEpisode(User user, League league, Episode episode);
     List<Score> findByLeagueLeagueIdAndUserUserId(Long leagueId, Long userId);
+    List<Score> findByLeagueLeagueIdAndEpisodeEpisodeId(Long leagueId, Long episodeId);
     List<Score> findByLeagueLeagueId(Long leagueId);
 
 }

@@ -98,17 +98,54 @@ VALUES
 (200, 200);
 
 INSERT INTO question (question_id, points, question_type, question_text, start_time, end_time, time_submitted, status, episode_id, league_id, submitter_user_id)
-VALUES (100, 8.0, 'CONTESTANT_PICK', 'Which contestant will get voted off?', '2023-11-16 07:00:00', '2023-11-23 07:00:00', '2023-11-05 11:00:00', 'OPEN', 300, 100, 100),
-       (200, 12.0, 'TRIBE_PICK', 'Which tribe will win immunity?', '2023-11-16 07:00:00', '2023-11-23 07:00:00', '2023-11-05 11:00:00', 'INACTIVE', 300, 100, 100);
-
+VALUES (100, 10, 'CONTESTANT_PICK', 'Which contestant will get voted off?', '2023-11-16 07:00:00', '2023-11-23 07:00:00', '2023-11-05 11:00:00', 'OPEN', 100, 100, 100),
+       (200, 10, 'TRIBE_PICK', 'Which tribe will win immunity?', '2023-11-16 07:00:00', '2023-11-23 07:00:00', '2023-11-05 11:00:00', 'INACTIVE', 100, 100, 100),
+       (300, 10, 'CONTESTANT_PICK', 'Which contestant will go to exinction island?', '2023-11-16 07:00:00', '2023-11-23 07:00:00', '2023-11-05 11:00:00', 'INACTIVE', 100, 100, 100),
+       (400, 10, 'TRIBE_PICK', 'Which tribe will lose immunity?', '2023-11-16 07:00:00', '2023-11-23 07:00:00', '2023-11-05 11:00:00', 'INACTIVE', 100, 100, 100),
+       (500, 10, 'CONTESTANT_PICK', 'Which contestant will get voted off?', '2023-11-16 07:00:00', '2023-11-23 07:00:00', '2023-11-05 11:00:00', 'OPEN', 200, 100, 100),
+       (600, 10, 'TRIBE_PICK', 'Which tribe will win immunity?', '2023-11-16 07:00:00', '2023-11-23 07:00:00', '2023-11-05 11:00:00', 'INACTIVE', 200, 100, 100),
+       (700, 10, 'CONTESTANT_PICK', 'Which contestant will go to exinction island?', '2023-11-16 07:00:00', '2023-11-23 07:00:00', '2023-11-05 11:00:00', 'INACTIVE', 200, 100, 100),
+       (800, 10, 'TRIBE_PICK', 'Which tribe will lose immunity?', '2023-11-16 07:00:00', '2023-11-23 07:00:00', '2023-11-05 11:00:00', 'INACTIVE', 200, 100, 100);
 
 INSERT INTO answer (answer_id, answer, is_correct, time_submitted, question_id, user_id)
 VALUES
 (100,'Contestant A', null, '2023-11-24 07:00:00', 100, 100),
-(200,'Contestant B', null, '2023-11-24 07:00:00', 100, 200),
-(300, 'True', null, '2023-11-24 07:00:00', 200, 200);
+(200,'Contestant A', null, '2023-11-24 07:00:00', 100, 200),
+(300,'Blue', null, '2023-11-24 07:00:00', 200, 100),
+(400,'Blue', null, '2023-11-24 07:00:00', 200, 200),
+(500,'Contestant A', null, '2023-11-24 07:00:00', 300, 100),
+(600,'Contestant A', null, '2023-11-24 07:00:00', 300, 200),
+(700,'Red', null, '2023-11-24 07:00:00', 400, 100),
+(800,'Red', null, '2023-11-24 07:00:00', 400, 200),
+(900,'Contestant A', null, '2023-11-24 07:00:00', 500, 100),
+(1000,'Contestant A', null, '2023-11-24 07:00:00', 500, 200),
+(1100,'Blue', null, '2023-11-24 07:00:00', 600, 100),
+(1200,'Blue', null, '2023-11-24 07:00:00', 600, 200),
+(1300,'Contestant A', null, '2023-11-24 07:00:00', 700, 100),
+(1400,'Contestant A', null, '2023-11-24 07:00:00', 700, 200),
+(1500,'Red', null, '2023-11-24 07:00:00', 800, 100),
+(1600,'Red', null, '2023-11-24 07:00:00', 800, 200);
 
 INSERT INTO league_users (leagues_league_id, users_user_id)
 VALUES
 (100, 200),
 (100, 100);
+
+INSERT INTO score (score_id, points_earned, answer_answer_id, episode_episode_id, league_league_id, user_user_id)
+VALUES
+(100, 10, 100, 100, 100, 100),
+(200, 10, 200, 100, 100, 200),
+(300, 10, 300, 100, 100, 100),
+(400, 10, 400, 100, 100, 200),
+(500, 10, 500, 100, 100, 100),
+(600, 10, 600, 100, 100, 200),
+(700, 10, 700, 100, 100, 100),
+(800, 10, 800, 100, 100, 200),
+(900, 10, 900, 200, 100, 100),
+(1000, 10, 1000, 200, 100, 200),
+(1100, 10, 1100, 200, 100, 100),
+(1200, 10, 1200, 200, 100, 200),
+(1300, 10, 1300, 200, 100, 100),
+(1400, 10, 1400, 200, 100, 200),
+(1500, 10, 1500, 200, 100, 100),
+(1600, 10, 1600, 200, 100, 200);

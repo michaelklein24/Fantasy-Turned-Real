@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.Date;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name = "episode")
+@ToString(exclude = {"contestantStatuses", "season", "questions", "scores"})
 public class Episode {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

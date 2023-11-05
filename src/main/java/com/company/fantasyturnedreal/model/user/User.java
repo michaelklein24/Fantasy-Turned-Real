@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.Set;
 
@@ -17,6 +18,7 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 @EqualsAndHashCode(exclude = {"leagues", "roles", "answers"})
+@ToString(exclude = {"roles", "answers", "leagues", "scores", "questions", "password"})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 import java.time.LocalDateTime;
 
 @Data
-@EqualsAndHashCode(exclude = {"question", "user"})
+@EqualsAndHashCode(exclude = {"question", "user", "score"})
 @Entity
 @Table(name = "answer")
 public class Answer {

@@ -21,14 +21,14 @@ public class ScoreController {
 
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    public Map<User, Integer> getTotalScoresForLeague(@PathVariable Long leagueId) {
+    public Map<Long, Integer> getTotalScoresForLeague(@PathVariable Long leagueId) {
         return scoreService.getTotalScoresForLeague(leagueId);
     }
 
     @GetMapping("/episode")
     @ResponseStatus(HttpStatus.OK)
-    public Map<User, Map<String, Map<Episode, Integer>>> getTotalScoresAfterEachEpisodeForLeague(@PathVariable Long leagueId) {
-        return scoreService.getIndividualAndCombinedScoresPerEpisodeForLeague(leagueId);
+    public Map<Long, Map<String, Map<Long, Integer>>> getTotalScoresAfterEachEpisodeForLeague(@PathVariable Long leagueId) {
+        return scoreService.getIndividualAndTotalScoresPerEpisodeForLeague(leagueId);
     }
 
     @GetMapping("/user/{userId}")
@@ -39,13 +39,7 @@ public class ScoreController {
 
     @GetMapping("/user/{userId}/episode")
     @ResponseStatus(HttpStatus.OK)
-    public Map<Episode, Integer> getIndividualScoresForUserInLeague(@PathVariable Long leagueId, @PathVariable Long userId) {
+    public Map<Long, Integer> getIndividualScoresForUserInLeague(@PathVariable Long leagueId, @PathVariable Long userId) {
         return scoreService.getIndividualScoresForUserInLeague(leagueId, userId);
-    }
-
-    @GetMapping("/episode/{episodeId}")
-    @ResponseStatus(HttpStatus.OK)
-    public Map<User, Map<String, Integer>> getAllScoresForEpisodeInLeague(@PathVariable Long leagueId, @PathVariable Long episodeId) {
-        return scoreService.getAllScoresForEpisodeInLeague(leagueId, episodeId);
     }
 }
