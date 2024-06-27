@@ -36,30 +36,140 @@ public class SurveyService {
     private final LeagueService leagueService;
 
     public GetSurveyDetailsByIdResponse getSurveyDetailsBySurveyIdForUser(Integer surveyId, Integer userId) {
+        SurveyModel surveyModel = getSurveyById(surveyId);
 
-        SurveyModel surveyModel = surveyRepository.findById(surveyId)
+        GetSurveyDetailsByIdResponse response = new GetSurveyDetailsByIdResponse();
+        SurveyDetails surveyDetails = createSurveyDetails(surveyModel, userId);
+        response.setSurveyDetails(surveyDetails);
+
+        ScoringDetails scoringDetails = createScoringDetails(surveyModel, surveyId, userId);
+        response.setScoringDetails(scoringDetails);
+
+        return response;
+    }
+
+    @Transactional
+    public CreateSurveyResponse createSurvey(CreateSurveyRequest createSurveyRequest, Integer userId) {
+        validateSurveyUniqueness(createSurveyRequest);
+
+        SurveyModel surveyModel = new SurveyModel();
+        surveyModel.setStatus(SurveyStatusCode.CREATED);
+
+        EpisodeModel episodeModel = getEpisodeById(createSurveyRequest.getEpisodeId());
+        surveyModel.setEpisodeModel(episodeModel);
+
+        LeagueModel leagueModel = getLeagueById(createSurveyRequest.getLeagueId());
+        surveyModel.setLeagueModel(leagueModel);
+
+        surveyModel = surveyRepository.save(surveyModel);
+
+        List<QuestionModel> questionModels = createSurveyRequest.getSurveyDetails().getQuestionDetails().stream()
+                .map(questionService::createQuestion)
+                .toList();
+
+        SurveyDetails surveyDetails = createSurveyDetails(surveyModel, questionModels);
+
+        CreateSurveyResponse response = new CreateSurveyResponse();
+        response.setSurveyDetails(surveyDetails);
+
+        return response;
+    }
+
+    private SurveyModel getSurveyById(Integer surveyId) {
+        return surveyRepository.findById(surveyId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Unable to find survey with surveyId '%d'", surveyId)));
+    }
 
-        GetSurveyDetailsByIdResponse getSurveyDetailsByIdResponse = new GetSurveyDetailsByIdResponse();
+    private void validateSurveyUniqueness(CreateSurveyRequest createSurveyRequest) {
+        Integer episodeId = createSurveyRequest.getEpisodeId();
+        Integer leagueId = createSurveyRequest.getLeagueId();
+        boolean doesSurveyAlreadyExist = surveyRepository.existsByEpisodeModelEpisodeIdAndLeagueModelLeagueId(episodeId, leagueId);
 
+        if (doesSurveyAlreadyExist) {
+            throw new EntityExistsException(String.format("Survey has already been created for episodeId '%d' in leagueId '%d'", episodeId, leagueId));
+        }
+    }
+
+    private EpisodeModel getEpisodeById(Integer episodeId) {
+        return episodeService.getEpisodeByEpisodeId(episodeId)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Unable to find episode with episodeId '%d'", episodeId)));
+    }
+
+    private LeagueModel getLeagueById(Integer leagueId) {
+        return leagueService.getLeagueByLeagueId(leagueId)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Unable to find league with leagueId '%d'", leagueId)));
+    }
+
+    private SurveyDetails createSurveyDetails(SurveyModel surveyModel, Integer userId) {
         SurveyDetails surveyDetails = new SurveyDetails();
         surveyDetails.setSurveyId(surveyModel.getSurveyId());
         surveyDetails.setEpisodeTitle(surveyModel.getEpisodeModel().getTitle());
         surveyDetails.setEpisodeNumber(surveyModel.getEpisodeModel().getEpisodeNumber());
 
         List<QuestionDetails> questionDetails = new ArrayList<>();
+        List<QuestionModel> questionModels = questionService.getQuestionsForSurveyForUser(surveyModel.getSurveyId(), userId);
 
-        List<QuestionModel> questionModels = questionService.getQuestionsForSurveyForUser(surveyId, userId);
         for (QuestionModel questionModel : questionModels) {
-            AnswerModel answerModel = answerService.getUsersAnswerForQuestion(userId, questionModel.getQuestionId())
-                    .orElseThrow(() -> new EntityNotFoundException(String.format("Unable to find answer for user Id '%d' and questionId '%d'", userId, questionModel.getQuestionId())));
-            QuestionDetails questionDetail = createQuestionDetail(questionModel, answerModel);
-            questionDetails.add(questionDetail);
+            try {
+                AnswerModel answerModel = answerService.getUsersAnswerForQuestion(userId, questionModel.getQuestionId())
+                        .orElseThrow(() -> new EntityNotFoundException(String.format("Unable to find answer for user Id '%d' and questionId '%d'", userId, questionModel.getQuestionId())));
+                QuestionDetails questionDetail = createQuestionDetail(questionModel, answerModel);
+                questionDetails.add(questionDetail);
+            } catch (EntityNotFoundException e) {
+                // Handle missing answers if necessary
+            }
         }
 
         surveyDetails.setQuestionDetails(questionDetails);
-        getSurveyDetailsByIdResponse.setSurveyDetails(surveyDetails);
+        return surveyDetails;
+    }
 
+    private SurveyDetails createSurveyDetails(SurveyModel surveyModel, List<QuestionModel> questionModels) {
+        SurveyDetails surveyDetails = new SurveyDetails();
+        surveyDetails.setEpisodeTitle(surveyModel.getEpisodeModel().getTitle());
+        surveyDetails.setEpisodeNumber(surveyModel.getEpisodeModel().getEpisodeNumber());
+
+        List<QuestionDetails> questionDetails = questionModels.stream().map(this::createQuestionDetail).toList();
+        surveyDetails.setQuestionDetails(questionDetails);
+
+        return surveyDetails;
+    }
+
+    private QuestionDetails createQuestionDetail(QuestionModel questionModel, AnswerModel answerModel) {
+        AnswerDetails answerDetails = createAnswerDetails(answerModel, questionModel);
+        QuestionDetails questionDetail = new QuestionDetails();
+        questionDetail.setAnswerDetails(answerDetails);
+        questionDetail.setQuestionId(questionModel.getQuestionId());
+        questionDetail.setQuestion(questionModel.getQuestion());
+        questionDetail.setQuestionTypeCode(questionModel.getQuestionType());
+        questionDetail.setCorrectAnswer(questionModel.getCorrectAnswer());
+        questionDetail.setPossiblePoints(questionModel.getPoints());
+
+        return questionDetail;
+    }
+
+    private QuestionDetails createQuestionDetail(QuestionModel questionModel) {
+        QuestionDetails questionDetail = new QuestionDetails();
+        questionDetail.setQuestionId(questionModel.getQuestionId());
+        questionDetail.setPossiblePoints(questionModel.getPoints());
+        questionDetail.setQuestionTypeCode(questionModel.getQuestionType());
+        questionDetail.setQuestionNumber(questionModel.getQuestionNumber());
+        questionDetail.setQuestion(questionModel.getQuestion());
+
+        return questionDetail;
+    }
+
+    private AnswerDetails createAnswerDetails(AnswerModel answerModel, QuestionModel questionModel) {
+        AnswerDetails answerDetails = new AnswerDetails();
+        answerDetails.setAnswerId(answerModel.getAnswerId());
+        answerDetails.setAnswer(answerModel.getAnswer());
+        answerDetails.setCorrect(answerModel.isCorrect());
+        answerDetails.setAwardedPoints(answerModel.isCorrect() ? questionModel.getPoints() : BigDecimal.ZERO);
+
+        return answerDetails;
+    }
+
+    private ScoringDetails createScoringDetails(SurveyModel surveyModel, Integer surveyId, Integer userId) {
         ScoringDetails scoringDetails = new ScoringDetails();
 
         BigDecimal pointsEarnedFromSurvey = scoreService.getTotalPointsEarnedFromSurveyForUser(surveyId, userId);
@@ -70,63 +180,19 @@ public class SurveyService {
 
         BigDecimal totalPotentialPointsInSurvey = questionService.getTotalPotentialPointsOfAllQuestionsInSurvey(surveyId);
         scoringDetails.setTotalPossiblePoints(totalPotentialPointsInSurvey);
-        scoringDetails.setPercentageObtained(pointsEarnedFromSurvey.divide(totalPotentialPointsInSurvey, RoundingMode.HALF_UP).multiply(new BigDecimal(100)));
+
+        if (totalPotentialPointsInSurvey.compareTo(BigDecimal.ZERO) > 0) {
+            BigDecimal percentageObtained = pointsEarnedFromSurvey
+                    .divide(totalPotentialPointsInSurvey, 2, RoundingMode.HALF_UP)
+                    .multiply(new BigDecimal(100));
+            scoringDetails.setPercentageObtained(percentageObtained);
+        } else {
+            scoringDetails.setPercentageObtained(BigDecimal.ZERO);
+        }
 
         Integer totalNumberOfPlayers = participantService.getTotalNumberOfParticipantsInLeague(surveyModel.getLeagueModel().getLeagueId());
         scoringDetails.setTotalNumberOfPlayers(totalNumberOfPlayers);
 
-        getSurveyDetailsByIdResponse.setScoringDetails(scoringDetails);
-        return getSurveyDetailsByIdResponse;
-    }
-
-    private static QuestionDetails createQuestionDetail(QuestionModel questionModel, AnswerModel answerModel) {
-        AnswerDetails answerDetails = new AnswerDetails();
-        answerDetails.setAnswerId(answerModel.getAnswerId());
-        answerDetails.setAnswer(answerModel.getAnswer());
-        answerDetails.setCorrect(answerModel.isCorrect());
-        answerDetails.setAwardedPoints(answerModel.isCorrect() ? questionModel.getPoints() : BigDecimal.ZERO);
-
-        QuestionDetails questionDetail = new QuestionDetails();
-        questionDetail.setAnswerDetails(answerDetails);
-        questionDetail.setQuestionId(questionModel.getQuestionId());
-        questionDetail.setQuestion(questionModel.getQuestion());
-        questionDetail.setQuestionTypeCode(questionModel.getQuestionType());
-        questionDetail.setCorrectAnswer(questionModel.getCorrectAnswer());
-        questionDetail.setPossiblePoints(questionModel.getPoints());
-        return questionDetail;
-    }
-
-    @Transactional
-    public CreateSurveyResponse createSurvey(CreateSurveyRequest createSurveyRequest, Integer userId) {
-        Integer episodeId = createSurveyRequest.getEpisodeId();
-        Integer leagueId = createSurveyRequest.getLeagueId();
-        boolean doesSurveyAlreadyExist = surveyRepository.existsByEpisodeModelEpisodeIdAndLeagueModelLeagueId(episodeId, leagueId);
-
-        if (doesSurveyAlreadyExist) {
-            throw new EntityExistsException(String.format("Survey has already been created for episodeId '%d' in leagueId '%d'", episodeId, leagueId));
-        }
-
-        SurveyModel surveyModel = new SurveyModel();
-        surveyModel.setStatus(SurveyStatusCode.CREATED);
-
-        EpisodeModel episodeModel = episodeService.getEpisodeByEpisodeId(episodeId)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Unable to find episode with episodeId '%d'", episodeId)));
-        surveyModel.setEpisodeModel(episodeModel);
-
-        LeagueModel leagueModel = leagueService.getLeagueByLeagueId(episodeId)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Unable to find league with leagueId '%d'", leagueId)));
-        surveyModel.setLeagueModel(leagueModel);
-
-        surveyModel = surveyRepository.save(surveyModel);
-
-        List<QuestionModel> questionModels = new ArrayList<>();
-        for (QuestionDetails questionDetail : createSurveyRequest.getQuestions()) {
-            QuestionModel questionModel = questionService.createQuestion(questionDetail);
-            questionModels.add(questionModel);
-        }
-
-        CreateSurveyResponse createSurveyResponse = new CreateSurveyResponse();
-        createSurveyResponse.setSurveyDetails();
-
+        return scoringDetails;
     }
 }

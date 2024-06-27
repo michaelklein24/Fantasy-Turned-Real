@@ -18,6 +18,8 @@ public class QuestionModel {
     @JoinColumn(name = "survey_id", referencedColumnName = "surveyId")
     private SurveyModel surveyModel;
 
+    private Integer questionNumber;
+
     private String question;
 
     private QuestionTypeCode questionType;
