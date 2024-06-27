@@ -15,6 +15,5 @@ public class LeagueSummaryWithUserDetails {
     private Integer totalNumberOfPlayers;
     private Integer placement;
     private String name;
-    private String image;
     private LeagueStatusCode status;
 }

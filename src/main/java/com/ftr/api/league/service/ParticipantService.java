@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,8 +20,7 @@ public class ParticipantService extends AbstractService {
     private final ParticipantRepository participantRepository;
 
     public LeagueRoleCode getUserParticipantRoleForLeague(Integer userId, Integer leagueId) {
-        ParticipantModel participantModel = participantRepository.findByUserModelUserIdAndLeagueModelLeagueId(userId, leagueId)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Unable to find league role associated with userId %d and leagueId %d", userId, leagueId)));
+        ParticipantModel participantModel = getParticipantByUserIdAndLeagueId(userId, leagueId).orElseThrow(() -> new EntityNotFoundException(String.format("Unable to find league role associated with userId %d and leagueId %d", userId, leagueId)));
         return participantModel.getLeagueRole();
     }
 
@@ -43,5 +43,17 @@ public class ParticipantService extends AbstractService {
     public List<LeagueModel> getLeaguesForParticipant(Integer userId) {
         List<ParticipantModel> participantModels = participantRepository.findByUserModelUserId(userId);
         return participantModels.stream().map(ParticipantModel::getLeagueModel).toList();
+    }
+
+    public Optional<ParticipantModel> getAdminParticipantForLeague(Integer leagueId) {
+        return participantRepository.findByLeagueModelLeagueIdAndLeagueRole(leagueId, LeagueRoleCode.ADMIN).stream().findFirst();
+    }
+
+    public List<ParticipantModel> getParticipantsForLeague(Integer leagueId) {
+        return participantRepository.findByLeagueModelLeagueId(leagueId);
+    }
+
+    public Optional<ParticipantModel> getParticipantByUserIdAndLeagueId(Integer userId, Integer leagueId) {
+        return participantRepository.findByUserModelUserIdAndLeagueModelLeagueId(userId, leagueId);
     }
 }

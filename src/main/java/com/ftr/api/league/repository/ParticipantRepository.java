@@ -1,5 +1,6 @@
 package com.ftr.api.league.repository;
 
+import com.ftr.api.league.code.LeagueRoleCode;
 import com.ftr.api.league.model.ParticipantModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,4 +18,8 @@ public interface ParticipantRepository extends JpaRepository<ParticipantModel, I
     boolean existsByUserModelUserIdAndLeagueModelLeagueId(Integer userId, Integer leagueId);
 
     List<ParticipantModel> findByUserModelUserId(Integer userId);
+
+    List<ParticipantModel> findByLeagueModelLeagueIdAndLeagueRole(Integer leagueId, LeagueRoleCode role);
+
+    List<ParticipantModel> findByLeagueModelLeagueId(Integer leagueId);
 }

@@ -41,7 +41,6 @@ public class DataInitializer implements CommandLineRunner {
         LeagueModel leagueModel = new LeagueModel();
         leagueModel.setName("Corner By The Bookshelf");
         leagueModel.setStatus(LeagueStatusCode.NOT_STARTED);
-        leagueModel.setImageData("".getBytes());
         leagueRepo.save(leagueModel);
 
         for (int i = 0; i < userModels.size(); i++) {

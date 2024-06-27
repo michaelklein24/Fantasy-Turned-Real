@@ -1,6 +1,7 @@
 package com.ftr.api.league.model;
 
 import com.ftr.api.league.code.LeagueStatusCode;
+import com.ftr.api.score.model.ScoreModel;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -15,13 +16,7 @@ public class LeagueModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer leagueId;
 
-//    @OneToMany(fetch = FetchType.EAGER, mappedBy = "participantId")
-//    private List<ParticipantModel> participants;
-
     private String name;
-
-    @Lob
-    private byte[] imageData;
 
     private LeagueStatusCode status;
 

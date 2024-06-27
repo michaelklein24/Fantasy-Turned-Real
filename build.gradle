@@ -41,8 +41,6 @@ dependencies {
     implementation "io.jsonwebtoken:jjwt-impl:${jsonWebTokenVersion}"
     implementation "io.jsonwebtoken:jjwt-jackson:${jsonWebTokenVersion}"
     runtimeOnly "org.postgresql:postgresql:${postgresJdbcVersion}"
-    implementation 'io.swagger.codegen.v3:swagger-codegen-cli:3.0.57'
-
 }
 
 idea.project.settings {

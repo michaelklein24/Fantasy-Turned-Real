@@ -8,6 +8,7 @@ import com.ftr.api.league.model.LeagueModel;
 import com.ftr.api.league.model.ParticipantModel;
 import com.ftr.api.league.repository.LeagueRepository;
 import com.ftr.api.score.service.ScoreService;
+import com.ftr.api.user.exception.UserNotPermittedException;
 import com.ftr.api.user.model.UserModel;
 import com.ftr.api.user.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
@@ -16,9 +17,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -55,9 +56,6 @@ public class LeagueService extends AbstractService {
         leagueSummaryWithUserDetails.setName(league.getName());
         leagueSummaryWithUserDetails.setStatus(league.getStatus());
 
-        String image = getImageBase64(league.getImageData());
-        leagueSummaryWithUserDetails.setImage(image);
-
         LeagueRoleCode leagueRole = participantService.getUserParticipantRoleForLeague(userId, league.getLeagueId());
         leagueSummaryWithUserDetails.setRole(leagueRole);
 
@@ -77,11 +75,7 @@ public class LeagueService extends AbstractService {
         LeagueModel leagueModel = new LeagueModel();
         leagueModel.setName(createLeagueRequest.getName());
         leagueModel.setStatus(LeagueStatusCode.NOT_STARTED);
-        try {
-            leagueModel.setImageData(image.getBytes());
-        } catch (IOException e) {
-            log.error("Unable to save image!", e);
-        }
+
         leagueModel = leagueRepository.save(leagueModel);
 
         UserModel userModel = userService.findUserByUserId(userId).orElseThrow(() -> new EntityNotFoundException(String.format("Unabled to find user with userId '%d'", userId)));
@@ -99,9 +93,50 @@ public class LeagueService extends AbstractService {
         boolean doesUserHaveAccessToLeague = participantService.doesParticipantWithUserIdExistInLeague(userId, leagueId);
 
         if (!doesUserHaveAccessToLeague) {
-            throw new RuntimeException("NOT_AUTHORIZED TO ACCESS LEAGUE DETAILS");
+            throw new UserNotPermittedException(String.format("User with userId '%d' is not permitted to retrieve league details for league with leagueId '%d'.", userId, leagueId));
         }
+        GetLeagueDetailsByIdForUserResponse response = new GetLeagueDetailsByIdForUserResponse();
 
-        return null;
+        LeagueModel leagueModel = getLeagueByLeagueId(leagueId).orElseThrow(() -> new EntityNotFoundException(String.format("League with leagueId '%d' does not exist", leagueId)));
+        response.setName(leagueModel.getName());
+        response.setStatus(leagueModel.getStatus());
+
+        List<ParticipantModel> participantModels = participantService.getParticipantsForLeague(leagueId);
+        List<ParticipantSummary> participantSummaries = participantModels.stream().map(this::buildParticipantSummary).toList();
+
+        response.setParticipants(participantSummaries);
+        response.setAdmin(participantSummaries.stream().filter(participant -> participant.getRole().equals(LeagueRoleCode.ADMIN)).findFirst().orElse(null));
+
+        return response;
+    }
+
+    public Optional<LeagueModel> getLeagueByLeagueId(Integer leagueId) {
+        return leagueRepository.findById(leagueId);
+    }
+
+    private ParticipantSummary buildParticipantSummary(ParticipantModel participantModel) {
+        ParticipantSummary participantSummary = new ParticipantSummary();
+        participantSummary.setFirstName(participantSummary.getFirstName());
+        participantSummary.setLastName(participantSummary.getLastName());
+        participantSummary.setRole(participantSummary.getRole());
+
+        Integer leagueId = participantModel.getLeagueModel().getLeagueId();
+        Integer userId = participantModel.getUserModel().getUserId();
+        participantSummary.setUserId(userId);
+
+        Integer placement = scoreService.getCurrentPlacementForUserInLeague(userId, leagueId);
+        participantSummary.setPlacement(placement);
+        BigDecimal totalPoints = scoreService.getTotalScoreForUserInLeague(userId, leagueId);
+        participantSummary.setTotalPoints(totalPoints);
+
+        return participantSummary;
+    }
+
+    public void deleteLeague(Integer leagueId, Integer userId) {
+        LeagueRoleCode role = participantService.getUserParticipantRoleForLeague(leagueId, userId);
+        if (!role.equals(LeagueRoleCode.ADMIN)) {
+            throw new UserNotPermittedException(String.format("User with UserId '%d' is not allowed to delete league.  Only ADMIN is allowed to delete.", userId));
+        }
+        leagueRepository.deleteById(leagueId);
     }
 }

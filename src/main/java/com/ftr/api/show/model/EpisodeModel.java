@@ -10,4 +10,8 @@ public class EpisodeModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer episodeId;
+
+    private String title;
+
+    private Integer episodeNumber;
 }

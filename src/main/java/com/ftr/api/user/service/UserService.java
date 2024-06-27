@@ -41,4 +41,8 @@ public class UserService extends AbstractService {
         return userRepository.findById(userId);
     }
 
+    public Optional<UserModel> findUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
 }
