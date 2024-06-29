@@ -1,6 +1,7 @@
 package com.ftr.api.league.service;
 
 import com.ftr.api.core.service.AbstractService;
+import com.ftr.api.core.service.IDaoImpl;
 import com.ftr.api.league.code.LeagueRoleCode;
 import com.ftr.api.league.code.LeagueStatusCode;
 import com.ftr.api.league.dto.*;
@@ -24,7 +25,7 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class LeagueService extends AbstractService {
+public class LeagueService extends AbstractService implements IDaoImpl<LeagueModel> {
 
     private final LeagueRepository leagueRepository;
     private final ParticipantService participantService;
@@ -69,24 +70,6 @@ public class LeagueService extends AbstractService {
         leagueSummaryWithUserDetails.setTotalNumberOfPlayers(totalNumberOfPlayers);
 
         return leagueSummaryWithUserDetails;
-    }
-
-    public CreateLeagueResponse createLeague(MultipartFile image, CreateLeagueRequest createLeagueRequest, Integer userId) {
-        LeagueModel leagueModel = new LeagueModel();
-        leagueModel.setName(createLeagueRequest.getName());
-        leagueModel.setStatus(LeagueStatusCode.NOT_STARTED);
-
-        leagueModel = leagueRepository.save(leagueModel);
-
-        UserModel userModel = userService.findUserByUserId(userId).orElseThrow(() -> new EntityNotFoundException(String.format("Unabled to find user with userId '%d'", userId)));
-
-        ParticipantModel participantModel = new ParticipantModel();
-        participantModel.setLeagueRole(LeagueRoleCode.ADMIN);
-        participantModel.setUserModel(userModel);
-        participantModel.setLeagueModel(leagueModel);
-        participantModel = participantService.createParticipant(userModel, leagueModel, LeagueRoleCode.ADMIN);
-
-        return new CreateLeagueResponse();
     }
 
     public GetLeagueDetailsByIdForUserResponse getLeagueDetailsByIdForUser(Integer userId, Integer leagueId) {
@@ -138,5 +121,26 @@ public class LeagueService extends AbstractService {
             throw new UserNotPermittedException(String.format("User with UserId '%d' is not allowed to delete league.  Only ADMIN is allowed to delete.", userId));
         }
         leagueRepository.deleteById(leagueId);
+    }
+
+
+    @Override
+    public LeagueModel saveEntity(LeagueModel entity) {
+        return leagueRepository.save(entity);
+    }
+
+    @Override
+    public Optional<LeagueModel> findEntityById(Integer id) {
+        return leagueRepository.findById(id);
+    }
+
+    @Override
+    public void updateEntity(LeagueModel entity) {
+        leagueRepository.save(entity);
+    }
+
+    @Override
+    public void deleteEntityById(Integer id) {
+        leagueRepository.deleteById(id);
     }
 }

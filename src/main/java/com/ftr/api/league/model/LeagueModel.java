@@ -1,11 +1,8 @@
 package com.ftr.api.league.model;
 
 import com.ftr.api.league.code.LeagueStatusCode;
-import com.ftr.api.score.model.ScoreModel;
 import jakarta.persistence.*;
 import lombok.Data;
-
-import java.util.List;
 
 @Data
 @Entity

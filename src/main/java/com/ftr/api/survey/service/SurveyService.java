@@ -63,9 +63,11 @@ public class SurveyService {
 
         surveyModel = surveyRepository.save(surveyModel);
 
-        List<QuestionModel> questionModels = createSurveyRequest.getSurveyDetails().getQuestionDetails().stream()
-                .map(questionService::createQuestion)
-                .toList();
+        List<QuestionModel> questionModels = new ArrayList<>();
+        for (QuestionDetails questionDetail : createSurveyRequest.getSurveyDetails().getQuestionDetails()) {
+            QuestionModel questionModel = questionService.createQuestion(questionDetail, surveyModel);
+            questionModels.add(questionModel);
+        }
 
         SurveyDetails surveyDetails = createSurveyDetails(surveyModel, questionModels);
 
@@ -122,6 +124,15 @@ public class SurveyService {
 
         surveyDetails.setQuestionDetails(questionDetails);
         return surveyDetails;
+    }
+
+    public SubmitSurveyResponse submitSurvey(SubmitSurveyRequest submitSurveyRequest) {
+        List<AnswerDetails> submittedAnswers = submitSurveyRequest.getAnswers();
+        List<AnswerModel> answerModels = new ArrayList<>();
+        for (AnswerDetails submittedAnswer : submittedAnswers) {
+
+            QuestionModel questionModel = questionService.getQuestionByQuestionId(questionId);
+        }
     }
 
     private SurveyDetails createSurveyDetails(SurveyModel surveyModel, List<QuestionModel> questionModels) {
