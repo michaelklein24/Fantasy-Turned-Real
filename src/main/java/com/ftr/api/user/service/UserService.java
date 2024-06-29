@@ -1,6 +1,7 @@
 package com.ftr.api.user.service;
 
 import com.ftr.api.core.service.AbstractService;
+import com.ftr.api.core.service.IDaoImpl;
 import com.ftr.api.user.helper.UserHelper;
 import com.ftr.api.user.model.GlobalRole;
 import com.ftr.api.user.model.UserModel;
@@ -12,7 +13,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UserService extends AbstractService {
+public class UserService extends AbstractService implements IDaoImpl<UserModel> {
 
     private final UserRepository userRepository;
     private final PasswordService passwordService;
@@ -37,12 +38,27 @@ public class UserService extends AbstractService {
         return userRepository.findByUsername(username);
     }
 
-    public Optional<UserModel> findUserByUserId(Integer userId) {
-        return userRepository.findById(userId);
-    }
-
     public Optional<UserModel> findUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
+    @Override
+    public UserModel saveEntity(UserModel entity) {
+        return userRepository.save(entity);
+    }
+
+    @Override
+    public Optional<UserModel> findEntityById(Integer id) {
+        return userRepository.findById(id);
+    }
+
+    @Override
+    public void updateEntity(UserModel entity) {
+        userRepository.save(entity);
+    }
+
+    @Override
+    public void deleteEntityById(Integer id) {
+        userRepository.deleteById(id);
+    }
 }
