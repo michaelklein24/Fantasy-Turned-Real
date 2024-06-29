@@ -13,7 +13,7 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class LeagueService implements IDaoImpl<LeagueModel> {
+public class LeagueDao implements IDaoImpl<LeagueModel> {
 
     private final LeagueRepository leagueRepository;
     private final ParticipantService participantService;

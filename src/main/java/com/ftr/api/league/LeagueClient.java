@@ -5,7 +5,7 @@ import com.ftr.api.league.code.LeagueStatusCode;
 import com.ftr.api.league.dto.*;
 import com.ftr.api.league.model.LeagueModel;
 import com.ftr.api.league.model.ParticipantModel;
-import com.ftr.api.league.service.LeagueService;
+import com.ftr.api.league.service.LeagueDao;
 import com.ftr.api.league.service.ParticipantService;
 import com.ftr.api.score.service.ScoreService;
 import com.ftr.api.user.exception.UserNotPermittedException;
@@ -24,14 +24,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LeagueClient {
 
-    private final LeagueService leagueService;
+    private final LeagueDao leagueDao;
     private final UserService userService;
     private final ParticipantService participantService;
     private final ScoreService scoreService;
 
     public CreateLeagueResponse createLeague(MultipartFile image, CreateLeagueRequest createLeagueRequest, Integer userId) {
         LeagueModel leagueModel = mapCreateLeagueRequestToLeagueModel(createLeagueRequest);
-        leagueModel = leagueService.saveEntity(leagueModel);
+        leagueModel = leagueDao.saveEntity(leagueModel);
 
         UserModel userModel = userService.findEntityById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Unable to find user with userId '%d'", userId)));
@@ -43,7 +43,7 @@ public class LeagueClient {
     }
 
     public GetLeagueSummariesForUser getLeagueSummariesForUser(Integer userId) {
-        List<LeagueModel> leagueModels = leagueService.getLeaguesForUser(userId);
+        List<LeagueModel> leagueModels = leagueDao.getLeaguesForUser(userId);
         List<LeagueSummaryWithUserDetails> leagueSummaries = new ArrayList<>();
 
         for (LeagueModel leagueModel : leagueModels) {
@@ -64,7 +64,7 @@ public class LeagueClient {
             throw new UserNotPermittedException(String.format("User with userId '%d' is not permitted to retrieve league details for league with leagueId '%d'.", userId, leagueId));
         }
 
-        LeagueModel leagueModel = leagueService.findEntityById(leagueId)
+        LeagueModel leagueModel = leagueDao.findEntityById(leagueId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("League with leagueId '%d' does not exist", leagueId)));
 
         List<ParticipantModel> participantModels = participantService.getParticipantsForLeague(leagueId);
@@ -88,7 +88,7 @@ public class LeagueClient {
             throw new UserNotPermittedException(String.format("User with UserId '%d' is not allowed to delete league. Only ADMIN is allowed to delete.", userId));
         }
 
-        leagueService.deleteEntityById(leagueId);
+        leagueDao.deleteEntityById(leagueId);
     }
 
     private GetLeagueDetailsByIdForUserResponse buildGetLeagueDetailsByIdForUserResponse(LeagueModel leagueModel, List<ParticipantSummary> participantSummaries) {

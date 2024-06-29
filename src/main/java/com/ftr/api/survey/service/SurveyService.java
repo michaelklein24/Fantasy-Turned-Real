@@ -1,7 +1,7 @@
 package com.ftr.api.survey.service;
 
 import com.ftr.api.league.model.LeagueModel;
-import com.ftr.api.league.service.LeagueService;
+import com.ftr.api.league.service.LeagueDao;
 import com.ftr.api.league.service.ParticipantService;
 import com.ftr.api.score.service.ScoreService;
 import com.ftr.api.show.model.EpisodeModel;
@@ -33,7 +33,7 @@ public class SurveyService {
     private final AnswerService answerService;
     private final ParticipantService participantService;
     private final EpisodeService episodeService;
-    private final LeagueService leagueService;
+    private final LeagueDao leagueDao;
 
     public GetSurveyDetailsByIdResponse getSurveyDetailsBySurveyIdForUser(Integer surveyId, Integer userId) {
         SurveyModel surveyModel = getSurveyById(surveyId);
@@ -98,7 +98,7 @@ public class SurveyService {
     }
 
     private LeagueModel getLeagueById(Integer leagueId) {
-        return leagueService.getLeagueByLeagueId(leagueId)
+        return leagueDao.getLeagueByLeagueId(leagueId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Unable to find league with leagueId '%d'", leagueId)));
     }
 
