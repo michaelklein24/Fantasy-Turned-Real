@@ -9,5 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface GlobalRoleRepository extends JpaRepository<GlobalRoleModel, Integer> {
-    Optional<GlobalRoleModel> findByUserModel(UserModel userModel);
+    Optional<GlobalRoleModel> findByUserModelUserId(Integer userId);
 }

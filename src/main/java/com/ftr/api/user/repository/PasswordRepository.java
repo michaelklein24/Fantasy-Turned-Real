@@ -9,5 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface PasswordRepository extends JpaRepository<PasswordModel, Integer> {
-    Optional<PasswordModel> findByUserModelAndActive(UserModel userModel, Boolean active);
+    Optional<PasswordModel> findByUserModelUserIdAndActive(Integer userId, Boolean active);
 }

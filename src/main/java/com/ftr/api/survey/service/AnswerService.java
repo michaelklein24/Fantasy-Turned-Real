@@ -26,7 +26,7 @@ public class AnswerService extends AbstractService {
         AnswerModel answerModel = new AnswerModel();
         Integer answerId = answerModel.getAnswerId();
         if (answerId != null) {
-            answerModel = answerRepository.findById(answerId).orElseThrow(() -> new EntityNotFoundException("Unable to find answer with answerId '%d'", answerId));
+            answerModel = answerRepository.findById(answerId).orElseThrow(() -> new EntityNotFoundException(String.format("Unable to find answer with answerId '%d'", answerId)));
         }
         answerModel.setAnswer(answerDetails.getAnswer());
         answerModel.setQuestionModel(questionModel);

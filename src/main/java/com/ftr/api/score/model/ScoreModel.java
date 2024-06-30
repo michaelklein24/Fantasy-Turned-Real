@@ -4,6 +4,7 @@ import com.ftr.api.league.model.LeagueModel;
 import com.ftr.api.league.model.ParticipantModel;
 import com.ftr.api.score.code.PointSourceCode;
 import com.ftr.api.survey.model.QuestionModel;
+import com.ftr.api.survey.model.SurveyModel;
 import com.ftr.api.user.model.UserModel;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -24,8 +25,8 @@ public class ScoreModel {
     private LeagueModel leagueModel;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "participant_id", referencedColumnName = "participant_id")
-    private ParticipantModel participantModel;
+    @JoinColumn(name = "user_id", referencedColumnName = "userId")
+    private UserModel userModel;
 
     private BigDecimal pointsAwarded;
 
@@ -35,4 +36,8 @@ public class ScoreModel {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "question_id", referencedColumnName = "questionId")
     private QuestionModel questionModel;
+
+    @ManyToOne
+    @JoinColumn(name = "survey_id")
+    private SurveyModel surveyModel;
 }

@@ -1,7 +1,7 @@
 package com.ftr.api.league.controller;
 
 import com.ftr.api.core.controller.AbstractController;
-import com.ftr.api.league.LeagueClient;
+import com.ftr.api.league.service.LeagueService;
 import com.ftr.api.league.dto.CreateLeagueRequest;
 import com.ftr.api.league.dto.CreateLeagueResponse;
 import com.ftr.api.league.dto.GetLeagueDetailsByIdForUserResponse;
@@ -18,33 +18,33 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/league")
 public class LeagueController extends AbstractController {
 
-    private final LeagueClient leagueClient;
+    private final LeagueService leagueService;
 
     @GetMapping
     @ResponseStatus(value = HttpStatus.OK)
     public GetLeagueSummariesForUser getLeaguesForUser(HttpServletRequest request) {
         Integer userId = extractUserIdFromToken(request.getHeader(HttpHeaders.AUTHORIZATION));
-        return leagueClient.getLeagueSummariesForUser(userId);
+        return leagueService.getLeagueSummariesForUser(userId);
     }
 
     @GetMapping("/{leagueId}")
     @ResponseStatus(value = HttpStatus.OK)
     public GetLeagueDetailsByIdForUserResponse getLeagueDetailsById(@PathVariable Integer leagueId, HttpServletRequest request) {
         Integer userId = extractUserIdFromToken(request.getHeader(HttpHeaders.AUTHORIZATION));
-        return leagueClient.getLeagueDetailsByIdForUser(userId, leagueId);
+        return leagueService.getLeagueDetailsByIdForUser(userId, leagueId);
     }
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
     public CreateLeagueResponse createLeague(@RequestParam("file") MultipartFile file, @RequestBody CreateLeagueRequest createLeagueRequest, HttpServletRequest request) {
         Integer userId = extractUserIdFromToken(request.getHeader(HttpHeaders.AUTHORIZATION));
-        return leagueClient.createLeague(file, createLeagueRequest, userId);
+        return leagueService.createLeague(file, createLeagueRequest, userId);
     }
 
     @DeleteMapping("/{leagueId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteLeague(@PathVariable Integer leagueId, HttpServletRequest request) {
         Integer userId = extractUserIdFromToken(request.getHeader(HttpHeaders.AUTHORIZATION));
-        leagueClient.deleteLeague(leagueId, userId);
+        leagueService.deleteLeague(leagueId, userId);
     }
 }

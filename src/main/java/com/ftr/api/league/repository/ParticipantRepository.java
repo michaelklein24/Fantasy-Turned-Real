@@ -22,4 +22,7 @@ public interface ParticipantRepository extends JpaRepository<ParticipantModel, I
     List<ParticipantModel> findByLeagueModelLeagueIdAndLeagueRole(Integer leagueId, LeagueRoleCode role);
 
     List<ParticipantModel> findByLeagueModelLeagueId(Integer leagueId);
+
+
+
 }

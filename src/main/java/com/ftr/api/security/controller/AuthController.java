@@ -32,7 +32,7 @@ public class AuthController extends AbstractController {
     @PostMapping("/checkUsername")
     public ResponseEntity<CheckUsernameResponse> checkUsername(@RequestBody CheckUsernameRequest request) {
         CheckUsernameResponse response = new CheckUsernameResponse();
-        response.setCheckUsernameResponseTypeCode(authService.checkEmail(request));
+        response.setCheckUsernameResponseTypeCode(authService.checkUsername(request));
         return ResponseEntity.ok().body(response);
     }
 

@@ -15,5 +15,5 @@ public interface QuestionRepository extends JpaRepository<QuestionModel, Integer
 
     @Query("SELECT SUM(q.points) FROM QuestionModel q " +
             "WHERE q.surveyModel.surveyId = :surveyId")
-    BigDecimal findSumOfPotentialPointsForQuestionsInSurvey(@Param("userId") Integer surveyId);
+    BigDecimal findSumOfPointsForAllQuestionsInSurvey(@Param("surveyId") Integer surveyId);
 }

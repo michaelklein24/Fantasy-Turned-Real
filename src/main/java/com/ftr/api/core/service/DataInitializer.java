@@ -6,7 +6,6 @@ import com.ftr.api.league.model.LeagueModel;
 import com.ftr.api.league.model.ParticipantModel;
 import com.ftr.api.league.repository.LeagueRepository;
 import com.ftr.api.league.repository.ParticipantRepository;
-import com.ftr.api.user.helper.UserHelper;
 import com.ftr.api.user.model.GlobalRole;
 import com.ftr.api.user.model.GlobalRoleModel;
 import com.ftr.api.user.model.PasswordModel;
@@ -15,7 +14,6 @@ import com.ftr.api.user.repository.GlobalRoleRepository;
 import com.ftr.api.user.repository.PasswordRepository;
 import com.ftr.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -50,7 +48,7 @@ public class DataInitializer implements CommandLineRunner {
             passwordModel.setEncodedPassword("$2a$10$eC5IdxQRafWen9oW2UfMGOR.X0DSGffCN9Z0Qv1rU15vXrui5G/Ga");
             passwordModel.setActive(true);
             passwordModel.setCreatedDate(new Date());
-            passwordModel.setExpiryDate(UserHelper.calculateExpiryDate(90));
+            passwordModel.setExpiryDate(new Date());
             passwordRepo.save(passwordModel);
 
             GlobalRoleModel globalRoleModel = new GlobalRoleModel();

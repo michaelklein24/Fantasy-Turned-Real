@@ -1,13 +1,10 @@
 package com.ftr.api.security.service;
 
+import com.ftr.api.user.dao.GlobalRoleDao;
+import com.ftr.api.user.dao.PasswordDao;
+import com.ftr.api.user.dao.UserDao;
 import com.ftr.api.user.model.GlobalRoleModel;
 import com.ftr.api.user.model.UserModel;
-import com.ftr.api.user.repository.GlobalRoleRepository;
-import com.ftr.api.user.repository.PasswordRepository;
-import com.ftr.api.user.repository.UserRepository;
-import com.ftr.api.user.service.PasswordService;
-import com.ftr.api.user.service.RoleService;
-import com.ftr.api.user.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -24,18 +21,18 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
-    private final UserService userService;
-    private final RoleService roleService;
-    private final PasswordService passwordService;
+    private final UserDao userDao;
+    private final GlobalRoleDao globalRoleDao;
+    private final PasswordDao passwordDao;
 
     @Transactional(readOnly = true)
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserModel userModel = userService.findUserByUsername(username)
+        UserModel userModel = userDao.findUserByUsername(username)
                 .orElseThrow(() ->  new UsernameNotFoundException("User not found with username: " + username));
-        GlobalRoleModel roleModel = roleService.findByUserModel(userModel)
+        GlobalRoleModel roleModel = globalRoleDao.getGlobalRoleForUser(userModel.getUserId())
                 .orElseThrow(() -> new EntityNotFoundException("Role not found with userId: " + userModel.getUserId()));
-        return new User(userModel.getUsername(), passwordService.getActivePasswordForUser(userModel)
+        return new User(userModel.getUsername(), passwordDao.getActivePasswordforUser(userModel.getUserId())
                 .orElseThrow(() -> new EntityNotFoundException("Active password not found with userId: " + userModel.getUserId()))
                 .getEncodedPassword(), mapRolesToAuthorities(List.of(roleModel)));
     }

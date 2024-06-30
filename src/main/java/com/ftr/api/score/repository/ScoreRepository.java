@@ -23,7 +23,7 @@ public interface ScoreRepository extends JpaRepository<ScoreModel, Integer> {
 
     @Query("SELECT SUM(s.pointsAwarded) FROM ScoreModel s " +
             "WHERE s.userModel.userId = :userId AND " +
-            "s.questionType = 'QUESTION' AND " +
+            "s.sourceCode = 'QUESTION' AND " +
             "s.questionModel.surveyModel.surveyId = :surveyId")
     BigDecimal findSumByUserIdAndSurveyId(@Param("userId") Integer userId, @Param("surveyId") Integer surveyId);
 

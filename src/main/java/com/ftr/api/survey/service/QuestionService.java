@@ -22,17 +22,7 @@ public class QuestionService {
     }
 
     public BigDecimal getTotalPotentialPointsOfAllQuestionsInSurvey(Integer surveyId) {
-        return questionRepository.findSumOfPotentialPointsForQuestionsInSurvey(surveyId);
-    }
-
-    public QuestionModel createQuestion(QuestionDetails questionDetails, SurveyModel surveyModel) {
-        QuestionModel questionModel = new QuestionModel();
-        questionModel.setQuestion(questionDetails.getQuestion());
-        questionModel.setQuestionType(questionDetails.getQuestionTypeCode());
-        questionModel.setPoints(questionDetails.getPossiblePoints());
-        questionModel.setQuestionNumber(questionDetails.getQuestionNumber());
-        questionModel.setSurveyModel(surveyModel);
-        return questionModel;
+        return questionRepository.findSumOfPointsForAllQuestionsInSurvey(surveyId);
     }
 
     public Optional<QuestionModel> getQuestionByQuestionId(Integer questionId) {

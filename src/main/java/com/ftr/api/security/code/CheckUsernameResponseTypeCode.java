@@ -1,4 +1,4 @@
-package com.ftr.api.user.code;
+package com.ftr.api.security.code;
 
 public enum CheckUsernameResponseTypeCode {
     VALID,
