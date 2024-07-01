@@ -6,7 +6,7 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 @Data
-public class ParticipantSummary {
+public class LeagueUserSummary {
     private Integer userId;
     private String firstName;
     private String lastName;

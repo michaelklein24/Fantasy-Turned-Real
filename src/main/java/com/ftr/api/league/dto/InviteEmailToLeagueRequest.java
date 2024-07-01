@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.Set;
 
 @Data
-public class InviteParticipantsToLeagueRequest {
+public class InviteEmailToLeagueRequest {
     private Integer leagueId;
     private Set<String> emails;
 }

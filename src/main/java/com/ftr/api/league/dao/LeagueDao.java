@@ -2,9 +2,7 @@ package com.ftr.api.league.dao;
 
 import com.ftr.api.core.service.IDaoImpl;
 import com.ftr.api.league.model.LeagueModel;
-import com.ftr.api.league.model.ParticipantModel;
 import com.ftr.api.league.repository.LeagueRepository;
-import com.ftr.api.league.service.ParticipantService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,15 +16,6 @@ import java.util.Optional;
 public class LeagueDao implements IDaoImpl<LeagueModel> {
 
     private final LeagueRepository leagueRepository;
-
-    public List<LeagueModel> getLeaguesForUser(Integer userId) {
-        return leagueRepository.findByParticipantModels_ParticipantId(userId);
-    }
-
-    public void deleteLeague(Integer leagueId, Integer userId) {
-        leagueRepository.deleteById(leagueId);
-    }
-
 
     @Override
     public LeagueModel saveEntity(LeagueModel entity) {

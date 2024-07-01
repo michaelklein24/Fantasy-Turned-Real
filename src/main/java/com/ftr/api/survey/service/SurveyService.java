@@ -1,6 +1,6 @@
 package com.ftr.api.survey.service;
 
-import com.ftr.api.league.dao.ParticipantDao;
+import com.ftr.api.league.dao.LeagueUserRoleDao;
 import com.ftr.api.league.model.LeagueModel;
 import com.ftr.api.league.dao.LeagueDao;
 import com.ftr.api.score.dao.ScoreDao;
@@ -33,7 +33,7 @@ public class SurveyService {
     private final ScoreDao scoreDao;
     private final QuestionDao questionDao;
     private final AnswerDao answerDao;
-    private final ParticipantDao participantDao;
+    private final LeagueUserRoleDao leagueUserRoleDao;
     private final EpisodeDao episodeDao;
     private final LeagueDao leagueDao;
 
@@ -60,7 +60,7 @@ public class SurveyService {
         BigDecimal pointsEarnedFromSurvey = scoreDao.getScoreEarnedByUserInSurvey(surveyId, userId);
         BigDecimal totalPotentialPointsInSurvey = questionDao.findSumOfPointsOfAllQuestionsInSurvey(surveyId);
         Integer placement = scoreDao.getUserRankInSurvey(userId, surveyId);
-        Integer totalNumberOfPlayers = participantDao.getTotalNumberOfParticipantsInLeague(surveyModel.getLeagueModel().getLeagueId());
+        Integer totalNumberOfPlayers = leagueUserRoleDao.getTotalNumberOfLeagueUserRoleInLeague(surveyModel.getLeagueModel().getLeagueId());
 
         ScoringDetails scoringDetails = createScoringDetails(pointsEarnedFromSurvey, totalPotentialPointsInSurvey, placement, totalNumberOfPlayers);
         response.setScoringDetails(scoringDetails);

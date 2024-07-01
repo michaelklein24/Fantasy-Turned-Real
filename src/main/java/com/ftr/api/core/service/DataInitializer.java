@@ -3,9 +3,10 @@ package com.ftr.api.core.service;
 import com.ftr.api.league.code.LeagueRoleCode;
 import com.ftr.api.league.code.LeagueStatusCode;
 import com.ftr.api.league.model.LeagueModel;
-import com.ftr.api.league.model.ParticipantModel;
+import com.ftr.api.league.model.LeagueUserId;
+import com.ftr.api.league.model.LeagueUserRoleModel;
 import com.ftr.api.league.repository.LeagueRepository;
-import com.ftr.api.league.repository.ParticipantRepository;
+import com.ftr.api.league.repository.LeagueUserRoleRepository;
 import com.ftr.api.user.model.GlobalRole;
 import com.ftr.api.user.model.GlobalRoleModel;
 import com.ftr.api.user.model.PasswordModel;
@@ -29,7 +30,7 @@ public class DataInitializer implements CommandLineRunner {
     private final PasswordRepository passwordRepo;
     private final GlobalRoleRepository globalRoleRepo;
     private final LeagueRepository leagueRepo;
-    private final ParticipantRepository participantRepo;
+    private final LeagueUserRoleRepository leagueUserRoleRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -56,11 +57,12 @@ public class DataInitializer implements CommandLineRunner {
             globalRoleModel.setUserModel(userModel);
             globalRoleRepo.save(globalRoleModel);
 
-            ParticipantModel participantModel = new ParticipantModel();
-            participantModel.setLeagueModel(leagueModel);
-            participantModel.setUserModel(userModel);
-            participantModel.setLeagueRole(i == 0 ? LeagueRoleCode.ADMIN: LeagueRoleCode.USER);
-            participantRepo.save(participantModel);
+            LeagueUserRoleModel leagueUserRoleModel = new LeagueUserRoleModel();
+            leagueUserRoleModel.setLeagueUserId(new LeagueUserId(userModel.getUserId(), leagueModel.getLeagueId()));
+            leagueUserRoleModel.setLeagueModel(leagueModel);
+            leagueUserRoleModel.setUserModel(userModel);
+            leagueUserRoleModel.setLeagueRole(i == 0 ? LeagueRoleCode.ADMIN: LeagueRoleCode.USER);
+            leagueUserRoleRepository.save(leagueUserRoleModel);
         }
     }
 

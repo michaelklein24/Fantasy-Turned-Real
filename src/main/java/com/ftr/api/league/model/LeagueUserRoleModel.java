@@ -7,19 +7,20 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "lge_participant")
-public class ParticipantModel {
+@Table(name = "lge_user_role")
+public class LeagueUserRoleModel {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer participantId;
+    @EmbeddedId
+    private LeagueUserId leagueUserId;
 
+    @MapsId("userId")
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "userId")
     private UserModel userModel;
 
+    @MapsId("leagueId")
     @ManyToOne
-    @JoinColumn(name = "league_id")
+    @JoinColumn(name = "league_id", referencedColumnName = "leagueId")
     private LeagueModel leagueModel;
 
     @Enumerated(value = EnumType.STRING)

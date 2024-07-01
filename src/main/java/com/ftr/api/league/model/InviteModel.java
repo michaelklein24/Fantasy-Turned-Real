@@ -5,8 +5,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @Entity
@@ -19,10 +17,6 @@ public class InviteModel {
     @ManyToOne
     @JoinColumn(name = "league_id", referencedColumnName = "leagueId")
     private LeagueModel leagueModel;
-
-    @ManyToOne
-    @JoinColumn(name = "participant_id", referencedColumnName = "participantId")
-    private ParticipantModel invitedByParticipant;
 
     private String email;
 

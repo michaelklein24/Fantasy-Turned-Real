@@ -18,7 +18,7 @@ public class SurveyController extends AbstractController {
     private final SurveyService surveyService;
 
     @GetMapping("/{surveyId}")
-    public GetSurveyDetailsByIdResponse getSurveyDetailsBySurveyIdForParticipant(@PathVariable Integer surveyId, HttpServletRequest request) {
+    public GetSurveyDetailsByIdResponse getSurveyDetailsBySurveyIdForUser(@PathVariable Integer surveyId, HttpServletRequest request) {
         Integer userId = extractUserIdFromToken(request.getHeader(HttpHeaders.AUTHORIZATION));
         return surveyService.getSurveyDetailsBySurveyIdForUser(surveyId, userId);
     }

@@ -8,5 +8,4 @@ import java.util.List;
 
 @Repository
 public interface LeagueRepository extends JpaRepository<LeagueModel, Integer> {
-    List<LeagueModel> findByParticipantModels_ParticipantId(Integer participantId);
 }

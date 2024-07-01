@@ -8,7 +8,7 @@ import java.util.List;
 @Data
 public class GetLeagueDetailsByIdForUserResponse {
     private String name;
-    private List<ParticipantSummary> participants;
-    private ParticipantSummary admin;
+    private List<LeagueUserSummary> leagueUserSummaries;
+    private LeagueUserSummary admin;
     private LeagueStatusCode status;
 }

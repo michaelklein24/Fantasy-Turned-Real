@@ -1,7 +1,6 @@
 package com.ftr.api.score.model;
 
 import com.ftr.api.league.model.LeagueModel;
-import com.ftr.api.league.model.ParticipantModel;
 import com.ftr.api.score.code.PointSourceCode;
 import com.ftr.api.survey.model.QuestionModel;
 import com.ftr.api.survey.model.SurveyModel;

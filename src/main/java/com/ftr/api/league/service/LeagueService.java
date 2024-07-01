@@ -3,10 +3,10 @@ package com.ftr.api.league.service;
 import com.ftr.api.league.code.LeagueRoleCode;
 import com.ftr.api.league.code.LeagueStatusCode;
 import com.ftr.api.league.dao.LeagueDao;
-import com.ftr.api.league.dao.ParticipantDao;
+import com.ftr.api.league.dao.LeagueUserRoleDao;
 import com.ftr.api.league.dto.*;
 import com.ftr.api.league.model.LeagueModel;
-import com.ftr.api.league.model.ParticipantModel;
+import com.ftr.api.league.model.LeagueUserRoleModel;
 import com.ftr.api.score.dao.ScoreDao;
 import com.ftr.api.user.dao.UserDao;
 import com.ftr.api.user.exception.UserNotPermittedException;
@@ -26,7 +26,7 @@ public class LeagueService {
 
     private final LeagueDao leagueDao;
     private final UserDao userDao;
-    private final ParticipantDao participantDao;
+    private final LeagueUserRoleDao leagueUserRoleDao;
     private final ScoreDao scoreDao;
 
     public CreateLeagueResponse createLeague(MultipartFile image, CreateLeagueRequest createLeagueRequest, Integer userId) {
@@ -36,21 +36,22 @@ public class LeagueService {
         UserModel userModel = userDao.findEntityById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Unable to find user with userId '%d'", userId)));
 
-        ParticipantModel participantModel = buildParticipantModel(userModel, leagueModel);
-        participantModel = participantDao.saveEntity(participantModel);
+        LeagueUserRoleModel leagueUserRoleModel = buildLeagueUserRoleModel(userModel, leagueModel);
+        leagueUserRoleModel = leagueUserRoleDao.saveEntity(leagueUserRoleModel);
 
         return new CreateLeagueResponse();  // Populate this with necessary data
     }
 
     public GetLeagueSummariesForUser getLeagueSummariesForUser(Integer userId) {
-        List<LeagueModel> leagueModels = leagueDao.getLeaguesForUser(userId);
+        List<LeagueUserRoleModel> leagueUserRoleModels = leagueUserRoleDao.findLeagueUserRoleByUserId(userId);
         List<LeagueSummaryWithUserDetails> leagueSummaries = new ArrayList<>();
 
-        for (LeagueModel leagueModel : leagueModels) {
-            LeagueRoleCode leagueRole = participantDao.findParticipantByUserIdAndLeagueId(userId, leagueModel.getLeagueId())
-                    .orElseThrow(() -> new EntityNotFoundException("Participant could not be found"))
+        for (LeagueUserRoleModel leagueUserRoleModel : leagueUserRoleModels) {
+            LeagueModel leagueModel = leagueUserRoleModel.getLeagueModel();
+            LeagueRoleCode leagueRole = leagueUserRoleDao.findLeagueUserRoleByUserIdAndLeagueId(userId, leagueModel.getLeagueId())
+                    .orElseThrow(() -> new EntityNotFoundException("League User Role could not be found"))
                     .getLeagueRole();
-            Integer totalNumberOfPlayers = participantDao.getTotalNumberOfParticipantsInLeague(leagueModel.getLeagueId());
+            Integer totalNumberOfPlayers = leagueUserRoleDao.getTotalNumberOfLeagueUserRoleInLeague(leagueModel.getLeagueId());
             BigDecimal totalPoints = scoreDao.getTotalScoreForUserInLeague(userId, leagueModel.getLeagueId());
             Integer placement = scoreDao.getUserPlacementInLeague(userId, leagueModel.getLeagueId());
 
@@ -61,7 +62,7 @@ public class LeagueService {
     }
 
     public GetLeagueDetailsByIdForUserResponse getLeagueDetailsByIdForUser(Integer userId, Integer leagueId) {
-        boolean doesUserHaveAccessToLeague = participantDao.doesParticipantExistInLeague(userId, leagueId);
+        boolean doesUserHaveAccessToLeague = leagueUserRoleDao.doesLeagueUserRoleExistInLeague(userId, leagueId);
         if (!doesUserHaveAccessToLeague) {
             throw new UserNotPermittedException(String.format("User with userId '%d' is not permitted to retrieve league details for league with leagueId '%d'.", userId, leagueId));
         }
@@ -69,24 +70,24 @@ public class LeagueService {
         LeagueModel leagueModel = leagueDao.findEntityById(leagueId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("League with leagueId '%d' does not exist", leagueId)));
 
-        List<ParticipantModel> participantModels = participantDao.findParticipantsByLeagueId(leagueId);
-        List<ParticipantSummary> participantSummaries = new ArrayList<>();
+        List<LeagueUserRoleModel> leagueUserRoleModels = leagueUserRoleDao.findLeagueUserRoleByLeagueId(leagueId);
+        List<LeagueUserSummary> leagueUserSummaries = new ArrayList<>();
 
-        for (ParticipantModel participantModel : participantModels) {
-            Integer participantsUserId = participantModel.getUserModel().getUserId();
-            Integer placement = scoreDao.getUserPlacementInLeague(participantsUserId, leagueId);
-            BigDecimal totalPoints = scoreDao.getTotalScoreForUserInLeague(participantsUserId, leagueId);
+        for (LeagueUserRoleModel leagueUserRoleModel : leagueUserRoleModels) {
+            Integer leagueUserRoleUserId = leagueUserRoleModel.getUserModel().getUserId();
+            Integer placement = scoreDao.getUserPlacementInLeague(leagueUserRoleUserId, leagueId);
+            BigDecimal totalPoints = scoreDao.getTotalScoreForUserInLeague(leagueUserRoleUserId, leagueId);
 
-            ParticipantSummary participantSummary = buildParticipantSummary(participantModel, placement, totalPoints);
-            participantSummaries.add(participantSummary);
+            LeagueUserSummary leagueUserSummary = buildLeagueUserSummary(leagueUserRoleModel, placement, totalPoints);
+            leagueUserSummaries.add(leagueUserSummary);
         }
 
-        return buildGetLeagueDetailsByIdForUserResponse(leagueModel, participantSummaries);
+        return buildGetLeagueDetailsByIdForUserResponse(leagueModel, leagueUserSummaries);
     }
 
     public void deleteLeague(Integer leagueId, Integer userId) {
-        LeagueRoleCode role = participantDao.findParticipantByUserIdAndLeagueId(leagueId, userId)
-                .orElseThrow(() -> new EntityNotFoundException("Participant is not found"))
+        LeagueRoleCode role = leagueUserRoleDao.findLeagueUserRoleByUserIdAndLeagueId(userId, leagueId)
+                .orElseThrow(() -> new EntityNotFoundException("League User Role is not found"))
                 .getLeagueRole();
         if (!role.equals(LeagueRoleCode.ADMIN)) {
             throw new UserNotPermittedException(String.format("User with UserId '%d' is not allowed to delete league. Only ADMIN is allowed to delete.", userId));
@@ -95,28 +96,28 @@ public class LeagueService {
         leagueDao.deleteEntityById(leagueId);
     }
 
-    private GetLeagueDetailsByIdForUserResponse buildGetLeagueDetailsByIdForUserResponse(LeagueModel leagueModel, List<ParticipantSummary> participantSummaries) {
+    private GetLeagueDetailsByIdForUserResponse buildGetLeagueDetailsByIdForUserResponse(LeagueModel leagueModel, List<LeagueUserSummary> leagueUserSummaries) {
         GetLeagueDetailsByIdForUserResponse response = new GetLeagueDetailsByIdForUserResponse();
 
         response.setName(leagueModel.getName());
         response.setStatus(leagueModel.getStatus());
-        response.setParticipants(participantSummaries);
-        response.setAdmin(participantSummaries.stream().filter(participant -> participant.getRole().equals(LeagueRoleCode.ADMIN)).findFirst().orElse(null));
+        response.setLeagueUserSummaries(leagueUserSummaries);
+        response.setAdmin(leagueUserSummaries.stream().filter(leagueUserSummary -> leagueUserSummary.getRole().equals(LeagueRoleCode.ADMIN)).findFirst().orElse(null));
 
         return response;
     }
 
-    private ParticipantSummary buildParticipantSummary(ParticipantModel participantModel, Integer placement, BigDecimal totalPoints) {
-        ParticipantSummary participantSummary = new ParticipantSummary();
+    private LeagueUserSummary buildLeagueUserSummary(LeagueUserRoleModel leagueUserRoleModel, Integer placement, BigDecimal totalPoints) {
+        LeagueUserSummary leagueUserSummary = new LeagueUserSummary();
 
-        participantSummary.setFirstName(participantModel.getUserModel().getFirstName());
-        participantSummary.setLastName(participantModel.getUserModel().getLastName());
-        participantSummary.setRole(participantModel.getLeagueRole());
-        participantSummary.setUserId(participantModel.getUserModel().getUserId());
-        participantSummary.setPlacement(placement);
-        participantSummary.setTotalPoints(totalPoints);
+        leagueUserSummary.setFirstName(leagueUserRoleModel.getUserModel().getFirstName());
+        leagueUserSummary.setLastName(leagueUserRoleModel.getUserModel().getLastName());
+        leagueUserSummary.setRole(leagueUserRoleModel.getLeagueRole());
+        leagueUserSummary.setUserId(leagueUserRoleModel.getUserModel().getUserId());
+        leagueUserSummary.setPlacement(placement);
+        leagueUserSummary.setTotalPoints(totalPoints);
 
-        return participantSummary;
+        return leagueUserSummary;
     }
 
     private LeagueModel mapCreateLeagueRequestToLeagueModel(CreateLeagueRequest request) {
@@ -126,12 +127,12 @@ public class LeagueService {
         return leagueModel;
     }
 
-    private ParticipantModel buildParticipantModel(UserModel userModel, LeagueModel leagueModel) {
-        ParticipantModel participantModel = new ParticipantModel();
-        participantModel.setLeagueRole(LeagueRoleCode.ADMIN);
-        participantModel.setUserModel(userModel);
-        participantModel.setLeagueModel(leagueModel);
-        return participantModel;
+    private LeagueUserRoleModel buildLeagueUserRoleModel(UserModel userModel, LeagueModel leagueModel) {
+        LeagueUserRoleModel leagueUserRoleModel = new LeagueUserRoleModel();
+        leagueUserRoleModel.setLeagueRole(LeagueRoleCode.ADMIN);
+        leagueUserRoleModel.setUserModel(userModel);
+        leagueUserRoleModel.setLeagueModel(leagueModel);
+        return leagueUserRoleModel;
     }
 
     private GetLeagueSummariesForUser buildGetLeagueSummariesForUserResponse(List<LeagueSummaryWithUserDetails> leagueSummaries) {

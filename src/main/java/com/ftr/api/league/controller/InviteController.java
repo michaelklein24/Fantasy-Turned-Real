@@ -2,7 +2,7 @@ package com.ftr.api.league.controller;
 
 import com.ftr.api.core.controller.AbstractController;
 import com.ftr.api.league.dto.GetPendingInvitesForUserResponse;
-import com.ftr.api.league.dto.InviteParticipantsToLeagueRequest;
+import com.ftr.api.league.dto.InviteEmailToLeagueRequest;
 import com.ftr.api.league.dto.ResolveInviteRequest;
 import com.ftr.api.league.service.InviteService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,9 +27,9 @@ public class InviteController extends AbstractController {
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void inviteUsersToLeague(@RequestBody InviteParticipantsToLeagueRequest inviteParticipantsToLeagueRequest, HttpServletRequest request) {
+    public void inviteUsersToLeague(@RequestBody InviteEmailToLeagueRequest inviteEmailToLeagueRequest, HttpServletRequest request) {
         Integer userId = extractUserIdFromToken(request.getHeader(HttpHeaders.AUTHORIZATION));
-        inviteService.inviteUsersToLeague(inviteParticipantsToLeagueRequest, userId);
+        inviteService.inviteUsersToLeague(inviteEmailToLeagueRequest, userId);
     }
 
     @PutMapping
