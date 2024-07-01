@@ -5,9 +5,10 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class SurveyDetails {
+public class SurveyDto {
     private Integer surveyId;
     private Integer episodeNumber;
     private String episodeTitle;
-    private List<QuestionDetails> questionDetails;
+    private List<QuestionDto> questions;
+    private List<AnswerDto> answers;
 }

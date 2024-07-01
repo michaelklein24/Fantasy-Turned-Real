@@ -6,5 +6,5 @@ import lombok.Data;
 public class CreateSurveyRequest {
     private Integer leagueId;
     private Integer episodeId;
-    private SurveyDetails surveyDetails;
+    private SurveyDto surveyDto;
 }

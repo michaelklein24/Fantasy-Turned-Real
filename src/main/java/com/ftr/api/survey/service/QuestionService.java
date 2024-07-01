@@ -1,9 +1,6 @@
 package com.ftr.api.survey.service;
 
-import com.ftr.api.survey.dto.QuestionDetails;
-import com.ftr.api.survey.model.AnswerModel;
 import com.ftr.api.survey.model.QuestionModel;
-import com.ftr.api.survey.model.SurveyModel;
 import com.ftr.api.survey.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

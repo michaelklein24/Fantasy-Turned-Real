@@ -45,25 +45,31 @@ public class SurveyService {
 
         List<QuestionModel> questionModels = questionDao.getQuestionsInSurvey(surveyModel.getSurveyId());
 
-        List<QuestionDetails> questionDetails = new ArrayList<>();
+        List<QuestionDto> questionDtos = new ArrayList<>();
+        List<AnswerDto> answerDtos = new ArrayList<>();
         for (QuestionModel questionModel: questionModels) {
             AnswerModel answerModel = answerDao.getUserAnswerForQuestion(userId, questionModel.getQuestionId())
                     .orElseThrow(() -> new EntityNotFoundException(String.format("Could not find answer for userId '%d' and questionId '%d'", userId, questionModel.getQuestionId())));
-            QuestionDetails questionDetail = createQuestionDetail(questionModel, answerModel);
-            questionDetails.add(questionDetail);
+            AnswerDto answerDto = createAnswerDto(answerModel, questionModel);
+            answerDtos.add(answerDto);
+
+            QuestionDto questionDto = createQuestionDto(questionModel);
+            questionDtos.add(questionDto);
         }
 
-        SurveyDetails surveyDetails = createSurveyDetails(surveyModel);
-        surveyDetails.setQuestionDetails(questionDetails);
-        response.setSurveyDetails(surveyDetails);
+        SurveyDto surveyDto = createSurveyDetails(surveyModel);
+        surveyDto.setQuestions(questionDtos);
+        surveyDto.setAnswers(answerDtos);
+
+        response.setSurveyDto(surveyDto);
 
         BigDecimal pointsEarnedFromSurvey = scoreDao.getScoreEarnedByUserInSurvey(surveyId, userId);
         BigDecimal totalPotentialPointsInSurvey = questionDao.findSumOfPointsOfAllQuestionsInSurvey(surveyId);
         Integer placement = scoreDao.getUserRankInSurvey(userId, surveyId);
         Integer totalNumberOfPlayers = leagueUserRoleDao.getTotalNumberOfLeagueUserRoleInLeague(surveyModel.getLeagueModel().getLeagueId());
 
-        ScoringDetails scoringDetails = createScoringDetails(pointsEarnedFromSurvey, totalPotentialPointsInSurvey, placement, totalNumberOfPlayers);
-        response.setScoringDetails(scoringDetails);
+        ScoringSummaryDto scoringSummaryDto = createScoringDto(pointsEarnedFromSurvey, totalPotentialPointsInSurvey, placement, totalNumberOfPlayers);
+        response.setScoringSummaryDto(scoringSummaryDto);
 
         return response;
     }
@@ -92,101 +98,90 @@ public class SurveyService {
         surveyModel = surveyDao.saveEntity(surveyModel);
 
         List<QuestionModel> questionModels = new ArrayList<>();
-        for (QuestionDetails questionDetail : createSurveyRequest.getSurveyDetails().getQuestionDetails()) {
-            QuestionModel questionModel = buildQuestionModel(questionDetail, surveyModel);
+        for (QuestionDto questionDto : createSurveyRequest.getSurveyDto().getQuestions()) {
+            QuestionModel questionModel = buildQuestionModel(questionDto, surveyModel);
             questionModel = questionDao.saveEntity(questionModel);
             questionModels.add(questionModel);
         }
 
-        SurveyDetails surveyDetails = createSurveyDetails(surveyModel, questionModels);
+        SurveyDto surveyDto = createSurveyDetails(surveyModel, questionModels);
 
         CreateSurveyResponse response = new CreateSurveyResponse();
-        response.setSurveyDetails(surveyDetails);
+        response.setSurveyDto(surveyDto);
 
         return response;
     }
 
-    private SurveyDetails createSurveyDetails(SurveyModel surveyModel, List<QuestionModel> questionModels) {
-        SurveyDetails surveyDetails = createSurveyDetails(surveyModel);
-        List<QuestionDetails> questionDetails = new ArrayList<>();
+    private SurveyDto createSurveyDetails(SurveyModel surveyModel, List<QuestionModel> questionModels) {
+        SurveyDto surveyDto = createSurveyDetails(surveyModel);
+        List<QuestionDto> questionDtos = new ArrayList<>();
         for (QuestionModel questionModel : questionModels) {
-            QuestionDetails questionDetail = createQuestionDetail(questionModel);
-            questionDetails.add(questionDetail);
+            QuestionDto questionDto = createQuestionDto(questionModel);
+            questionDtos.add(questionDto);
         }
-        surveyDetails.setQuestionDetails(questionDetails);
-        return surveyDetails;
+        surveyDto.setQuestions(questionDtos);
+        return surveyDto;
     }
 
-    private SurveyDetails createSurveyDetails(SurveyModel surveyModel) {
-        SurveyDetails surveyDetails = new SurveyDetails();
-        surveyDetails.setSurveyId(surveyModel.getSurveyId());
-        surveyDetails.setEpisodeTitle(surveyModel.getEpisodeModel().getTitle());
-        surveyDetails.setEpisodeNumber(surveyModel.getEpisodeModel().getEpisodeNumber());
-        return surveyDetails;
+    private SurveyDto createSurveyDetails(SurveyModel surveyModel) {
+        SurveyDto surveyDto = new SurveyDto();
+        surveyDto.setSurveyId(surveyModel.getSurveyId());
+        surveyDto.setEpisodeTitle(surveyModel.getEpisodeModel().getTitle());
+        surveyDto.setEpisodeNumber(surveyModel.getEpisodeModel().getEpisodeNumber());
+        return surveyDto;
     }
 
-    private QuestionDetails createQuestionDetail(QuestionModel questionModel, AnswerModel answerModel) {
-        AnswerDetails answerDetails = createAnswerDetails(answerModel, questionModel);
-        QuestionDetails questionDetail = new QuestionDetails();
-        questionDetail.setAnswerDetails(answerDetails);
-        questionDetail.setQuestionId(questionModel.getQuestionId());
-        questionDetail.setQuestion(questionModel.getQuestion());
-        questionDetail.setQuestionTypeCode(questionModel.getQuestionType());
-        questionDetail.setCorrectAnswer(questionModel.getCorrectAnswer());
-        questionDetail.setPossiblePoints(questionModel.getPoints());
+    private QuestionDto createQuestionDto(QuestionModel questionModel) {
+        QuestionDto questionDto = new QuestionDto();
+        questionDto.setQuestionId(questionModel.getQuestionId());
+        questionDto.setQuestion(questionModel.getQuestion());
+        questionDto.setQuestionTypeCode(questionModel.getQuestionType());
+        questionDto.setCorrectAnswer(questionModel.getCorrectAnswer());
+        questionDto.setPossiblePoints(questionModel.getPoints());
+        questionDto.setQuestionNumber(questionModel.getQuestionNumber());
 
-        return questionDetail;
+        return questionDto;
     }
 
-    private QuestionDetails createQuestionDetail(QuestionModel questionModel) {
-        QuestionDetails questionDetail = new QuestionDetails();
-        questionDetail.setQuestionId(questionModel.getQuestionId());
-        questionDetail.setPossiblePoints(questionModel.getPoints());
-        questionDetail.setQuestionTypeCode(questionModel.getQuestionType());
-        questionDetail.setQuestionNumber(questionModel.getQuestionNumber());
-        questionDetail.setQuestion(questionModel.getQuestion());
+    private AnswerDto createAnswerDto(AnswerModel answerModel, QuestionModel questionModel) {
+        AnswerDto answerDto = new AnswerDto();
+        answerDto.setAnswerId(answerModel.getAnswerId());
+        answerDto.setAnswer(answerModel.getAnswer());
+        answerDto.setCorrect(answerModel.isCorrect());
+        answerDto.setAwardedPoints(answerModel.isCorrect() ? questionModel.getPoints() : BigDecimal.ZERO);
+        answerDto.setQuestionId(questionModel.getQuestionId());
 
-        return questionDetail;
+        return answerDto;
     }
 
-    private AnswerDetails createAnswerDetails(AnswerModel answerModel, QuestionModel questionModel) {
-        AnswerDetails answerDetails = new AnswerDetails();
-        answerDetails.setAnswerId(answerModel.getAnswerId());
-        answerDetails.setAnswer(answerModel.getAnswer());
-        answerDetails.setCorrect(answerModel.isCorrect());
-        answerDetails.setAwardedPoints(answerModel.isCorrect() ? questionModel.getPoints() : BigDecimal.ZERO);
+    private ScoringSummaryDto createScoringDto(BigDecimal pointsEarnedFromSurvey, BigDecimal totalPotentialPointsInSurvey, Integer placement, Integer totalNumberOfPlayers) {
+        ScoringSummaryDto scoringSummaryDto = new ScoringSummaryDto();
 
-        return answerDetails;
-    }
+        scoringSummaryDto.setPointsAwarded(pointsEarnedFromSurvey);
 
-    private ScoringDetails createScoringDetails(BigDecimal pointsEarnedFromSurvey, BigDecimal totalPotentialPointsInSurvey, Integer placement, Integer totalNumberOfPlayers) {
-        ScoringDetails scoringDetails = new ScoringDetails();
+        scoringSummaryDto.setPlacement(placement);
 
-        scoringDetails.setPointsAwarded(pointsEarnedFromSurvey);
-
-        scoringDetails.setPlacement(placement);
-
-        scoringDetails.setTotalPossiblePoints(totalPotentialPointsInSurvey);
+        scoringSummaryDto.setTotalPossiblePoints(totalPotentialPointsInSurvey);
 
         if (totalPotentialPointsInSurvey.compareTo(BigDecimal.ZERO) > 0) {
             BigDecimal percentageObtained = pointsEarnedFromSurvey
                     .divide(totalPotentialPointsInSurvey, 2, RoundingMode.HALF_UP)
                     .multiply(new BigDecimal(100));
-            scoringDetails.setPercentageObtained(percentageObtained);
+            scoringSummaryDto.setPercentageObtained(percentageObtained);
         } else {
-            scoringDetails.setPercentageObtained(BigDecimal.ZERO);
+            scoringSummaryDto.setPercentageObtained(BigDecimal.ZERO);
         }
 
-        scoringDetails.setTotalNumberOfPlayers(totalNumberOfPlayers);
+        scoringSummaryDto.setTotalNumberOfPlayers(totalNumberOfPlayers);
 
-        return scoringDetails;
+        return scoringSummaryDto;
     }
-    private QuestionModel buildQuestionModel(QuestionDetails questionDetails, SurveyModel surveyModel) {
+    private QuestionModel buildQuestionModel(QuestionDto questionDto, SurveyModel surveyModel) {
         QuestionModel questionModel = new QuestionModel();
-        questionModel.setQuestion(questionDetails.getQuestion());
-        questionModel.setQuestionType(questionDetails.getQuestionTypeCode());
-        questionModel.setPoints(questionDetails.getPossiblePoints());
-        questionModel.setQuestionNumber(questionDetails.getQuestionNumber());
+        questionModel.setQuestion(questionDto.getQuestion());
+        questionModel.setQuestionType(questionDto.getQuestionTypeCode());
+        questionModel.setPoints(questionDto.getPossiblePoints());
+        questionModel.setQuestionNumber(questionDto.getQuestionNumber());
         questionModel.setSurveyModel(surveyModel);
         return questionModel;
     }

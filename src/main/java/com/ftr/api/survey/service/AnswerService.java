@@ -1,7 +1,7 @@
 package com.ftr.api.survey.service;
 
 import com.ftr.api.core.service.AbstractService;
-import com.ftr.api.survey.dto.AnswerDetails;
+import com.ftr.api.survey.dto.AnswerDto;
 import com.ftr.api.survey.model.AnswerModel;
 import com.ftr.api.survey.model.QuestionModel;
 import com.ftr.api.survey.repository.AnswerRepository;
@@ -22,13 +22,13 @@ public class AnswerService extends AbstractService {
         return answerRepository.findByUserModelUserIdAndQuestionModelQuestionId(userId, questionId);
     }
 
-    public AnswerModel saveAnswer(AnswerDetails answerDetails, QuestionModel questionModel, UserModel userModel) {
+    public AnswerModel saveAnswer(AnswerDto answerDto, QuestionModel questionModel, UserModel userModel) {
         AnswerModel answerModel = new AnswerModel();
         Integer answerId = answerModel.getAnswerId();
         if (answerId != null) {
             answerModel = answerRepository.findById(answerId).orElseThrow(() -> new EntityNotFoundException(String.format("Unable to find answer with answerId '%d'", answerId)));
         }
-        answerModel.setAnswer(answerDetails.getAnswer());
+        answerModel.setAnswer(answerDto.getAnswer());
         answerModel.setQuestionModel(questionModel);
         answerModel.setUserModel(userModel);
 

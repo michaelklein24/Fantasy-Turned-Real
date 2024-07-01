@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class GetSurveyDetailsByIdResponse {
-    private SurveyDetails surveyDetails;
-    private ScoringDetails scoringDetails;
+    private SurveyDto surveyDto;
+    private ScoringSummaryDto scoringSummaryDto;
 }

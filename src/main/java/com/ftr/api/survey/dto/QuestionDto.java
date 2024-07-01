@@ -6,12 +6,11 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 @Data
-public class QuestionDetails {
+public class QuestionDto {
     private Integer questionId;
     private Integer questionNumber;
     private String question;
     private QuestionTypeCode questionTypeCode;
-    private AnswerDetails answerDetails;
     private String correctAnswer;
     private BigDecimal possiblePoints;
 }

@@ -6,5 +6,5 @@ import java.util.List;
 
 @Data
 public class SubmitSurveyRequest {
-    private List<AnswerDetails> answers;
+    private List<AnswerDto> answers;
 }
