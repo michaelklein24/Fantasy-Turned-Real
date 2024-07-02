@@ -1,9 +1,7 @@
 package com.ftr.api.survey.controller;
 
 import com.ftr.api.core.controller.AbstractController;
-import com.ftr.api.survey.dto.CreateSurveyRequest;
-import com.ftr.api.survey.dto.CreateSurveyResponse;
-import com.ftr.api.survey.dto.GetSurveyDetailsByIdResponse;
+import com.ftr.api.survey.dto.*;
 import com.ftr.api.survey.service.SurveyService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +25,13 @@ public class SurveyController extends AbstractController {
     public CreateSurveyResponse createSurvey(@RequestBody CreateSurveyRequest createSurveyRequest, HttpServletRequest request) {
         Integer userId = extractUserIdFromToken(request.getHeader(HttpHeaders.AUTHORIZATION));
         return surveyService.createSurvey(createSurveyRequest, userId);
+    }
+
+    @PutMapping("/{surveyId}/answers")
+    public SubmitSurveyResponse submitSurveyAnswers(
+            @PathVariable Integer surveyId,
+            @RequestBody SubmitSurveyRequest submitSurveyRequest) {
+        return surveyService.submitSurveyAnswers(surveyId, submitSurveyRequest);
     }
 
 }

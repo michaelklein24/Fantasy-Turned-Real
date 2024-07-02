@@ -14,6 +14,8 @@ import com.ftr.api.survey.dto.*;
 import com.ftr.api.survey.model.AnswerModel;
 import com.ftr.api.survey.model.QuestionModel;
 import com.ftr.api.survey.model.SurveyModel;
+import com.ftr.api.user.dao.UserDao;
+import com.ftr.api.user.model.UserModel;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -36,6 +38,7 @@ public class SurveyService {
     private final LeagueUserRoleDao leagueUserRoleDao;
     private final EpisodeDao episodeDao;
     private final LeagueDao leagueDao;
+    private final UserDao userDao;
 
     public GetSurveyDetailsByIdResponse getSurveyDetailsBySurveyIdForUser(Integer surveyId, Integer userId) {
         SurveyModel surveyModel = surveyDao.findEntityById(surveyId)
@@ -110,6 +113,21 @@ public class SurveyService {
         response.setSurveyDto(surveyDto);
 
         return response;
+    }
+
+    public SubmitSurveyResponse submitSurveyAnswers(SubmitSurveyRequest submitSurveyRequest, Integer userId) {
+
+
+
+        submitSurveyRequest.getAnswers().stream().map(answer -> {
+            AnswerModel answerModel = answerDao.findEntityById(answer.getAnswerId()).orElse(new AnswerModel());
+            UserModel userModel = userDao.findEntityById(userId).orElseThrow(() -> new EntityNotFoundException(String.format("Unable to find user with userId '%d'", userId)));
+            answerModel.setUserModel(userModel);
+            answerModel.setAnswer(answer.getAnswer());
+            answerModel.setQuestionModel(questionDao.findEntityById(answer.getQuestionId()).orElseThrow(() -> new EntityNotFoundException(String.format("Unable to find question with questionId '%d'", userId))));
+
+        })
+
     }
 
     private SurveyDto createSurveyDetails(SurveyModel surveyModel, List<QuestionModel> questionModels) {
