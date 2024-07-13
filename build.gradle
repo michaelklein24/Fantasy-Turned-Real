@@ -18,6 +18,8 @@ compileJava {
     options.annotationProcessorPath = configurations.annotationProcessor
 }
 
+
+
 dependencies {
 
 }
@@ -25,6 +27,8 @@ dependencies {
 repositories {
     mavenCentral()
 }
+
+
 
 dependencies {
     implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
@@ -41,6 +45,10 @@ dependencies {
     implementation "io.jsonwebtoken:jjwt-impl:${jsonWebTokenVersion}"
     implementation "io.jsonwebtoken:jjwt-jackson:${jsonWebTokenVersion}"
     runtimeOnly "org.postgresql:postgresql:${postgresJdbcVersion}"
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << '-parameters'
 }
 
 idea.project.settings {

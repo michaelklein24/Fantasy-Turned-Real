@@ -28,10 +28,10 @@ public class SurveyController extends AbstractController {
     }
 
     @PutMapping("/{surveyId}/answers")
-    public SubmitSurveyResponse submitSurveyAnswers(
-            @PathVariable Integer surveyId,
-            @RequestBody SubmitSurveyRequest submitSurveyRequest) {
-        return surveyService.submitSurveyAnswers(surveyId, submitSurveyRequest);
+    public SubmitSurveyResponse submitSurveyAnswers(@RequestBody SubmitSurveyRequest submitSurveyRequest, HttpServletRequest request) {
+        Integer userId = extractUserIdFromToken(request.getHeader(HttpHeaders.AUTHORIZATION));
+
+        return surveyService.submitSurveyAnswers(submitSurveyRequest, userId);
     }
 
 }

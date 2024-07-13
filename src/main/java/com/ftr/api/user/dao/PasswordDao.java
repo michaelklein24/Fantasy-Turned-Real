@@ -3,16 +3,17 @@ package com.ftr.api.user.dao;
 import com.ftr.api.core.service.IDaoImpl;
 import com.ftr.api.user.model.PasswordModel;
 import com.ftr.api.user.repository.PasswordRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class PasswordDao implements IDaoImpl<PasswordModel> {
 
-    @Autowired
-    private PasswordRepository passwordRepository;
+    private final PasswordRepository passwordRepository;
 
     @Override
     public PasswordModel saveEntity(PasswordModel entity) {

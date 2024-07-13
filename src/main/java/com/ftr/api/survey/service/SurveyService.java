@@ -53,7 +53,7 @@ public class SurveyService {
         for (QuestionModel questionModel: questionModels) {
             AnswerModel answerModel = answerDao.getUserAnswerForQuestion(userId, questionModel.getQuestionId())
                     .orElseThrow(() -> new EntityNotFoundException(String.format("Could not find answer for userId '%d' and questionId '%d'", userId, questionModel.getQuestionId())));
-            AnswerDto answerDto = createAnswerDto(answerModel, questionModel);
+            AnswerDto answerDto = createAnswerDto(answerModel);
             answerDtos.add(answerDto);
 
             QuestionDto questionDto = createQuestionDto(questionModel);
@@ -117,17 +117,21 @@ public class SurveyService {
 
     public SubmitSurveyResponse submitSurveyAnswers(SubmitSurveyRequest submitSurveyRequest, Integer userId) {
 
-
-
-        submitSurveyRequest.getAnswers().stream().map(answer -> {
+        List<AnswerModel> answerModels = submitSurveyRequest.getAnswers().stream().map(answer -> {
             AnswerModel answerModel = answerDao.findEntityById(answer.getAnswerId()).orElse(new AnswerModel());
             UserModel userModel = userDao.findEntityById(userId).orElseThrow(() -> new EntityNotFoundException(String.format("Unable to find user with userId '%d'", userId)));
             answerModel.setUserModel(userModel);
             answerModel.setAnswer(answer.getAnswer());
-            answerModel.setQuestionModel(questionDao.findEntityById(answer.getQuestionId()).orElseThrow(() -> new EntityNotFoundException(String.format("Unable to find question with questionId '%d'", userId))));
+            answerModel.setQuestionModel(questionDao.findEntityById(answer.getQuestionId())
+                    .orElseThrow(() -> new EntityNotFoundException(String.format("Unable to find question with questionId '%d'", userId))));
+            return answerDao.saveEntity(answerModel);
+        }).toList();
 
-        })
+        List<AnswerDto> answerDtos = answerModels.stream().map(this::createAnswerDto).toList();
 
+        SubmitSurveyResponse response = new SubmitSurveyResponse();
+        response.setAnswers(answerDtos);
+        return response;
     }
 
     private SurveyDto createSurveyDetails(SurveyModel surveyModel, List<QuestionModel> questionModels) {
@@ -161,13 +165,13 @@ public class SurveyService {
         return questionDto;
     }
 
-    private AnswerDto createAnswerDto(AnswerModel answerModel, QuestionModel questionModel) {
+    private AnswerDto createAnswerDto(AnswerModel answerModel) {
         AnswerDto answerDto = new AnswerDto();
         answerDto.setAnswerId(answerModel.getAnswerId());
         answerDto.setAnswer(answerModel.getAnswer());
         answerDto.setCorrect(answerModel.isCorrect());
-        answerDto.setAwardedPoints(answerModel.isCorrect() ? questionModel.getPoints() : BigDecimal.ZERO);
-        answerDto.setQuestionId(questionModel.getQuestionId());
+        answerDto.setAwardedPoints(answerModel.isCorrect() ? answerModel.getQuestionModel().getPoints() : BigDecimal.ZERO);
+        answerDto.setQuestionId(answerModel.getQuestionModel().getQuestionId());
 
         return answerDto;
     }

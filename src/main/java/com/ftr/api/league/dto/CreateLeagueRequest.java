@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class CreateLeagueRequest {
     private String name;
-    private String showId;
+    private Integer showId;
     private Integer userId;
 }

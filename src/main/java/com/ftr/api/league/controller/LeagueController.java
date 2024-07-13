@@ -29,9 +29,9 @@ public class LeagueController extends AbstractController {
 
     @GetMapping("/{leagueId}")
     @ResponseStatus(value = HttpStatus.OK)
-    public GetLeagueDetailsByIdForUserResponse getLeagueDetailsById(@PathVariable Integer leagueId, HttpServletRequest request) {
+    public GetLeagueDetailsByIdForUserResponse getLeagueDetailsById(@PathVariable String leagueId, HttpServletRequest request) {
         Integer userId = extractUserIdFromToken(request.getHeader(HttpHeaders.AUTHORIZATION));
-        return leagueService.getLeagueDetailsByIdForUser(userId, leagueId);
+        return leagueService.getLeagueDetailsByIdForUser(userId, Integer.valueOf(leagueId));
     }
 
     @PostMapping
