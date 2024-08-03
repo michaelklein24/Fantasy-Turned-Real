@@ -1,0 +1,8 @@
+<div class="row border border-primary-subtle border-2 rounded p-2 league-entry-hover" (click)="onSelectLeague()">
+    <div class="col-1 rounded bg-primary align-self-center" style="width: 4rem; height: 4rem;"></div>
+    <div class="col d-flex flex-column">
+        <div class="fs-4 fw-bold">{{ league.name }}</div>
+        <div><strong>Rank:</strong> {{ league.placement }} / {{ league.totalNumberOfPlayers }}</div>
+        <div><strong>Role:</strong> {{ league.role }}</div>
+    </div>
+</div>

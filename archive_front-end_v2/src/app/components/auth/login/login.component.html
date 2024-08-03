@@ -1,0 +1,43 @@
+<div class="container-sm mt-4" style="max-width: 450px;">
+    <div class="row text-center">
+        <h2>Log in to your account</h2>
+        <p>Welcome back! Please enter your details</p>
+    </div>
+    <form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="row g-3">
+        <div class="col-12">
+            <label for="username" class="form-label">Username</label>
+            <input id="username" type="text" placeholder="Enter your username" class="form-control" ngModel
+                name="username" required #username="ngModel"
+                [ngClass]="{'is-invalid': !username.valid && username.touched, 'is-valid': username.valid && username.touched}">
+            <div *ngIf="!username.valid && username.touched" class="help-block invalid-feedback">Please enter a valid
+                username.
+            </div>
+        </div>
+        <div class="col-12">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" placeholder="Password" class="form-control" ngModel #password="ngModel"
+                name="password" required
+                [ngClass]="{'is-invalid': !password.valid && password.touched, 'is-valid': password.valid && password.touched}">
+            <div *ngIf="!password.valid && password.touched" class="help-block invalid-feedback">Please enter a valid
+                password.</div>
+        </div>
+        <div class="col-5">
+            <input type="checkbox" id="rememberMe" class="form-check-input">
+            <label for="rememberMe" class="form-check-label px-2">Remember me</label>
+        </div>
+        <div class="col-7 text-end">
+            <a href="#" class="text-decoration-none">Forgot Password</a>
+        </div>
+        <div class="col-12">
+            <button class="btn btn-primary w-100" type="submit" [disabled]="!loginForm.valid">Log in</button>
+        </div>
+
+        <div class="col-12">
+            <button class="btn btn-outline-secondary w-100 disabled">Sign in with Google</button>
+        </div>
+    </form>
+
+    <div class="row text-center mt-3">
+        <p>Dont have an account? <a routerLink="/register">Sign up</a></p>
+    </div>
+</div>
