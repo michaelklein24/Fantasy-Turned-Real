@@ -1,0 +1,48 @@
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+.idea/*/workspace.xml
+.idea/*/tasks.xml
+.idea/*/libraries
+.idea/*/artifacts
+.idea/*/runConfigurations
+.idea/*/dependencies
+.idea/.name
+.idea/modules.xml
+.idea/.idea*.iml
+.idea/userData/
+
+# Gradle build directory
+.gradle/
+/build/
+*/build/
+
+# Java compiled files
+*.class
+
+# JAR/WAR/EAR files
+*.jar
+*.war
+*.ear
+
+# Log files
+*.log
+
+# Local environment files
+.env
+application-dev.properties
+application-local.properties
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Vim temporary files
+*.swp
+*.swo
+*.bak
+*.tmp

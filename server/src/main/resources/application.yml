@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/fantasy-turned-real
+    username: postgres
+    password: password
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop    # Options: none, update, create, create-drop
+#    database-platform: org.hibernate.dialect.PostgreSQLDialect  # PostgreSQL dialect
+#    show-sql: true        # Optional: Show SQL statements
+#    properties:
+#      hibernate:
+#        format_sql: true   # Optional: Format SQL for readability
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+        web:
+          filter: DEBUG
+
+server:
+  contextPath: "api"
