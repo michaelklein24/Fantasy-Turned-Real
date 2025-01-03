@@ -18,17 +18,13 @@ public class JwtHelper {
 
     private final ConfigService configService;
 
-    public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
-    }
-
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    public Integer extractUserId(String token) {
+    public String extractUserId(String token) {
         Claims claims = extractAllClaims(token);
-        return claims.get("userId", Integer.class);
+        return claims.get("userId", String.class);
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -46,7 +42,7 @@ public class JwtHelper {
 
     private Boolean isTokenExpired(String token) {
         boolean tokenExpirationEnabled = configService.getBool("api.jwt.expiration.enabled", true);
-        if (tokenExpirationEnabled) {
+        if (!tokenExpirationEnabled) {
             return false;
         }
         return extractExpiration(token).before(new Date());
