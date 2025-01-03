@@ -7,7 +7,6 @@ import com.kleintwins.ftr.auth.service.AuthService;
 import com.kleintwins.ftr.auth.service.TokenService;
 import com.kleintwins.ftr.core.dto.CustomErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

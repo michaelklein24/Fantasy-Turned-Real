@@ -1,5 +1,6 @@
 package com.kleintwins.ftr.auth.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kleintwins.ftr.auth.dto.RegisterUserRequest;
 import com.kleintwins.ftr.auth.dto.RegisterUserResponse;
 import com.kleintwins.ftr.auth.exception.AccountAlreadyExists;
@@ -8,44 +9,68 @@ import com.kleintwins.ftr.auth.model.UserModel;
 import com.kleintwins.ftr.auth.service.AuthService;
 import com.kleintwins.ftr.auth.service.TokenService;
 import com.kleintwins.ftr.core.service.I18nService;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import org.apache.commons.lang3.SerializationUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
+@SpringBootTest(classes = {AuthController.class, AuthExceptionHandler.class})
 @AutoConfigureMockMvc
+@EnableWebMvc
 class AuthControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @Autowired
+    private WebApplicationContext webApplicationContext;
+
+    @MockitoBean
     private AuthService authService;
 
-    @MockBean
+    @MockitoBean
     private TokenService tokenService;
 
-    @MockBean
+    @MockitoBean
     private I18nService i18nService;
+
+    private Validator validator;
 
     private RegisterUserRequest validRequest;
 
+    private ObjectMapper objectMapper;
+
     @BeforeEach
     void setUp() {
+        objectMapper = new ObjectMapper();
+        mockMvc = MockMvcBuilders
+                .webAppContextSetup(webApplicationContext)
+                .build();
         validRequest = new RegisterUserRequest("John", "Doe", "john.doe@example.com", "ValidPassword123!");
+        validator = Validation.buildDefaultValidatorFactory().getValidator();
     }
 
     @Test
-    void shouldRegisterUserAndReturnToken() throws Exception {
+    @WithMockUser
+    void registerApishouldRegisterUserAndReturnToken() throws Exception {
         // Arrange
         String expectedToken = "mockToken";
         RegisterUserResponse response = new RegisterUserResponse(expectedToken);
@@ -55,10 +80,10 @@ class AuthControllerTest {
 
         // Act & Assert
         mockMvc.perform(post("/auth/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"firstName\":\"John\",\"lastName\":\"Doe\",\"email\":\"john.doe@example.com\",\"password\":\"ValidPassword123!\"}"))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(validRequest)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.token").value(expectedToken));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.accessToken").value(expectedToken));
 
         // Verify interactions
         verify(authService).registerUser(any(), any(), any(), any());
@@ -66,44 +91,47 @@ class AuthControllerTest {
     }
 
     @Test
-    void shouldReturnEmailAlreadyExistsError() throws Exception {
+    @WithMockUser
+    void registerApiShouldReturn403ForEmailAlreadyExistsError() throws Exception {
         // Arrange
-        when(authService.registerUser(any(), any(), any(), any())).thenThrow(new AccountAlreadyExists("Account already exists"));
+        when(authService.registerUser(any(), any(), eq("john.doe@example.com"), any())).thenThrow(new AccountAlreadyExists("Account already exists"));
 
         // Act & Assert
         mockMvc.perform(post("/auth/register")
-                        .contentType("application/json")
-                        .content("{\"firstName\":\"John\",\"lastName\":\"Doe\",\"email\":\"john.doe@example.com\",\"password\":\"ValidPassword123!\"}"))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(validRequest)))
                 .andExpect(MockMvcResultMatchers.status().isForbidden())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("403"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Account already exists"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(403))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errorMsg").value("Account already exists"));
     }
 
     @Test
-    void shouldReturnInvalidPasswordError() throws Exception {
+    @WithMockUser
+    void registerApiShouldReturn400ForInvalidPasswordError() throws Exception {
         // Arrange
         when(authService.registerUser(any(), any(), any(), any())).thenThrow(new InvalidPassword("Invalid password"));
 
         // Act & Assert
         mockMvc.perform(post("/auth/register")
-                        .contentType("application/json")
-                        .content("{\"firstName\":\"John\",\"lastName\":\"Doe\",\"email\":\"john.doe@example.com\",\"password\":\"short\"}"))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(validRequest)))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("400"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Invalid password"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(400))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errorMsg").value("Invalid password"));
     }
 
     @Test
-    void shouldReturnValidationError() throws Exception {
+    void registerApiShouldReturn400ForRequestValidationError() throws Exception {
         // Arrange: Simulate validation error on email field
-        String invalidEmailRequest = "{\"firstName\":\"John\",\"lastName\":\"Doe\",\"email\":\"invalid-email\",\"password\":\"ValidPassword123!\"}";
+        RegisterUserRequest requestWithInvalidEmail = SerializationUtils.clone(validRequest);
+        requestWithInvalidEmail.setEmail("invalid-email");
 
         // Act & Assert
         mockMvc.perform(post("/auth/register")
-                        .contentType("application/json")
-                        .content(invalidEmailRequest))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(requestWithInvalidEmail)))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("400"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("email must be a well-formed email address"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(400))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errorMsg").value("email must be a well-formed email address"));
     }
 }

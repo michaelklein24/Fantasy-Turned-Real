@@ -32,9 +32,15 @@ subprojects {
         compileOnly "org.projectlombok:lombok:${lombokVersion}"
         annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
         runtimeOnly "org.postgresql:postgresql:${postgresqlVersion}"
+        testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
+        testImplementation "org.mockito:mockito-junit-jupiter:${junitVersion}"
+        testImplementation "org.springframework.security:spring-security-test:${springSecurityVersion}"
+        testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
+        implementation "org.springframework.boot:spring-boot-starter-validation:${springBootVersion}"
+    }
+    tasks.named('test') {
+        useJUnitPlatform()
     }
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
-}
+

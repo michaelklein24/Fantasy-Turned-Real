@@ -21,14 +21,14 @@ public class AuthExceptionHandler {
     @ExceptionHandler(value = AccountAlreadyExists.class)
     public ResponseEntity<CustomErrorResponse> accountAlreadyExists(AccountAlreadyExists e) {
         CustomErrorResponse error = new CustomErrorResponse(HttpStatus.FORBIDDEN.toString(), e.getMessage());
-        error.setStatus((HttpStatus.FORBIDDEN.value()));
+        error.setStatus(HttpStatus.FORBIDDEN.value());
         return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(value = InvalidPassword.class)
     public ResponseEntity<CustomErrorResponse> invalidPassword(InvalidPassword e) {
         CustomErrorResponse error = new CustomErrorResponse(HttpStatus.BAD_REQUEST.toString(), e.getMessage());
-        error.setStatus((HttpStatus.BAD_REQUEST.value()));
+        error.setStatus(HttpStatus.BAD_REQUEST.value());
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
