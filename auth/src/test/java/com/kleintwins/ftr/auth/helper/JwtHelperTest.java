@@ -99,6 +99,7 @@ class JwtHelperTest {
     void validateTokenShouldReturnFalseIfTokenExpired() {
         // Arrange: Mock the behavior of ConfigService to enable expiration check
         when(configService.getBool("api.jwt.expiration.enabled", true)).thenReturn(true);
+        when(configService.getString("api.jwt.secret", "")).thenReturn(secretKey);
 
         // Act: When calling validateToken for an expired token
         Boolean isValid = jwtHelper.validateToken(expiredToken);
