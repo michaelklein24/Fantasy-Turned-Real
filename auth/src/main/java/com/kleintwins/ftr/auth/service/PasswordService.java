@@ -4,7 +4,8 @@ import com.kleintwins.ftr.auth.exception.InvalidPassword;
 import com.kleintwins.ftr.auth.model.PasswordModel;
 import com.kleintwins.ftr.auth.model.UserModel;
 import com.kleintwins.ftr.auth.repository.PasswordRepository;
-import com.kleintwins.ftr.core.service.AbstractService;
+import com.kleintwins.ftr.core.service.ConfigService;
+import com.kleintwins.ftr.core.service.I18nService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -15,10 +16,12 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class PasswordService extends AbstractService {
+public class PasswordService {
 
     private final PasswordRepository passwordRepo;
     private final PasswordEncoder passwordEncoder;
+    private final I18nService i18nService;
+    private final ConfigService configService;
 
     @Transactional
     public void createPasswordForUser(String plainTextPassword, UserModel userModel) {

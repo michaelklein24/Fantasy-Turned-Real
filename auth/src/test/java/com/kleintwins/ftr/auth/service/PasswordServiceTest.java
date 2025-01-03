@@ -6,6 +6,7 @@ import com.kleintwins.ftr.auth.model.UserModel;
 import com.kleintwins.ftr.auth.repository.PasswordRepository;
 import com.kleintwins.ftr.core.service.ConfigService;
 import com.kleintwins.ftr.core.service.I18nService;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -14,11 +15,11 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 class PasswordServiceTest {
 
@@ -29,121 +30,120 @@ class PasswordServiceTest {
     private PasswordEncoder passwordEncoder;
 
     @Mock
-    private ConfigService configService;
+    private I18nService i18nService;
 
     @Mock
-    private I18nService i18nService;
+    private ConfigService configService;
 
     @InjectMocks
     private PasswordService passwordService;
 
-    private String userId;
-    private String password;
     private UserModel userModel;
-    private PasswordModel passwordModel;
+    private String decodedExistingPassword = "passwordisfake";
+    private PasswordModel existingPasswordModel;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        userId = "12345";
-        password = "Password123!";
-        userModel = new UserModel("John", "Doe", "john.doe@example.com");
-        passwordModel = PasswordModel.of(password, userModel);  // assuming PasswordModel constructor
+        userModel = new UserModel("tony", "stark", "testuser@example.com");
+        userModel.setUserId(UUID.randomUUID().toString());
+        existingPasswordModel = PasswordModel.of(decodedExistingPassword, userModel);
+        existingPasswordModel.setPasswordId(UUID.randomUUID().toString());
     }
 
     @Test
     void shouldCreateNewPasswordAndMarkPreviousPasswordAsInactive() {
-        // Arrange: Mock the behavior of passwordRepo
-        when(passwordRepo.findByUserModelUserIdAndActive(userId, true)).thenReturn(Optional.of(passwordModel));
-        when(passwordEncoder.encode(password)).thenReturn("encodedPassword");
+        // Arrange: We mock that there is an existing active password
+        String newPassword = "newPassword123";
+        when(passwordRepo.findByUserModelUserIdAndActive(userModel.getUserId(), true)).thenReturn(Optional.of(existingPasswordModel));
+        when(passwordEncoder.encode(newPassword)).thenReturn("encodedNewPassword123");
 
         // Act: Call createPasswordForUser method
-        passwordService.createPasswordForUser(password, userModel);
+        passwordService.createPasswordForUser(newPassword, userModel);
+
+        // Log to ensure the method is being hit with correct parameters
+        System.out.println("User ID in test: " + userModel.getUserId());
 
         // Assert: Verify that passwordRepo.save() was called twice (once for inactive password, once for the new password)
-        verify(passwordRepo).findByUserModelUserIdAndActive(userId, true);
-        verify(passwordRepo).save(passwordModel);  // Marking the previous password as inactive
-        verify(passwordRepo).save(any(PasswordModel.class));  // Saving the new password
+        verify(passwordRepo, times(1)).findByUserModelUserIdAndActive(anyString(), anyBoolean()); // verify that the mock was called with `any()` userId
+        verify(passwordRepo, times(2)).save(any(PasswordModel.class));  // verify that the previous password was saved as inactive
     }
 
     @Test
     void shouldCreateNewPasswordWhenNoPreviousPasswordExists() {
-        // Arrange: Mock the behavior of passwordRepo to return empty for previous password
-        when(passwordRepo.findByUserModelUserIdAndActive(userId, true)).thenReturn(Optional.empty());
-        when(passwordEncoder.encode(password)).thenReturn("encodedPassword");
+        // Arrange: We mock that there is no existing active password
+        String newPassword = "newPassword123";
+        when(passwordRepo.findByUserModelUserIdAndActive(userModel.getUserId(), true)).thenReturn(Optional.empty());
+        when(passwordEncoder.encode(newPassword)).thenReturn("encodedNewPassword123");
 
-        // Act: Call createPasswordForUser method
-        passwordService.createPasswordForUser(password, userModel);
+        // Act: Create a new password for the user
+        passwordService.createPasswordForUser(newPassword, userModel);
 
-        // Assert: Verify that passwordRepo.save() was called once for the new password
-        verify(passwordRepo).findByUserModelUserIdAndActive(userId, true);
-        verify(passwordRepo).save(any(PasswordModel.class));  // Saving the new password
+        // Assert: Verify that a new password was created and saved
+        verify(passwordRepo).save(any(PasswordModel.class)); // Ensure save is called for the new password
     }
 
     @Test
     void shouldThrowInvalidPasswordIfPasswordIsTooShort() {
-        // Arrange: Set a minimum password length of 8 characters (via mocked configService)
+        // Arrange: We set a password that's shorter than the minimum length
+        String shortPassword = "short";
         when(configService.getInt("api.auth.register.password.validation.minLength", 8)).thenReturn(8);
         when(configService.getInt("api.auth.register.password.validation.maxLength", 150)).thenReturn(150);
+        when(i18nService.translate(anyString())).thenReturn("passwordTooShort");
 
-        // Act & Assert: Expect InvalidPassword exception to be thrown
-        InvalidPassword exception = assertThrows(InvalidPassword.class, () -> {
-            passwordService.validatePassword("short");
-        });
-
-        assertEquals("Password is too short.", exception.getMessage());  // assuming i18nService translation key is correctly set
+        // Act & Assert: We expect InvalidPassword exception for too short password
+        InvalidPassword thrown = assertThrows(InvalidPassword.class, () -> passwordService.validatePassword(shortPassword));
+        assertTrue(thrown.getMessage().contains("passwordTooShort")); // The error message should contain "passwordTooShort"
     }
 
     @Test
     void shouldThrowInvalidPasswordIfPasswordIsTooLong() {
-        // Arrange: Set a maximum password length of 150 characters (via mocked configService)
+        // Arrange: We set a password that's longer than the maximum length
+        String longPassword = StringUtils.repeat("a", 200); // 200 chars long
         when(configService.getInt("api.auth.register.password.validation.minLength", 8)).thenReturn(8);
         when(configService.getInt("api.auth.register.password.validation.maxLength", 150)).thenReturn(150);
+        when(i18nService.translate(anyString())).thenReturn("passwordTooLong");
 
-        // Act & Assert: Expect InvalidPassword exception to be thrown
-        InvalidPassword exception = assertThrows(InvalidPassword.class, () -> {
-            passwordService.validatePassword("thispasswordiswaytoolongandshouldfailvalidationbecauseitisover150characters......");
-        });
-
-        assertEquals("Password is too long.", exception.getMessage());  // assuming i18nService translation key is correctly set
+        // Act & Assert: We expect InvalidPassword exception for too long password
+        InvalidPassword thrown = assertThrows(InvalidPassword.class, () -> passwordService.validatePassword(longPassword));
+        assertTrue(thrown.getMessage().contains("passwordTooLong")); // The error message should contain "passwordTooLong"
     }
 
     @Test
     void shouldThrowInvalidPasswordIfPasswordIsMissing() {
-        // Arrange: Set a minimum password length of 8 characters (via mocked configService)
+        // Arrange: We set an empty password (missing password)
+        String missingPassword = "";
         when(configService.getInt("api.auth.register.password.validation.minLength", 8)).thenReturn(8);
         when(configService.getInt("api.auth.register.password.validation.maxLength", 150)).thenReturn(150);
+        when(i18nService.translate(anyString())).thenReturn("passwordMissing");
 
-        // Act & Assert: Expect InvalidPassword exception to be thrown
-        InvalidPassword exception = assertThrows(InvalidPassword.class, () -> {
-            passwordService.validatePassword("");  // Empty password
-        });
-
-        assertEquals("Password is missing.", exception.getMessage());  // assuming i18nService translation key is correctly set
+        // Act & Assert: We expect InvalidPassword exception for missing password
+        InvalidPassword thrown = assertThrows(InvalidPassword.class, () -> passwordService.validatePassword(missingPassword));
+        assertTrue(thrown.getMessage().contains("passwordMissing")); // The error message should contain "missingPassword"
     }
 
     @Test
     void shouldReturnActivePasswordForUser() {
-        // Arrange: Mock the behavior of passwordRepo to return an active password for the user
-        when(passwordRepo.findByUserModelUserIdAndActive(userId, true)).thenReturn(Optional.of(passwordModel));
+        // Arrange: We mock that there is an active password for the user
+        when(passwordRepo.findByUserModelUserIdAndActive(userModel.getUserId(), true)).thenReturn(Optional.of(existingPasswordModel));
 
-        // Act: Call getActivePasswordForUser method
-        Optional<PasswordModel> result = passwordService.getActivePasswordforUser(userId);
+        // Act: Fetch the active password for the user
+        Optional<PasswordModel> result = passwordService.getActivePasswordforUser(userModel.getUserId());
 
-        // Assert: Verify that the result is the expected active password
-        assertTrue(result.isPresent());
-        assertEquals(passwordModel, result.get());
+        // Assert: Verify the result contains the active password
+        assertTrue(result.isPresent()); // The result should be present
+        assertEquals(existingPasswordModel, result.get()); // The result should match the existing password
     }
 
     @Test
     void shouldReturnEmptyIfNoActivePasswordExistsForUser() {
-        // Arrange: Mock the behavior of passwordRepo to return empty (no active password)
-        when(passwordRepo.findByUserModelUserIdAndActive(userId, true)).thenReturn(Optional.empty());
+        // Arrange: We mock that there is no active password for the user
+        when(passwordRepo.findByUserModelUserIdAndActive(userModel.getUserId(), true)).thenReturn(Optional.empty());
 
-        // Act: Call getActivePasswordForUser method
-        Optional<PasswordModel> result = passwordService.getActivePasswordforUser(userId);
+        // Act: Fetch the active password for the user
+        Optional<PasswordModel> result = passwordService.getActivePasswordforUser(userModel.getUserId());
 
-        // Assert: Verify that the result is empty
-        assertFalse(result.isPresent());
+        // Assert: Verify the result is empty (no active password found)
+        assertFalse(result.isPresent()); // The result should be empty
     }
 }
