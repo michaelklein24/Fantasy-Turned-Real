@@ -15,7 +15,7 @@ public class I18nService {
         return translate(key, null);
     }
 
-    public String translate(String key, String ...args) {
+    public String translate(String key, String... args) {
         try {
             return messageSource.getMessage(key, args, LocaleContextHolder.getLocale());
         } catch (NoSuchMessageException e) {

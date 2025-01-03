@@ -21,5 +21,21 @@ logging:
         web:
           filter: DEBUG
 
+api:
+  auth:
+    register:
+      password:
+        validation:
+          minLength: 8
+          maxLength: 100
+
+
+  jwt:
+    secret: "urLkJKtovWsxqQjXHwEjqpV23cfsRD8n"
+    expiration:
+      enabled: true
+      DOC__length: "Lifetime of token before expiry in ms.  Configure to be negative if no expiry."
+      length: 600000
+
 server:
   contextPath: "api"

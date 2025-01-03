@@ -7,5 +7,7 @@ dependencies {
     implementation "io.jsonwebtoken:jjwt-impl:${jsonWebTokenVersion}"
     implementation "io.jsonwebtoken:jjwt-jackson:${jsonWebTokenVersion}"
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springDocOpenApiVersion}"
-
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
+    testImplementation "org.mockito:mockito-junit-jupiter:${junitVersion}"
+    testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
 }
