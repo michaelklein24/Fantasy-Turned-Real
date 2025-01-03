@@ -4,6 +4,8 @@ import com.kleintwins.ftr.auth.exception.AccountAlreadyExists;
 import com.kleintwins.ftr.auth.model.UserModel;
 import com.kleintwins.ftr.auth.repository.UserRepository;
 import com.kleintwins.ftr.core.service.AbstractService;
+import com.kleintwins.ftr.core.service.ConfigService;
+import com.kleintwins.ftr.core.service.I18nService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,11 +16,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService extends AbstractService {
+public class AuthService {
 
     private final UserRepository userRepo;
     private final PasswordService passwordService;
     private final AuthenticationManager authenticationManager;
+    private final I18nService i18nService;
+    private final ConfigService configService;
 
     @Transactional
     public UserModel registerUser(String firstName, String lastName, String email, String plainTextPassword) {
@@ -44,7 +48,4 @@ public class AuthService extends AbstractService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return authentication;
     }
-
-
-
 }

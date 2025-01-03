@@ -6,17 +6,24 @@ import com.kleintwins.ftr.auth.repository.UserRepository;
 import com.kleintwins.ftr.core.service.I18nService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 public class AuthServiceTest {
+
+    @InjectMocks
+    private AuthService authService;
 
     @Mock
     private UserRepository userRepo;
@@ -29,9 +36,6 @@ public class AuthServiceTest {
 
     @Mock
     private I18nService i18nService;
-
-    @InjectMocks
-    private AuthService authService;
 
     private String existingEmail;
     private String newEmail;
@@ -47,17 +51,14 @@ public class AuthServiceTest {
         firstName = "John";
         lastName = "Doe";
         password = "Password123!";
-
-        // Initialize mocks
-        MockitoAnnotations.openMocks(this);
     }
 
     @Test
     void shouldThrowAccountAlreadyExistsExceptionIfEmailUsedForRegistrationWasAlreadyUsedForAnotherAccount() {
         // Arrange: Mock the repository to simulate email already in use
-        when(userRepo.existsByEmail(existingEmail)).thenReturn(true);
+        when(userRepo.existsByEmail(eq(existingEmail))).thenReturn(true);
         when(i18nService.translate(eq("api.auth.register.response.error.emailAlreadyExists.message"), eq(existingEmail)))
-                .thenReturn("Account with email 'existing.email@example.com' already exists.");
+                .thenReturn("email already exists...");
 
         // Act & Assert: Expect an AccountAlreadyExistsException to be thrown
         AccountAlreadyExists exception = assertThrows(AccountAlreadyExists.class, () -> {
@@ -65,7 +66,7 @@ public class AuthServiceTest {
         });
 
         // Assert: Verify that the exception message is correct
-        assertEquals("Account with email 'existing.email@example.com' already exists.", exception.getMessage());
+        assertEquals("email already exists...", exception.getMessage());
 
         // Verify that the repository method was called and the translation was done
         verify(userRepo).existsByEmail(existingEmail);
@@ -76,7 +77,6 @@ public class AuthServiceTest {
     void shouldSuccessfullyRegisterUserIfEmailIsNotAlreadyUsed() {
         // Arrange: Mock the repository to simulate email is not in use
         when(userRepo.existsByEmail(newEmail)).thenReturn(false);
-        when(i18nService.translate(anyString(), anyString())).thenReturn("mocked message"); // Mock translation
 
         // Mock other services
         doNothing().when(passwordService).validatePassword(anyString());
@@ -96,4 +96,24 @@ public class AuthServiceTest {
         verify(passwordService).createPasswordForUser(password, result);
         verify(authenticationManager).authenticate(any());
     }
+
+    @Test
+    void shouldAuthenticateUserAfterRegistration() {
+        // Arrange
+        when(userRepo.existsByEmail(eq("new.email@example.com"))).thenReturn(false);
+        doNothing().when(passwordService).validatePassword(password);
+
+        UserModel registeredUser = new UserModel("John", "Doe", "new.email@example.com");
+        when(userRepo.save(any(UserModel.class))).thenReturn(registeredUser);
+        Authentication mockAuth = mock(Authentication.class);
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(mockAuth);
+
+        // Act
+        UserModel result = authService.registerUser("John", "Doe", "new.email@example.com", "Password123!");
+
+        // Assert
+        verify(authenticationManager, times(1)).authenticate(any(UsernamePasswordAuthenticationToken.class));  // Ensure authentication is called
+        assertNotNull(SecurityContextHolder.getContext().getAuthentication());  // Ensure authentication is set in the context
+    }
+
 }
