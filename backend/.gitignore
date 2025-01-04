@@ -46,3 +46,5 @@ Thumbs.db
 *.swo
 *.bak
 *.tmp
+
+.DS_Store
