@@ -1,0 +1,96 @@
+<div class="flex items-center justify-center py-10 px-6 sm:px-12 lg:px-24">
+  <div
+    class="bg-white flex-grow p-8 sm:p-12 rounded-lg shadow-lg max-w-screen-sm"
+  >
+    <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 text-center mb-8">
+      Become a <span class="text-teal-500">Purr-ticipant</span> Meow!
+    </h2>
+    <form
+      action="/register"
+      method="POST"
+      class="space-y-6"
+      #registerUserForm="ngForm"
+      (ngSubmit)="onSubmit(registerUserForm)"
+    >
+      <!-- First Name -->
+      <div>
+        <label for="firstName" class="block text-sm font-medium text-gray-700">
+          First Name
+        </label>
+        <input
+          type="text"
+          id="firstName"
+          name="firstName"
+          placeholder="Your Fur-st Name"
+          required
+          ngModel
+          class="mt-1 p-3 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
+        />
+      </div>
+
+      <!-- Last Name -->
+      <div>
+        <label for="lastName" class="block text-sm font-medium text-gray-700">
+          Last Name
+        </label>
+        <input
+          type="text"
+          id="lastName"
+          name="lastName"
+          placeholder="Your Purr-sonal Surname"
+          required
+          ngModel
+          class="mt-1 p-3 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
+        />
+      </div>
+
+      <!-- Email -->
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-700">
+          Email
+        </label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="Your Paw-some Email"
+          required
+          ngModel
+          class="mt-1 p-3 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
+        />
+      </div>
+
+      <!-- Password -->
+      <div>
+        <label for="password" class="block text-sm font-medium text-gray-700">
+          Password
+        </label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Keep it Claw-sified"
+          required
+          ngModel
+          class="mt-1 p-3 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
+        />
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        class="w-full bg-teal-500 text-white py-3 rounded-lg font-semibold hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-offset-2 transition"
+      >
+        Join the War!
+      </button>
+    </form>
+
+    <!-- Footer Text -->
+    <p class="text-center text-sm text-gray-500 mt-8">
+      Already have an account?
+      <a href="/login" class="text-teal-500 font-medium hover:underline">
+        Log in
+      </a>
+    </p>
+  </div>
+</div>

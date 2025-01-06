@@ -1,0 +1,14 @@
+<div
+  *ngIf="toast"
+  class="fixed transform px-6 py-4 rounded-lg shadow-lg z-50 transition-all"
+  [ngClass]="{
+    'top-20 right-5': !isSmallScreen,
+    'top-10 left-1/2 px-3 -translate-x-1/2 w-3/4': isSmallScreen,
+    'bg-green-200 text-white': toast.type === 'success',
+    'bg-red-200 text-white': toast.type === 'error',
+    'bg-blue-200 text-white': toast.type === 'info' || toast.type === undefined
+  }"
+  [ngStyle]="{ 'animation-duration': toast.duration + 'ms' }"
+>
+  {{ toast.message }}
+</div>
