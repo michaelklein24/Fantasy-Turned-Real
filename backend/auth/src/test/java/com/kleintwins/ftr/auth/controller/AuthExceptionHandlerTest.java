@@ -5,6 +5,7 @@ import com.kleintwins.ftr.auth.exception.InvalidPassword;
 import com.kleintwins.ftr.core.dto.CustomErrorResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -67,5 +68,20 @@ class AuthExceptionHandlerTest {
         assertNotNull(response);
         assertEquals(400, response.getStatus());
         assertEquals("email must be a well-formed email address", response.getErrorMsg());
+    }
+
+    @Test
+    void shouldHandleBadCredentials() {
+        // Arrange
+        BadCredentialsException exception = new BadCredentialsException("Bad Credentials");
+
+        // Act
+        CustomErrorResponse response = exceptionHandler.badCredentials(exception).getBody();
+
+        // Assert
+        assertNotNull(response);
+        assertEquals(401, response.getStatus());
+        assertEquals("Bad Credentials", response.getErrorMsg());
+
     }
 }

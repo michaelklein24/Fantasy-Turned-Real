@@ -11,9 +11,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+
+import java.lang.reflect.Method;
+import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -114,6 +119,22 @@ public class AuthServiceTest {
         // Assert
         verify(authenticationManager, times(1)).authenticate(any(UsernamePasswordAuthenticationToken.class));  // Ensure authentication is called
         assertNotNull(SecurityContextHolder.getContext().getAuthentication());  // Ensure authentication is set in the context
+    }
+
+    @Test
+    void shouldReturnUserModelWhenLoginUserIsSuccess() {
+
+    }
+
+    @Test
+    void shouldThrowBadCredentialsExceptionWhenUserNotFound() {
+
+    }
+
+
+    @Test
+    void shouldThrowBadCredentialsExceptionWhenEnteredIncorrectPassword() throws Exception {
+
     }
 
 }

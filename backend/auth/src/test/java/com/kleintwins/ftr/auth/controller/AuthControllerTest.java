@@ -1,6 +1,8 @@
 package com.kleintwins.ftr.auth.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kleintwins.ftr.auth.dto.LoginUserRequest;
+import com.kleintwins.ftr.auth.dto.LoginUserResponse;
 import com.kleintwins.ftr.auth.dto.RegisterUserRequest;
 import com.kleintwins.ftr.auth.dto.RegisterUserResponse;
 import com.kleintwins.ftr.auth.exception.AccountAlreadyExists;
@@ -18,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -55,6 +58,7 @@ class AuthControllerTest {
     private Validator validator;
 
     private RegisterUserRequest validRequest;
+    private LoginUserRequest loginUserRequest;
 
     private ObjectMapper objectMapper;
 
@@ -65,6 +69,7 @@ class AuthControllerTest {
                 .webAppContextSetup(webApplicationContext)
                 .build();
         validRequest = new RegisterUserRequest("John", "Doe", "john.doe@example.com", "ValidPassword123!");
+        loginUserRequest = new LoginUserRequest("tony.stark@test.com", "incorrectPassword");
         validator = Validation.buildDefaultValidatorFactory().getValidator();
     }
 
@@ -134,4 +139,41 @@ class AuthControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(400))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errorMsg").value("email must be a well-formed email address"));
     }
+
+    @Test
+    void loginApiShouldReturn401WhenReceivingBadCredentials() throws Exception {
+        // Arrange: throw Bad Credentials exception
+        when(authService.loginUser(any(), any())).thenThrow(new BadCredentialsException("bad credentials"));
+
+        // Act and Assert
+        mockMvc.perform(post("/auth/login")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(loginUserRequest)))
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(401))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errorMsg").value("bad credentials"));
+    }
+
+    @Test
+    void loginApiShouldSuccessfullyLogUserIn() throws Exception {
+        // Arrange
+        String expectedToken = "mockToken";
+        LoginUserResponse response = new LoginUserResponse(expectedToken);
+
+        when(authService.loginUser(any(), any())).thenReturn(new UserModel());
+        when(tokenService.generateToken(any())).thenReturn(expectedToken);
+
+        // Act & Assert
+        mockMvc.perform(post("/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(validRequest)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.accessToken").value(expectedToken));
+
+        // Verify interactions
+        verify(authService).loginUser(any(), any());
+        verify(tokenService).generateToken(any());
+    }
+
+
 }
