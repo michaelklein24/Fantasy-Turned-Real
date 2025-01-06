@@ -1,5 +1,5 @@
-import { AuthControllerApi } from "./api/api";
-import { Configuration } from "./api/configuration";
+import { AuthControllerApi } from "./generated/api";
+import { Configuration } from "./generated/configuration";
 
 const config = new Configuration({
     basePath: 'http://localhost:8080'
@@ -10,4 +10,4 @@ const apiClient = {
 }
 
 export default apiClient;
-export * from './api/index';
+export * from './generated/index';

@@ -16,7 +16,7 @@ export class AuthService {
       email: email,
       password: password
     }
-    return await apiClient.auth.register(request, "");
+    return await apiClient.auth.register(request);
   }
 
   async loginUser(email: string, password: string) : Promise<AxiosResponse<LoginUserResponse>> {
