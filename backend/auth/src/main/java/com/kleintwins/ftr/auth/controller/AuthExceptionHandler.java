@@ -5,6 +5,7 @@ import com.kleintwins.ftr.auth.exception.InvalidPassword;
 import com.kleintwins.ftr.core.dto.CustomErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -50,6 +51,14 @@ public class AuthExceptionHandler {
         // Create and return the ResponseEntity
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(value = BadCredentialsException.class)
+    public ResponseEntity<CustomErrorResponse> badCredentials(BadCredentialsException e) {
+        CustomErrorResponse error = new CustomErrorResponse(HttpStatus.UNAUTHORIZED.toString(), e.getMessage());
+        error.setStatus(HttpStatus.UNAUTHORIZED.value());
+        return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
+    }
+
 
 }
 
