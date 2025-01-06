@@ -11,11 +11,13 @@ export class AuthService {
 
   async registerUser(firstName: string, lastName: string, email: string, password: string) : Promise<AxiosResponse<RegisterUserResponse>> {
     const request : RegisterUserRequest = {
-      firstName: "michael",
-      lastName: "klein",
-      email: "email",
-      password: "password"
+      firstName: firstName, 
+      lastName: lastName,
+      email: email,
+      password: password
     }
+    console.log(request)
+
     return await apiClient.auth.register(request);
   }
 }

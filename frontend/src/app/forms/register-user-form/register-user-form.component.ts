@@ -2,11 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ToastService } from '../../services/toast.service';
-import apiClient, {
-  RegisterUserRequest,
+import {
   RegisterUserResponse,
 } from '../../shared/ApiClient';
-import { AxiosError } from 'axios';
 import { AxiosResponse } from 'axios';
 
 @Component({
@@ -27,18 +25,20 @@ export class RegisterUserFormComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {}
 
   async onSubmit(form: NgForm) {
-    const request: RegisterUserRequest = { ...form.value };
+    const firstName = form.value.firstName;
+    const lastName = form.value.lastName;
+    const email = form.value.email;
+    const password = form.value.password;
   
     try {
-      // Await the API call
-      const response: AxiosResponse<RegisterUserResponse> =
-        await apiClient.auth.register(request);
-      
-      // Handle successful registration
-      const toastMessage = `Welcome ${request.firstName}`;
-      this.toastService.toastSuccess(toastMessage, 1000);
+      const response: AxiosResponse<RegisterUserResponse> = 
+        await this.authService.registerUser(firstName, lastName, email, password);    
+        console.log(response)  
+      const toastMessage = `Welcome ${firstName}`;
+      this.toastService.toastSuccess(toastMessage, 3000);
     } catch (error: any) {
-      this.toastService.toastAxiosError("register account", error, 3000);
+      console.log(error)
+      this.toastService.toastAxiosError("register account", error, 5000);
     }
   }  
   
