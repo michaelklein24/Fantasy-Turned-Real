@@ -3,14 +3,14 @@ import { AuthService } from '../../services/auth.service';
 import { FormsModule, NgForm } from '@angular/forms';
 import { AxiosResponse } from 'axios';
 import { SessionService } from '../../services/session.service';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { LoginUserResponse } from '../../shared/generated';
 import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-login-user-form',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, RouterModule],
   templateUrl: './login-user-form.component.html',
   styleUrl: './login-user-form.component.css',
 })

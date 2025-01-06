@@ -6,13 +6,13 @@ import {
   RegisterUserResponse,
 } from '../../shared/ApiClient';
 import { AxiosResponse } from 'axios';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { SessionService } from '../../services/session.service';
 
 @Component({
   selector: 'app-register-user-form',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, RouterModule],
   templateUrl: './register-user-form.component.html',
   styleUrl: './register-user-form.component.css',
 })
