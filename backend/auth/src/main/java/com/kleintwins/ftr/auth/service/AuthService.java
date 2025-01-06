@@ -1,5 +1,6 @@
 package com.kleintwins.ftr.auth.service;
 
+import com.kleintwins.ftr.auth.dto.LoginUserResponse;
 import com.kleintwins.ftr.auth.exception.AccountAlreadyExists;
 import com.kleintwins.ftr.auth.model.UserModel;
 import com.kleintwins.ftr.auth.repository.UserRepository;
@@ -9,6 +10,7 @@ import com.kleintwins.ftr.core.service.I18nService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -36,6 +38,14 @@ public class AuthService {
 
         passwordService.validatePassword(plainTextPassword);
         passwordService.createPasswordForUser(plainTextPassword, userModel);
+
+        Authentication authentication = authenticateUser(userModel.getUserId(), plainTextPassword);
+
+        return userModel;
+    }
+
+    public UserModel loginUser(String email, String plainTextPassword) {
+        UserModel userModel = userRepo.findByEmail(email).orElseThrow(() -> new BadCredentialsException("Unable to find user with email: " + email));
 
         Authentication authentication = authenticateUser(userModel.getUserId(), plainTextPassword);
 

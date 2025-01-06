@@ -1,5 +1,7 @@
 package com.kleintwins.ftr.auth.controller;
 
+import com.kleintwins.ftr.auth.dto.LoginUserRequest;
+import com.kleintwins.ftr.auth.dto.LoginUserResponse;
 import com.kleintwins.ftr.auth.dto.RegisterUserRequest;
 import com.kleintwins.ftr.auth.dto.RegisterUserResponse;
 import com.kleintwins.ftr.auth.model.UserModel;
@@ -51,6 +53,34 @@ public class AuthController {
         UserModel registeredUser = authService.registerUser(firstName, lastName, email, plainTextPassword);
         String token = tokenService.generateToken(registeredUser);
         RegisterUserResponse response = new RegisterUserResponse(token);
+
+        return ResponseEntity.ok().body(response);
+    }
+
+    @PostMapping("/login")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Login a user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully logged user in",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = LoginUserResponse.class))),
+            @ApiResponse(responseCode = "400", description = "Unable to login user due to bad request",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CustomErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "Invalid credentials",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CustomErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CustomErrorResponse.class)))
+    })
+    public ResponseEntity<LoginUserResponse> login(@RequestBody @Valid LoginUserRequest request) {
+        String email = request.getEmail();
+        String plainTextPassword = request.getPassword();
+
+        UserModel loggedInUser = authService.loginUser(email, plainTextPassword);
+        String token = tokenService.generateToken(loggedInUser);
+        LoginUserResponse response = new LoginUserResponse(token);
 
         return ResponseEntity.ok().body(response);
     }

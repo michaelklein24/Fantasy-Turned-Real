@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from './shared/navbar/navbar.component';
 import { ToastComponent } from './shared/toast/toast.component';
 import { CommonModule } from '@angular/common';
+import { LoginUserFormComponent } from './forms/login-user-form/login-user-form.component';
 
 @Component({
   selector: 'app-root',
@@ -13,6 +14,7 @@ import { CommonModule } from '@angular/common';
     CommonModule,
     RouterOutlet,
     RegisterUserFormComponent,
+    LoginUserFormComponent,
     NavbarComponent,
     ToastComponent
   ],
