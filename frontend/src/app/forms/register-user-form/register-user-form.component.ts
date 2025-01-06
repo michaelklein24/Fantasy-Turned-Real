@@ -6,6 +6,8 @@ import {
   RegisterUserResponse,
 } from '../../shared/ApiClient';
 import { AxiosResponse } from 'axios';
+import { Router } from '@angular/router';
+import { SessionService } from '../../services/session.service';
 
 @Component({
   selector: 'app-register-user-form',
@@ -17,7 +19,9 @@ import { AxiosResponse } from 'axios';
 export class RegisterUserFormComponent implements OnInit, OnDestroy {
   constructor(
     private authService: AuthService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private sessionService: SessionService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {}
@@ -35,7 +39,10 @@ export class RegisterUserFormComponent implements OnInit, OnDestroy {
         await this.authService.registerUser(firstName, lastName, email, password);    
         console.log(response)  
       const toastMessage = `Welcome ${firstName}`;
+      const token : string = response.data.accessToken!;
+      this.sessionService.startSession(token);
       this.toastService.toastSuccess(toastMessage, 3000);
+      this.router.navigate(["/dashboard"]);
     } catch (error: any) {
       console.log(error)
       this.toastService.toastAxiosError("register account", error, 5000);
