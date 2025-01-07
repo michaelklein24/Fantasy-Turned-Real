@@ -3,6 +3,7 @@ package com.kleintwins.ftr.core.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Table(name = "lge_league")
@@ -17,7 +18,7 @@ public class LeagueModel {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String leagueId;
     private String name;
-    @OneToMany(mappedBy = "league", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "league", cascade = CascadeType.REMOVE)
     private List<ParticipantModel> participants;
 
     public LeagueModel() {}

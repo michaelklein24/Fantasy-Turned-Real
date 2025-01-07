@@ -23,13 +23,13 @@ public class LeagueService {
     public LeagueModel createLeague(String name, String ownerId) {
         LeagueModel leagueModel = new LeagueModel();
         leagueModel.setName(name);
-        leagueModel = leagueRepo.save(leagueModel);
+        LeagueModel savedLeague = leagueRepo.save(leagueModel);
 
         ParticipantModel owner = new ParticipantModel();
-        ParticipantId participantId = new ParticipantId(ownerId, leagueModel.getLeagueId());
+        ParticipantId participantId = new ParticipantId(ownerId, savedLeague.getLeagueId());
         owner.setParticipantId(participantId);
         owner.setRole(LeagueRole.OWNER);
-        owner.setLeague(leagueModel);
+        owner.setLeague(savedLeague);
         participantRepo.save(owner);
 
         leagueModel.setParticipants(List.of(owner));
