@@ -6,6 +6,8 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -55,5 +57,27 @@ public class JwtHelper {
 
     public Boolean validateToken(String token) {
         return !isTokenExpired(token);
+    }
+
+    public String extractUserIdFromTokenInRequest(HttpServletRequest request) {
+        String token = extractTokenFromRequest(request);
+        return extractUserId(token);
+    }
+
+    public String extractTokenFromRequest(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("jwtToken".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
+
+        throw new IllegalArgumentException("JWT token not found in request.");
     }
 }

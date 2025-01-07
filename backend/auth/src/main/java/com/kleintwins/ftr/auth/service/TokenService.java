@@ -5,6 +5,8 @@ import com.kleintwins.ftr.auth.model.UserModel;
 import com.kleintwins.ftr.core.service.AbstractService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
