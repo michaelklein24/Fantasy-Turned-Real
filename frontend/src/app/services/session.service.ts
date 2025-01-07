@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { TokenService } from './token.service';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
 })
-export class SessionService {
+export class SessionService implements OnDestroy {
 
     private _loginStatus = new BehaviorSubject<boolean>(this.tokenService.hasValidToken());
     private _userId = new BehaviorSubject<string | null>(this.tokenService.hasValidToken() ? ((<any>this.tokenService.decodeToken(this.tokenService.getToken())).userId) : null);
@@ -13,10 +13,11 @@ export class SessionService {
     public userId$ = this._userId.asObservable();
     public loginStatus$ = this._loginStatus.asObservable();
 
-    // public startSession(): void;
-    // public startSession(token: string): void;
+    private tokenCheckInterval : any;
 
-    constructor(private tokenService: TokenService) { }
+    constructor(private tokenService: TokenService) {
+        this.startTokenCheck();
+    }
 
     private setUserId(id: string | null) {
         this._userId.next(id);
@@ -44,5 +45,17 @@ export class SessionService {
         this.tokenService.deleteToken();
         this.setUserId(null);
         this.setloginStatus(false);
+    }
+
+    private startTokenCheck() {
+        this.tokenCheckInterval = setInterval(() => {
+            this.tokenService.hasValidToken();
+        }, 60000); // Check every 60 seconds
+    }
+
+    ngOnDestroy(): void {
+        if (this.tokenCheckInterval) {
+            clearInterval(this.tokenCheckInterval);
+        }
     }
 }
