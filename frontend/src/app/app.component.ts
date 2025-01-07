@@ -6,6 +6,8 @@ import { NavbarComponent } from './shared/navbar/navbar.component';
 import { ToastComponent } from './shared/toast/toast.component';
 import { CommonModule } from '@angular/common';
 import { LoginUserFormComponent } from './forms/login-user-form/login-user-form.component';
+import { ModalComponent } from './shared/modal/modal.component';
+import { CreateLeagueFormComponent } from './forms/create-league-form/create-league-form.component';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +17,9 @@ import { LoginUserFormComponent } from './forms/login-user-form/login-user-form.
     RouterOutlet,
     RegisterUserFormComponent,
     LoginUserFormComponent,
+    CreateLeagueFormComponent,
     NavbarComponent,
+    ModalComponent,
     ToastComponent
   ],
   templateUrl: './app.component.html',

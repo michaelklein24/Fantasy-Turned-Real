@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { AxiosResponse } from 'axios';
-import apiClient, { LoginUserRequest, LoginUserResponse, RegisterUserRequest, RegisterUserResponse } from '../shared/ApiClient';
+import { LoginUserRequest, LoginUserResponse, RegisterUserRequest, RegisterUserResponse } from '../services/api.service';
+import { ApiService } from './api.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  constructor() { }
+  constructor(private apiService : ApiService) { }
 
   async registerUser(firstName: string, lastName: string, email: string, password: string) : Promise<AxiosResponse<RegisterUserResponse>> {
     const request : RegisterUserRequest = {
@@ -16,7 +17,7 @@ export class AuthService {
       email: email,
       password: password
     }
-    return await apiClient.auth.register(request);
+    return await this.apiService.auth.register(request);
   }
 
   async loginUser(email: string, password: string) : Promise<AxiosResponse<LoginUserResponse>> {
@@ -24,6 +25,6 @@ export class AuthService {
       email: email,
       password: password
     }
-    return await apiClient.auth.login(request);
+    return await this.apiService.auth.login(request);
   }
 }

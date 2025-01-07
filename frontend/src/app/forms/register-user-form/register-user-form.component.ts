@@ -2,12 +2,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ToastService } from '../../services/toast.service';
-import {
-  RegisterUserResponse,
-} from '../../shared/ApiClient';
 import { AxiosResponse } from 'axios';
 import { Router, RouterModule } from '@angular/router';
 import { SessionService } from '../../services/session.service';
+import { RegisterUserResponse } from '../../shared/generated';
 
 @Component({
   selector: 'app-register-user-form',
@@ -35,7 +33,7 @@ export class RegisterUserFormComponent implements OnInit, OnDestroy {
     const password = form.value.password;
   
     try {
-      const response: AxiosResponse<RegisterUserResponse> = 
+      const response: AxiosResponse<RegisterUserResponse > = 
         await this.authService.registerUser(firstName, lastName, email, password);    
         console.log(response)  
       const toastMessage = `Welcome ${firstName}`;

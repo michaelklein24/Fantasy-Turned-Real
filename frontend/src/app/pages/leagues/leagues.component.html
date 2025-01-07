@@ -1,0 +1,39 @@
+<aside class="bg-teal-100 h-full shadow-lg">
+  <div class="p-4">
+    <!-- Header Section -->
+    <div class="flex justify-between items-center">
+      <h2 class="text-lg font-semibold text-teal-800">Leagues</h2>
+      <button
+        class="bg-teal-500 text-white px-3 py-1 rounded-lg shadow-md hover:bg-teal-600 transition"
+        (click)="openModal()"
+      >
+        + Create
+      </button>
+    </div>
+
+    <!-- League List -->
+    <ul class="mt-4 space-y-2">
+      <li *ngFor="let league of leagues" class="group">
+        <a
+          [routerLink]="['/dashboard/leagues', league.leagueId]"
+          class="flex items-center p-2 text-teal-700 bg-white rounded-lg shadow-md hover:bg-teal-200 transition"
+        >
+          <span class="truncate flex-1">{{ league.name }}</span>
+          <span
+            *ngIf="league.leagueId"
+            class="ml-2 bg-teal-500 text-white text-xs font-bold px-2 py-1 rounded-full"
+            >{{ league.leagueId }}</span
+          >
+        </a>
+      </li>
+    </ul>
+  </div>
+</aside>
+
+<app-modal
+  [isOpen]="isModalOpen"
+  title="Create League"
+  (close)="closeModal()"
+>
+  <app-create-league-form (createLeague)="handleLeagueCreation($event)"></app-create-league-form>
+</app-modal>
