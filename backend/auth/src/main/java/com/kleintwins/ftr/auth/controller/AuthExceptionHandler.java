@@ -3,6 +3,7 @@ package com.kleintwins.ftr.auth.controller;
 import com.kleintwins.ftr.auth.exception.AccountAlreadyExists;
 import com.kleintwins.ftr.auth.exception.InvalidPassword;
 import com.kleintwins.ftr.core.dto.CustomErrorResponse;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestControllerAdvice
+@Order(10)
 public class AuthExceptionHandler {
 
     @ExceptionHandler(value = AccountAlreadyExists.class)

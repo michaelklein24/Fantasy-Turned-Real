@@ -1,6 +1,7 @@
 package com.kleintwins.ftr.controller.exception;
 
 import com.kleintwins.ftr.core.dto.CustomErrorResponse;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestControllerAdvice
+@Order(20)
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = RuntimeException.class)
