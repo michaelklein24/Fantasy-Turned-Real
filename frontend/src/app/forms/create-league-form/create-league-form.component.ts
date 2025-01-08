@@ -27,7 +27,9 @@ export class CreateLeagueFormComponent {
 
 
     try {
-      const response: AxiosResponse<CreateLeagueResponse> = await this.leagueService.createLeague(form.value.leagueName);
+      const leagueName : string = form.value.leagueName;
+      const seasonNumber : number = form.value.seasonNumber;
+      const response: AxiosResponse<CreateLeagueResponse> = await this.leagueService.createLeague(leagueName, seasonNumber);
       this.createLeague.emit(response.data.league);
     } catch (error: any) {
       console.log(error);

@@ -20,7 +20,7 @@ public class UserModel {
     @Column(unique = true)
     private String email;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private GlobalRole role = GlobalRole.USER;
 
     public UserModel(String firstName, String lastName, String email) {

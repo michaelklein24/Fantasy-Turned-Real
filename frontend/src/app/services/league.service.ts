@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CreateLeagueRequest, CreateLeagueResponse, GetLeaguesForUserResponse } from '../shared/generated';
+import { CreateLeagueRequest, CreateLeagueResponse, GetLeaguesForUserResponse, Show } from '../shared/generated';
 import { AxiosResponse } from 'axios';
 import { AxiosRequestConfig } from 'axios';
 import { TokenService } from './token.service';
@@ -12,11 +12,15 @@ export class LeagueService {
   constructor(private tokenService: TokenService, private apiService: ApiService) {}
 
   async createLeague(
-    name: string
+    name: string,
+    seasonNumber: number
   ): Promise<AxiosResponse<CreateLeagueResponse>> {
     const request: CreateLeagueRequest = {
       name: name,
+      show: Show.SURVIVOR,
+      seasonSequence: seasonNumber
     };
+    console.log(request)
     return await this.apiService.league.createLeague(request);
   }
 

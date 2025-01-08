@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { LoginUserFormComponent } from './forms/login-user-form/login-user-form.component';
 import { ModalComponent } from './shared/modal/modal.component';
 import { CreateLeagueFormComponent } from './forms/create-league-form/create-league-form.component';
+import { LeagueEntryComponent } from './components/league-entry/league-entry.component';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +16,8 @@ import { CreateLeagueFormComponent } from './forms/create-league-form/create-lea
   imports: [
     CommonModule,
     RouterOutlet,
+
+    LeagueEntryComponent,
     RegisterUserFormComponent,
     LoginUserFormComponent,
     CreateLeagueFormComponent,

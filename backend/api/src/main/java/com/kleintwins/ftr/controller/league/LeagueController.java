@@ -6,6 +6,7 @@ import com.kleintwins.ftr.controller.league.dto.CreateLeagueRequest;
 import com.kleintwins.ftr.controller.league.dto.CreateLeagueResponse;
 import com.kleintwins.ftr.controller.league.dto.GetLeaguesForUserResponse;
 import com.kleintwins.ftr.controller.league.dto.League;
+import com.kleintwins.ftr.core.code.Show;
 import com.kleintwins.ftr.core.dto.CustomErrorResponse;
 import com.kleintwins.ftr.core.model.LeagueModel;
 import com.kleintwins.ftr.core.service.LeagueService;
@@ -57,7 +58,9 @@ public class LeagueController {
     ) {
         String name = createLeagueRequest.getName();
         String userId = jwtHelper.extractUserIdFromTokenInRequest(request);
-        LeagueModel createdLeague = leagueService.createLeague(name, userId);
+        Show show = createLeagueRequest.getShow();
+        int seasonSequence = createLeagueRequest.getSeasonSequence();
+        LeagueModel createdLeague = leagueService.createLeague(name, userId, show, seasonSequence);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(LeagueResponseBuilder.buildCreateLeagueResponse(createdLeague));
     }

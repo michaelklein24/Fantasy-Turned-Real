@@ -1,0 +1,27 @@
+<!-- League List -->
+<li class="group cursor-pointer">
+    <a
+      class="flex justify-between items-center p-4 text-teal-800 bg-white rounded-lg shadow-lg hover:bg-teal-200 transition-all duration-200 ease-in-out"
+      routerLink="league.leagueId"
+    >
+      <!-- Left Section -->
+      <div class="flex flex-col">
+        <!-- League Name -->
+        <span class="truncate text-xl font-semibold">{{ league.name }}</span>
+  
+        <!-- Date Created -->
+        <span class="mt-2 text-sm text-teal-600 font-light"
+          >Created: {{ league.createTime | date: 'MMMM d, yyyy'}}</span
+        >
+  
+        <!-- Show, Season, and Episode -->
+        <div class="mt-2 text-sm text-teal-600">
+          <div class="flex gap-1">
+            <p class="font-medium">{{league.season!.show}}</p>
+            <p class="font-medium">{{league.season!.sequence}}</p>
+          </div>
+        </div>
+      </div>
+    </a>
+  </li>
+  

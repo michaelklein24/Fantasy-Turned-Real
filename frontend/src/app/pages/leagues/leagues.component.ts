@@ -5,14 +5,20 @@ import { GetLeaguesForUserResponse, League } from '../../shared/generated';
 import { LeagueService } from '../../services/league.service';
 import { CreateLeagueFormComponent } from '../../forms/create-league-form/create-league-form.component';
 import { ModalComponent } from '../../shared/modal/modal.component';
-import { FormGroup, NgForm } from '@angular/forms';
 import { AxiosResponse } from 'axios';
 import { ToastService } from '../../services/toast.service';
+import { LeagueEntryComponent } from '../../components/league-entry/league-entry.component';
 
 @Component({
   selector: 'app-leagues',
   standalone: true,
-  imports: [RouterModule, CommonModule, CreateLeagueFormComponent, ModalComponent],
+  imports: [
+    RouterModule, 
+    CommonModule, 
+    CreateLeagueFormComponent, 
+    ModalComponent, 
+    LeagueEntryComponent
+  ],
   templateUrl: './leagues.component.html',
   styleUrl: './leagues.component.css'
 })
@@ -56,6 +62,14 @@ export class LeaguesComponent implements OnInit {
   handleLeagueCreation(league: League): void {
     this.leagues.unshift(league);
     this.closeModal();
+  }
+
+  disapproveInvite(name: string) {
+
+  }
+
+  approveInvite(name: string) {
+    
   }
 
 }

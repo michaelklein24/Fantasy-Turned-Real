@@ -1,12 +1,17 @@
 spring:
+  sql:
+    init:
+      mode: always
   datasource:
     url: jdbc:postgresql://localhost:5432/fantasy-turned-real
     username: postgres
     password: password
     driver-class-name: org.postgresql.Driver
+    initialization-mode: always
   jpa:
+    defer-datasource-initialization: true
     hibernate:
-      ddl-auto: update  # Options: none, update, create, create-drop
+      ddl-auto: create-drop  # Options: none, update, create, create-drop
 #    database-platform: org.hibernate.dialect.PostgreSQLDialect  # PostgreSQL dialect
 #    show-sql: true        # Optional: Show SQL statements
 #    properties:
@@ -33,7 +38,7 @@ api:
   jwt:
     secret: "urLkJKtovWsxqQjXHwEjqpV23cfsRD8n"
     expiration:
-      enabled: true
+      enabled: false
       DOC__length: "Lifetime of token before expiry in ms.  Configure to be negative if no expiry."
       length: 600000
 

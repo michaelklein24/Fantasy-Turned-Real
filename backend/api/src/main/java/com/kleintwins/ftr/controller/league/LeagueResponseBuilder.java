@@ -4,6 +4,8 @@ import com.kleintwins.ftr.controller.league.dto.CreateLeagueResponse;
 import com.kleintwins.ftr.controller.league.dto.GetLeaguesForUserResponse;
 import com.kleintwins.ftr.controller.league.dto.League;
 import com.kleintwins.ftr.controller.league.dto.Participant;
+import com.kleintwins.ftr.controller.season.SeasonResponseBuilder;
+import com.kleintwins.ftr.controller.season.dto.Season;
 import com.kleintwins.ftr.core.model.LeagueModel;
 import com.kleintwins.ftr.core.model.ParticipantModel;
 
@@ -32,10 +34,14 @@ public class LeagueResponseBuilder {
                 .map(LeagueResponseBuilder::buildParticipant)
                 .toList();
 
+        Season season = SeasonResponseBuilder.buildSeason(leagueModel.getSeason());
+
         return League.builder()
                 .leagueId(leagueModel.getLeagueId())
                 .name(leagueModel.getName())
                 .participants(participants)
+                .season(season)
+                .createTime(leagueModel.getCreateTime())
                 .build();
     }
 
