@@ -35,4 +35,9 @@ public class LeagueService {
         leagueModel.setParticipants(List.of(owner));
         return leagueModel;
     }
+
+    public List<LeagueModel> getLeaguesForUser(String userId) {
+        List<ParticipantModel> participantModels = participantRepo.findByParticipantIdUserId(userId);
+        return participantModels.stream().map(ParticipantModel::getLeague).toList();
+    }
 }

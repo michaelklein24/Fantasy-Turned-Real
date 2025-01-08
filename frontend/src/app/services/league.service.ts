@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CreateLeagueRequest, CreateLeagueResponse } from '../shared/generated';
+import { CreateLeagueRequest, CreateLeagueResponse, GetLeaguesForUserResponse } from '../shared/generated';
 import { AxiosResponse } from 'axios';
 import { AxiosRequestConfig } from 'axios';
 import { TokenService } from './token.service';
@@ -17,11 +17,10 @@ export class LeagueService {
     const request: CreateLeagueRequest = {
       name: name,
     };
-    const token = this.tokenService.getToken();
-    // Pass the headers into the options object
-    const requestOptions: AxiosRequestConfig = {
-      
-    };
-    return await this.apiService.league.createLeague(request, requestOptions);
+    return await this.apiService.league.createLeague(request);
+  }
+
+  async getLeaguesForUser(): Promise<AxiosResponse<GetLeaguesForUserResponse>> {
+    return await this.apiService.league.getLeaguesForUser();
   }
 }

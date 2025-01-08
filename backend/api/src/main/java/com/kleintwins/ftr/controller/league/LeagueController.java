@@ -4,6 +4,7 @@ import com.kleintwins.ftr.auth.helper.JwtHelper;
 import com.kleintwins.ftr.auth.service.TokenService;
 import com.kleintwins.ftr.controller.league.dto.CreateLeagueRequest;
 import com.kleintwins.ftr.controller.league.dto.CreateLeagueResponse;
+import com.kleintwins.ftr.controller.league.dto.GetLeaguesForUserResponse;
 import com.kleintwins.ftr.controller.league.dto.League;
 import com.kleintwins.ftr.core.dto.CustomErrorResponse;
 import com.kleintwins.ftr.core.model.LeagueModel;
@@ -19,6 +20,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -57,6 +60,32 @@ public class LeagueController {
         LeagueModel createdLeague = leagueService.createLeague(name, userId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(LeagueResponseBuilder.buildCreateLeagueResponse(createdLeague));
+    }
+
+    @GetMapping("/user")
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Fetch Leagues")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful retrieval of leagues for user",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = GetLeaguesForUserResponse.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized: Missing or invalid JWT token",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CustomErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "Forbidden: Insufficient permissions",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CustomErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error: Unexpected server issue",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CustomErrorResponse.class)))
+    })
+    public ResponseEntity<GetLeaguesForUserResponse> getLeaguesForUser(
+            HttpServletRequest request
+    ) {
+        String userId = jwtHelper.extractUserIdFromTokenInRequest(request);
+        List<LeagueModel> leagueModels = leagueService.getLeaguesForUser(userId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(LeagueResponseBuilder.buildGetLeaguesForUserResponse(leagueModels));
     }
 
 }

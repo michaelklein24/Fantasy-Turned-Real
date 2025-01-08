@@ -1,11 +1,13 @@
 import { CommonModule, NgFor } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { League } from '../../shared/generated';
+import { GetLeaguesForUserResponse, League } from '../../shared/generated';
 import { LeagueService } from '../../services/league.service';
 import { CreateLeagueFormComponent } from '../../forms/create-league-form/create-league-form.component';
 import { ModalComponent } from '../../shared/modal/modal.component';
 import { FormGroup, NgForm } from '@angular/forms';
+import { AxiosResponse } from 'axios';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-leagues',
@@ -22,20 +24,25 @@ export class LeaguesComponent implements OnInit {
 
   constructor(
     private leagueService: LeagueService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
     this.fetchLeagues();
   }
 
-  fetchLeagues(): void {
-    // Replace this with a real service call
-    this.leagues = [
-      { leagueId: "1", name: 'Premier League'},
-      { leagueId: "2", name: 'Fantasy League 2024' },
-      { leagueId: "3", name: 'Champions League' },
-      { leagueId: "4", name: 'Survivor Pool' },
-    ];
+  async fetchLeagues(): Promise<void> {
+    try {
+      const getLeaguesForUserResponse: AxiosResponse<GetLeaguesForUserResponse> = await this.leagueService.getLeaguesForUser();
+      if (getLeaguesForUserResponse.data.leagues) {
+        this.leagues = getLeaguesForUserResponse.data.leagues;
+      } else {
+        this.leagues = [];
+      }
+    } catch (error) {
+      this.toastService.toastAxiosError('get leagues for user', error, 5000)
+      this.leagues = [];
+    }
   }
 
   openModal(): void {
@@ -47,10 +54,8 @@ export class LeaguesComponent implements OnInit {
   }
 
   handleLeagueCreation(league: League): void {
-    // Handle the form data (e.g., save it to a database)
+    this.leagues.unshift(league);
     this.closeModal();
   }
-  
-
 
 }
