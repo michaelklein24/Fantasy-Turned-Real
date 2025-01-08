@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AxiosRequestConfig } from 'axios';
-import axios, { AxiosInstance } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import { CookieService } from 'ngx-cookie-service';
 import { AuthControllerApi, LeagueControllerApi } from '../shared/generated'; // Adjust import as necessary
 

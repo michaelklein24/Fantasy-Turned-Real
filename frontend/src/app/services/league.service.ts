@@ -17,7 +17,7 @@ export class LeagueService {
   ): Promise<AxiosResponse<CreateLeagueResponse>> {
     const request: CreateLeagueRequest = {
       name: name,
-      show: Show.SURVIVOR,
+      show: Show.Survivor,
       seasonSequence: seasonNumber
     };
     console.log(request)
