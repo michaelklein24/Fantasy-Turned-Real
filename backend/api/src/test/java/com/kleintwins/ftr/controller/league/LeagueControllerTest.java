@@ -63,7 +63,7 @@ public class LeagueControllerTest {
 
         CreateLeagueResponse response = LeagueResponseBuilder.buildCreateLeagueResponse(mockLeague);
 
-        when(leagueService.createLeague(anyString(), anyString())).thenReturn(mockLeague);
+        when(leagueService.createLeague(anyString(), anyString(), any(), any())).thenReturn(mockLeague);
         when(jwtHelper.extractUserIdFromTokenInRequest(any(HttpServletRequest.class))).thenReturn("user123");
 
         // Perform the request and assert
@@ -96,7 +96,7 @@ public class LeagueControllerTest {
 
         // Mock the service to simulate a server error
         when(jwtHelper.extractUserIdFromTokenInRequest(any(HttpServletRequest.class))).thenReturn("user123");
-        when(leagueService.createLeague(anyString(), anyString())).thenThrow(new RuntimeException("Unexpected server issue"));
+        when(leagueService.createLeague(anyString(), anyString(), any(), any())).thenThrow(new RuntimeException("Unexpected server issue"));
 
         mockMvc.perform(post("/league")
                         .contentType(MediaType.APPLICATION_JSON)

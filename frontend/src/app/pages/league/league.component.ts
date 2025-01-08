@@ -1,18 +1,20 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { League } from '../../shared/generated';
-import { ActivatedRoute, Router } from '@angular/router';
-import { map } from 'rxjs';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { map, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-league',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './league.component.html',
   styleUrl: './league.component.css',
 })
-export class LeagueComponent implements OnInit {
+export class LeagueComponent implements OnInit, OnDestroy {
   constructor(private route: ActivatedRoute) {}
+
+  leagueSub : Subscription = new Subscription();
 
   league: League = {}
 
@@ -35,8 +37,14 @@ export class LeagueComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    let league = this.route.paramMap
+    this.leagueSub = this.route.paramMap
       .pipe(map(() => window.history.state))
-      .subscribe((res) => console.log(res));
+      .subscribe(param => {
+                    this.league = param.league
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.leagueSub.unsubscribe();
   }
 }
