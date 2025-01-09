@@ -1,6 +1,6 @@
 package com.kleintwins.ftr.auth.service;
 
-import com.kleintwins.ftr.core.exception.InvalidPassword;
+import com.kleintwins.ftr.user.exception.InvalidPassword;
 import com.kleintwins.ftr.core.service.ConfigService;
 import com.kleintwins.ftr.core.service.I18nService;
 import com.kleintwins.ftr.user.model.PasswordModel;

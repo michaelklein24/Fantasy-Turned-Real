@@ -1,5 +1,6 @@
 package com.kleintwins.ftr.league.dto;
 
+import com.kleintwins.ftr.league.code.InviteStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +10,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateLeagueInviteRequest {
-    private String inviteeEmail;
+public class UpdateInviteStatusRequest {
+    private InviteStatus newStatus;
 }

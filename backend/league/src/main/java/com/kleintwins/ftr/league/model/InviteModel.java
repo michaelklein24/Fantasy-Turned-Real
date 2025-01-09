@@ -1,20 +1,22 @@
 package com.kleintwins.ftr.league.model;
 
 import com.kleintwins.ftr.league.code.InviteStatus;
+import com.kleintwins.ftr.user.model.UserModel;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Table(name = "lge_invite")
 @Entity
 @Getter
 @Setter
-@ToString(exclude = "league")
+@ToString()
 @Builder
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class InviteModel {
+public class InviteModel implements Serializable {
 
     @EmbeddedId
     private InviteId inviteId;
@@ -31,19 +33,14 @@ public class InviteModel {
     @JoinColumn(name = "league_id", referencedColumnName = "leagueId", nullable = false)
     private LeagueModel league;
 
-    @OneToOne
-    @PrimaryKeyJoinColumns({
-            @PrimaryKeyJoinColumn(name = "user_id", referencedColumnName = "userId"),
-            @PrimaryKeyJoinColumn(name = "league_id", referencedColumnName = "leagueId")
-    })
-    private ParticipantModel inviter;
+    @MapsId("invitee_user_id")
+    @ManyToOne
+    @JoinColumn(name = "invitee_user_id", referencedColumnName = "userId")
+    private UserModel invitee;
 
     @OneToOne
-    @PrimaryKeyJoinColumns({
-            @PrimaryKeyJoinColumn(name = "user_id", referencedColumnName = "userId"),
-            @PrimaryKeyJoinColumn(name = "league_id", referencedColumnName = "leagueId")
-    })
-    private ParticipantModel invitee;
+    @JoinColumn(name = "inviter_user_id", referencedColumnName = "userId")
+    private UserModel inviter;
 
     @PrePersist
     protected void onCreate() {

@@ -16,17 +16,23 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class LeagueModel {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String leagueId;
+
     private String name;
+
     @OneToMany(mappedBy = "league", cascade = CascadeType.REMOVE)
     private List<ParticipantModel> participants;
+
     @ManyToOne
     private SeasonModel season;
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime createTime;
-    @OneToMany(mappedBy = "league")
+
+    @OneToMany(mappedBy = "league", fetch = FetchType.LAZY)
     private List<InviteModel> invites;
 
 

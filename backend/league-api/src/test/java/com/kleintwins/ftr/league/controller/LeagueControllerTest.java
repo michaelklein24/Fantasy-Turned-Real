@@ -2,9 +2,9 @@ package com.kleintwins.ftr.league.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kleintwins.ftr.auth.helper.JwtHelper;
+import com.kleintwins.ftr.core.controller.GlobalExceptionHandler;
 import com.kleintwins.ftr.league.dto.CreateLeagueRequest;
 import com.kleintwins.ftr.league.dto.CreateLeagueResponse;
-import com.kleintwins.ftr.league.dto.LeagueResponseBuilder;
 import com.kleintwins.ftr.league.model.LeagueModel;
 import com.kleintwins.ftr.league.service.LeagueService;
 import jakarta.servlet.http.HttpServletRequest;

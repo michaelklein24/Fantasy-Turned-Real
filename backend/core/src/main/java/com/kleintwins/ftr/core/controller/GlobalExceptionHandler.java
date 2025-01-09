@@ -1,6 +1,7 @@
-package com.kleintwins.ftr.league.controller;
+package com.kleintwins.ftr.core.controller;
 
 import com.kleintwins.ftr.core.dto.CustomErrorResponse;
+import com.kleintwins.ftr.core.exception.EntityNotFound;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestControllerAdvice
-@Order(20)
+@Order(9999)
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = RuntimeException.class)
@@ -30,6 +31,13 @@ public class GlobalExceptionHandler {
         CustomErrorResponse error = new CustomErrorResponse(HttpStatus.UNAUTHORIZED.toString(), e.getMessage());
         error.setStatus(HttpStatus.UNAUTHORIZED.value());
         return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(value = EntityNotFound.class)
+    public ResponseEntity<CustomErrorResponse> entityNotFoundException(EntityNotFound e) {
+        CustomErrorResponse error = new CustomErrorResponse(HttpStatus.NOT_FOUND.toString(), e.getMessage());
+        error.setStatus(HttpStatus.NOT_FOUND.value());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(value = {MethodArgumentNotValidException.class})

@@ -12,3 +12,7 @@ VALUES (47, '2025-01-08 14:38:53.763', '5f4da728-9eea-4969-a9b7-e6270027b13a', '
 
 INSERT INTO lge_participant (time_joined, league_id, role, user_id)
 VALUES ('2025-01-08 14:38:53.773', '5f4da728-9eea-4969-a9b7-e6270027b13a', 'OWNER', '7db21f43-31e2-4fd7-8501-772039ad9f16');
+
+-- Inserting data into lge_invite table
+INSERT INTO lge_invite (league_id, invitee_user_id, create_time, update_time, status)
+VALUES ('5f4da728-9eea-4969-a9b7-e6270027b13a', '7db21f43-31e2-4fd7-8501-772039ad9f16', '2025-01-08 14:38:53.773', '2025-01-08 14:38:53.773', 'PENDING');

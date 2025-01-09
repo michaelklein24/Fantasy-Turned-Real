@@ -1,6 +1,6 @@
 package com.kleintwins.ftr.auth.service;
 
-import com.kleintwins.ftr.core.exception.AccountAlreadyExists;
+import com.kleintwins.ftr.auth.exception.AccountAlreadyExists;
 import com.kleintwins.ftr.core.service.I18nService;
 import com.kleintwins.ftr.user.model.UserModel;
 import com.kleintwins.ftr.user.repository.UserRepository;

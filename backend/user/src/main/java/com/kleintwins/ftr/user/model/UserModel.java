@@ -2,11 +2,16 @@ package com.kleintwins.ftr.user.model;
 
 import com.kleintwins.ftr.user.code.GlobalRole;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
-@Data
-@Entity
 @Table(name = "usr_user")
+@Entity
+@Getter
+@Setter
+@ToString()
+@Builder
+@AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class UserModel {
 
     @Id

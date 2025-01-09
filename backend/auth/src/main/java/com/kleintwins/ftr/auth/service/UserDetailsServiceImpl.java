@@ -28,8 +28,7 @@ public class UserDetailsServiceImpl extends AbstractService implements UserDetai
     @Transactional(readOnly = true)
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-        UserModel userModel = userService.findUserByUserId(userId)
-                .orElseThrow(() -> new EntityNotFound("User not found with userId: " + userId));
+        UserModel userModel = userService.findUserByUserId(userId);
         return new User(userModel.getUserId(), passwordService.getActivePasswordforUser(userModel.getUserId())
                 .orElseThrow(() -> new EntityNotFoundException("Active password not found with userId: " + userModel.getUserId()))
                 .getEncodedPassword(),

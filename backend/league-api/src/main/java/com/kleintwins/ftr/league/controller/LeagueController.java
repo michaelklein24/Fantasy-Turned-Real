@@ -1,7 +1,10 @@
 package com.kleintwins.ftr.league.controller;
 
 import com.kleintwins.ftr.auth.helper.JwtHelper;
+import com.kleintwins.ftr.league.code.InviteStatus;
 import com.kleintwins.ftr.league.dto.*;
+import com.kleintwins.ftr.league.model.InviteModel;
+import com.kleintwins.ftr.league.util.LeagueDtoBuilder;
 import com.kleintwins.ftr.show.code.Show;
 import com.kleintwins.ftr.core.dto.CustomErrorResponse;
 import com.kleintwins.ftr.league.model.LeagueModel;
@@ -58,7 +61,7 @@ public class LeagueController {
         int seasonSequence = createLeagueRequest.getSeasonSequence();
         LeagueModel createdLeague = leagueService.createLeague(name, userId, show, seasonSequence);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(LeagueResponseBuilder.buildCreateLeagueResponse(createdLeague));
+        return ResponseEntity.status(HttpStatus.CREATED).body(LeagueDtoBuilder.buildCreateLeagueResponse(createdLeague));
     }
 
     @GetMapping("/user")
@@ -84,14 +87,96 @@ public class LeagueController {
         String userId = jwtHelper.extractUserIdFromTokenInRequest(request);
         List<LeagueModel> leagueModels = leagueService.getLeaguesForUser(userId);
 
-        return ResponseEntity.status(HttpStatus.OK).body(LeagueResponseBuilder.buildGetLeaguesForUserResponse(leagueModels));
+        return ResponseEntity.status(HttpStatus.OK).body(LeagueDtoBuilder.buildGetLeaguesForUserResponse(leagueModels));
     }
 
+    @PostMapping("/:leagueId/invite")
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Invite user to league")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Invite successfully created",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CreateLeagueInviteResponse.class))),
+            @ApiResponse(responseCode = "400", description = "Bad Request: Request missing object",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CustomErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "Forbidden: Insufficient permissions",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CustomErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "Not Found: Data not found",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CustomErrorResponse.class))),
+            @ApiResponse(responseCode = "409", description = "Conflict: User Already Invited",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CustomErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error: Unexpected server issue",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CustomErrorResponse.class)))
+    })
     public ResponseEntity<CreateLeagueInviteResponse> inviteUserToLeague(
+            @RequestBody @Valid CreateLeagueInviteRequest createLeagueInviteRequest,
+            @PathVariable String leagueId,
             HttpServletRequest request
     ) {
-        CreateLeagueInviteResponse response = new CreateLeagueInviteResponse();
-        return ResponseEntity.status(201).body(response);
+        String inviterUserId = jwtHelper.extractUserIdFromTokenInRequest(request);
+        String inviteeEmail = createLeagueInviteRequest.getInviteeEmail();
+
+        InviteModel inviteModel = leagueService.createInvite(inviterUserId, inviteeEmail, leagueId);
+        return ResponseEntity.status(201).body(LeagueDtoBuilder.buildCreateLeagueInviteResponse(inviteModel));
     }
 
+    @GetMapping("/:leagueId/invite")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Fetch invites for league")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Invites successfully retrieved",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CreateLeagueInviteResponse.class))),
+            @ApiResponse(responseCode = "400", description = "Bad Request: Missing leagueId path variable",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CustomErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "Forbidden: Insufficient permissions",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CustomErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "Not Found: League not found",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CustomErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error: Unexpected server issue",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CustomErrorResponse.class)))
+    })
+    public ResponseEntity<GetInvitesForLeagueResponse> getInvitesForLeague(
+            @PathVariable String leagueId
+    ) {
+        List<InviteModel> inviteModels = leagueService.getInvitesForLeague(leagueId);
+        return ResponseEntity.status(200).body(LeagueDtoBuilder.buildGetInvitesForLeagueResponse(inviteModels));
+    }
+
+    @PutMapping("/:leagueId/invite")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Update Invite Status")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Invites successfully updated",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CreateLeagueInviteResponse.class))),
+            @ApiResponse(responseCode = "403", description = "Forbidden: Insufficient permissions",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CustomErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "Not Found: Data Not Found",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CustomErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error: Unexpected server issue",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CustomErrorResponse.class)))
+    })
+    public void acceptOrRejectLeagueInvite(
+            @RequestBody UpdateInviteStatusRequest updateInviteStatusRequest,
+            @PathVariable String leagueId,
+            HttpServletRequest request
+    ) {
+        String inviteeUserId = jwtHelper.extractUserIdFromTokenInRequest(request);
+        InviteStatus newInviteStatus = updateInviteStatusRequest.getNewStatus();
+
+        leagueService.processInvite(inviteeUserId, leagueId, newInviteStatus);
+    }
 }

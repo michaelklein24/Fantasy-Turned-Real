@@ -15,7 +15,7 @@ public class SeasonService {
     private final SeasonRepository seasonRepo;
     private final I18nService i18nService;
 
-    public SeasonModel findByShowAndSeasonId(Show show, int sequence) {
+    public SeasonModel findSeasonByShowAndSeasonId(Show show, int sequence) {
         SeasonId id = new SeasonId(show, sequence);
 
         // Use `seasonRepo.findById(id)` directly

@@ -9,11 +9,12 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 public class CreateLeagueInviteResponse {
-    private String firstName;
-    private String lastName;
-    private String email;
-    private LocalDateTime inviteTime;
+    private Invite invite;
+
+    public CreateLeagueInviteResponse(Invite invite) {
+        this.invite = invite;
+    }
+
+    public CreateLeagueInviteResponse() { }
 }

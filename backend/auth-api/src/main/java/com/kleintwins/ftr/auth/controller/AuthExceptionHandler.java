@@ -1,8 +1,8 @@
 package com.kleintwins.ftr.auth.controller;
 
 import com.kleintwins.ftr.core.dto.CustomErrorResponse;
-import com.kleintwins.ftr.core.exception.AccountAlreadyExists;
-import com.kleintwins.ftr.core.exception.InvalidPassword;
+import com.kleintwins.ftr.auth.exception.AccountAlreadyExists;
+import com.kleintwins.ftr.user.exception.InvalidPassword;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
