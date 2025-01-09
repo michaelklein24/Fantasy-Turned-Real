@@ -1,10 +1,7 @@
 dependencies {
-    implementation project(":core")
-    implementation "org.springframework.boot:spring-boot-starter-security:${springBootVersion}"
-    implementation "org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}"
-    implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
-    implementation "io.jsonwebtoken:jjwt-api:${jsonWebTokenVersion}"
-    implementation "io.jsonwebtoken:jjwt-impl:${jsonWebTokenVersion}"
-    implementation "io.jsonwebtoken:jjwt-jackson:${jsonWebTokenVersion}"
-    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springDocOpenApiVersion}"
+    api project(":core")
+    api project(":user-api")
+    api "io.jsonwebtoken:jjwt-api:${jsonWebTokenVersion}"
+    api "io.jsonwebtoken:jjwt-impl:${jsonWebTokenVersion}"
+    api "io.jsonwebtoken:jjwt-jackson:${jsonWebTokenVersion}"
 }

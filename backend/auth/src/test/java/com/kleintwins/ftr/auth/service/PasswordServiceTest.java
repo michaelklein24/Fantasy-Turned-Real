@@ -1,11 +1,12 @@
 package com.kleintwins.ftr.auth.service;
 
-import com.kleintwins.ftr.auth.exception.InvalidPassword;
-import com.kleintwins.ftr.auth.model.PasswordModel;
-import com.kleintwins.ftr.auth.model.UserModel;
-import com.kleintwins.ftr.auth.repository.PasswordRepository;
+import com.kleintwins.ftr.core.exception.InvalidPassword;
 import com.kleintwins.ftr.core.service.ConfigService;
 import com.kleintwins.ftr.core.service.I18nService;
+import com.kleintwins.ftr.user.model.PasswordModel;
+import com.kleintwins.ftr.user.model.UserModel;
+import com.kleintwins.ftr.user.repository.PasswordRepository;
+import com.kleintwins.ftr.user.service.PasswordService;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

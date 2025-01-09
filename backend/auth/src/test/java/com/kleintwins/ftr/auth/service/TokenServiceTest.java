@@ -1,7 +1,7 @@
 package com.kleintwins.ftr.auth.service;
 
-import com.kleintwins.ftr.auth.model.UserModel;
 import com.kleintwins.ftr.core.service.ConfigService;
+import com.kleintwins.ftr.user.model.UserModel;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;

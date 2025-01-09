@@ -1,12 +1,11 @@
 package com.kleintwins.ftr.auth.service;
 
-import com.kleintwins.ftr.auth.dto.LoginUserResponse;
-import com.kleintwins.ftr.auth.exception.AccountAlreadyExists;
-import com.kleintwins.ftr.auth.model.UserModel;
-import com.kleintwins.ftr.auth.repository.UserRepository;
-import com.kleintwins.ftr.core.service.AbstractService;
+import com.kleintwins.ftr.core.exception.AccountAlreadyExists;
 import com.kleintwins.ftr.core.service.ConfigService;
 import com.kleintwins.ftr.core.service.I18nService;
+import com.kleintwins.ftr.user.model.UserModel;
+import com.kleintwins.ftr.user.repository.UserRepository;
+import com.kleintwins.ftr.user.service.PasswordService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;

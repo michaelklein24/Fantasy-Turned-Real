@@ -1,7 +1,5 @@
 dependencies {
-    implementation project(':api')
-    implementation project(':socket')
-    implementation project(':auth')
-    implementation "org.springframework.boot:spring-boot-starter:${springBootVersion}"
-    implementation "org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}"
+    implementation project(':auth-api')
+    implementation project(':league-api')
+    implementation project(':show-api')
 }

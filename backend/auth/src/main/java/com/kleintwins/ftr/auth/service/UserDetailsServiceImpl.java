@@ -1,9 +1,11 @@
 package com.kleintwins.ftr.auth.service;
 
-import com.kleintwins.ftr.auth.code.GlobalRole;
-import com.kleintwins.ftr.auth.exception.EntityNotFound;
-import com.kleintwins.ftr.auth.model.UserModel;
+import com.kleintwins.ftr.core.exception.EntityNotFound;
 import com.kleintwins.ftr.core.service.AbstractService;
+import com.kleintwins.ftr.user.code.GlobalRole;
+import com.kleintwins.ftr.user.model.UserModel;
+import com.kleintwins.ftr.user.service.PasswordService;
+import com.kleintwins.ftr.user.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

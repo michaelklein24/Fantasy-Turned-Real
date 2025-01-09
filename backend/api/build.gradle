@@ -1,8 +1,0 @@
-dependencies {
-    implementation project(':core')
-    implementation project(':auth')
-    implementation "org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}"
-    implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
-    implementation "org.springframework.boot:spring-boot-starter-validation:${springBootVersion}"
-    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springDocOpenApiVersion}"
-}

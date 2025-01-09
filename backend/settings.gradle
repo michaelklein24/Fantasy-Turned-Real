@@ -1,8 +1,14 @@
-rootProject.name = 'Fantasy-Turned-Real'
+rootProject.name = 'backend'
 
 include 'server'
-include 'api'
-include 'core'
-include 'auth'
 include 'socket'
+include 'core'
 
+include 'auth'
+include 'auth-api'
+include 'league'
+include 'league-api'
+include 'show'
+include 'show-api'
+include 'user'
+include 'user-api'

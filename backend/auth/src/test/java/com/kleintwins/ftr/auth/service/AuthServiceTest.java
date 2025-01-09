@@ -1,9 +1,10 @@
 package com.kleintwins.ftr.auth.service;
 
-import com.kleintwins.ftr.auth.exception.AccountAlreadyExists;
-import com.kleintwins.ftr.auth.model.UserModel;
-import com.kleintwins.ftr.auth.repository.UserRepository;
+import com.kleintwins.ftr.core.exception.AccountAlreadyExists;
 import com.kleintwins.ftr.core.service.I18nService;
+import com.kleintwins.ftr.user.model.UserModel;
+import com.kleintwins.ftr.user.repository.UserRepository;
+import com.kleintwins.ftr.user.service.PasswordService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,14 +12,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import java.lang.reflect.Method;
-import java.util.Optional;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;

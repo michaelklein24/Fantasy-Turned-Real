@@ -1,0 +1,5 @@
+dependencies {
+    api project(":league")
+    implementation project(":show-api")
+    implementation project(":auth-api")
+}
