@@ -1,1 +1,0 @@
-java -jar C:/dev/devtools/swagger-codegen-cli.jar generate -i http://localhost:8080/api/v3/api-docs -l typescript-angular -o C:/Users/Michael` Klein/Desktop/fantasy-turned-real/client/fantasy-turned-real/src/app/swagger

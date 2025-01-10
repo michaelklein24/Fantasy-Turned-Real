@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { CreateLeagueResponse, League } from '../../shared/generated';
-import { LeagueService } from '../../services/league.service';
 import { AxiosResponse } from 'axios';
-import { ToastService } from '../../services/toast.service';
+import { CreateLeagueResponse, League } from '../../../libs/generated';
+import { ToastService } from '../../core/services/toast.service';
+import { LeagueService } from '../../features/leagues/services/league.service';
 
 @Component({
   selector: 'app-create-league-form',

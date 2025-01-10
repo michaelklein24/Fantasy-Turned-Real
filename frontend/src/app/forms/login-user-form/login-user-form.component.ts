@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../../services/auth.service';
 import { FormsModule, NgForm } from '@angular/forms';
-import { AxiosResponse } from 'axios';
-import { SessionService } from '../../services/session.service';
 import { Router, RouterModule } from '@angular/router';
-import { LoginUserResponse } from '../../shared/generated';
-import { ToastService } from '../../services/toast.service';
+import { AxiosResponse } from 'axios';
+import { LoginUserResponse } from '../../../libs/generated';
+import { ToastService } from '../../core/services/toast.service';
+import { AuthService } from '../../features/auth/services/auth.service';
+import { SessionService } from '../../features/auth/services/session.service';
 
 @Component({
   selector: 'app-login-user-form',

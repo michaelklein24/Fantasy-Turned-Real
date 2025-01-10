@@ -1,11 +1,11 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { LeagueService } from '../../services/league.service';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { AxiosResponse } from 'axios';
-import { Invite, InviteUserToLeagueResponse } from '../../shared/generated';
-import { ToastService } from '../../services/toast.service';
+import { Subscription } from 'rxjs';
+import { Invite, InviteUserToLeagueResponse } from '../../../libs/generated';
+import { ToastService } from '../../core/services/toast.service';
+import { LeagueService } from '../../features/leagues/services/league.service';
 
 @Component({
   selector: 'app-invite-user-to-league-form',

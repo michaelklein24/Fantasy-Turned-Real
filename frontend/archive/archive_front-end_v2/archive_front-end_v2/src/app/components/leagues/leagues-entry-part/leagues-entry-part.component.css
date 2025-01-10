@@ -1,5 +1,0 @@
-.league-entry-hover:hover {
-    outline: 5px solid lightblue;
-    transition: outline 0.1s ease-in-out;
-    cursor: pointer;
-}

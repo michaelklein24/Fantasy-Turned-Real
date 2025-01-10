@@ -1,14 +1,13 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { RegisterUserFormComponent } from './forms/register-user-form/register-user-form.component';
-import { FormsModule } from '@angular/forms';
-import { NavbarComponent } from './shared/navbar/navbar.component';
-import { ToastComponent } from './shared/toast/toast.component';
-import { CommonModule } from '@angular/common';
-import { LoginUserFormComponent } from './forms/login-user-form/login-user-form.component';
-import { ModalComponent } from './shared/modal/modal.component';
+import { LeagueEntryComponent } from './features/leagues/components/league-entry/league-entry.component';
 import { CreateLeagueFormComponent } from './forms/create-league-form/create-league-form.component';
-import { LeagueEntryComponent } from './components/dashboard/leagues/league-entry/league-entry.component';
+import { LoginUserFormComponent } from './forms/login-user-form/login-user-form.component';
+import { RegisterUserFormComponent } from './forms/register-user-form/register-user-form.component';
+import { ModalComponent } from './shared/components/modal/modal.component';
+import { NavbarComponent } from './shared/components/navbar/navbar.component';
+import { ToastComponent } from './shared/components/toast/toast.component';
 
 @Component({
   selector: 'app-root',
@@ -16,13 +15,7 @@ import { LeagueEntryComponent } from './components/dashboard/leagues/league-entr
   imports: [
     CommonModule,
     RouterOutlet,
-
-    LeagueEntryComponent,
-    RegisterUserFormComponent,
-    LoginUserFormComponent,
-    CreateLeagueFormComponent,
     NavbarComponent,
-    ModalComponent,
     ToastComponent
   ],
   templateUrl: './app.component.html',
