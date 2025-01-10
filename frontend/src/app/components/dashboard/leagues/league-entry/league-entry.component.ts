@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { League } from '../../shared/generated';
+import { League } from '../../../../shared/generated';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 

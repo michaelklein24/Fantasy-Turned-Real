@@ -7,7 +7,7 @@ import { CreateLeagueFormComponent } from '../../forms/create-league-form/create
 import { ModalComponent } from '../../shared/modal/modal.component';
 import { AxiosResponse } from 'axios';
 import { ToastService } from '../../services/toast.service';
-import { LeagueEntryComponent } from '../../components/league-entry/league-entry.component';
+import { LeagueEntryComponent } from '../../components/dashboard/leagues/league-entry/league-entry.component';
 
 @Component({
   selector: 'app-leagues',
