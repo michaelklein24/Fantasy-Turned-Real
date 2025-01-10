@@ -1,6 +1,5 @@
 package com.kleintwins.ftr.league.util;
 
-import com.kleintwins.ftr.auth.dto.User;
 import com.kleintwins.ftr.auth.util.UserDtoBuilder;
 import com.kleintwins.ftr.league.code.InviteStatus;
 import com.kleintwins.ftr.league.dto.*;
@@ -26,8 +25,8 @@ public class LeagueDtoBuilder {
         return new GetLeaguesForUserResponse(leagues);
     }
 
-    public static CreateLeagueInviteResponse buildCreateLeagueInviteResponse(InviteModel inviteModel) {
-        return new CreateLeagueInviteResponse(LeagueDtoBuilder.buildInvite(inviteModel));
+    public static InviteUserToLeagueResponse buildCreateLeagueInviteResponse(InviteModel inviteModel) {
+        return new InviteUserToLeagueResponse(LeagueDtoBuilder.buildInvite(inviteModel));
     }
 
     public static GetInvitesForLeagueResponse buildGetInvitesForLeagueResponse(List<InviteModel> inviteModels) {
@@ -38,10 +37,10 @@ public class LeagueDtoBuilder {
                 response.getApproved().add(invite);
 
             } else if (InviteStatus.PENDING.equals(inviteModel.getStatus())) {
-                response.getDeclined().add(invite);
+                response.getPending().add(invite);
 
             } else if (InviteStatus.DECLINED.equals(inviteModel.getStatus())) {
-                response.getPending().add(invite);
+                response.getDeclined().add(invite);
             }
         }
         return response;

@@ -19,4 +19,6 @@ public class InviteId implements Serializable {
         this.inviteeUserId = inviteeUserId;
         this.leagueId = leagueId;
     }
+
+    public InviteId() {}
 }

@@ -16,7 +16,7 @@ export const routes: Routes = [
     { path: "dashboard", component: DashboardComponent, children: [
         { path: "", component: HomeComponent },
         { path: "league", component: LeaguesComponent },
-        { path: "league/:id", component: LeagueComponent, children: [
+        { path: "league/:leagueId", component: LeagueComponent, children: [
             { path: "home", component: LeagueHomeComponent },
             { path: "score", component: LeagueScoreComponent },
             { path: "survey", component: LeagueSurveyComponent },

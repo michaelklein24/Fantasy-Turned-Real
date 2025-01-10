@@ -17,10 +17,7 @@ export class LeagueEntryComponent {
   constructor(private router: Router, private route: ActivatedRoute) {}
 
   navigateToLeague() {
-    this.router.navigate([this.league.leagueId], {
-      state: { league : this.league,}, 
-      relativeTo: this.route
-    })
+    this.router.navigate(['dashboard', 'league', this.league.leagueId]);
   }
 
 }

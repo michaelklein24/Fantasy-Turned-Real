@@ -1,0 +1,19 @@
+<li
+  class="flex flex-col items-start justify-between items-center p-2 border rounded-lg"
+>
+  <p>{{ invite.invitee?.firstName }} {{ invite.invitee?.lastName }}</p>
+  <p class="text-sm text-gray-500">{{ invite.invitee?.email }}</p>
+  <p class="text-sm text-gray-400">
+    Invited by {{ invite.inviter?.firstName }} {{ invite.inviter?.lastName }}
+  </p>
+
+  <p *ngIf="invite.status == 'APPROVED'" class="text-xs text-gray-400 mt-1">
+    Approved on {{ invite.updateTime | date:'MMM d, yyyy' }}
+  </p>
+  <p *ngIf="invite.status == 'PENDING'" class="text-xs text-gray-400 mt-1">
+    Invited on {{ invite.updateTime | date:'MMM d, yyyy' }}
+  </p>
+  <p *ngIf="invite.status == 'DECLINED'" class="text-xs text-gray-400 mt-1">
+    Declined on {{ invite.updateTime | date:'MMM d, yyyy' }}
+  </p>
+</li>

@@ -1,0 +1,20 @@
+<form
+  (ngSubmit)="onSubmit(form)"
+  #form="ngForm"
+  class="flex flex-col sm:flex-row gap-4 items-center"
+>
+  <input
+    id="email"
+    name="email"
+    type="email"
+    placeholder="Enter participant's email"
+    class="flex-grow px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+    ngModel
+  />
+  <button
+    type="submit"
+    class="bg-teal-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-teal-700 transition"
+  >
+    Send Invite
+  </button>
+</form>

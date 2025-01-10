@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CreateLeagueRequest, CreateLeagueResponse, GetLeaguesForUserResponse, Show } from '../shared/generated';
+import { CreateLeagueRequest, CreateLeagueResponse, GetInvitesForLeagueResponse, GetLeaguesForUserResponse, InviteUserToLeagueResponse, Show } from '../shared/generated';
 import { AxiosResponse } from 'axios';
 import { AxiosRequestConfig } from 'axios';
 import { TokenService } from './token.service';
@@ -26,5 +26,15 @@ export class LeagueService {
 
   async getLeaguesForUser(): Promise<AxiosResponse<GetLeaguesForUserResponse>> {
     return await this.apiService.league.getLeaguesForUser();
+  }
+
+  async getInvitesForLeague(leagueId: string): Promise<AxiosResponse<GetInvitesForLeagueResponse>> {
+    return await this.apiService.league.getInvitesForLeague(leagueId)
+  }
+
+  async inviteUserToLeague(leagueId: string, inviteeEmail: string): Promise<AxiosResponse<InviteUserToLeagueResponse>> {
+    return await this.apiService.league.inviteUserToLeague(leagueId, {
+      inviteeEmail: inviteeEmail
+    })
   }
 }

@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-@ToString()
+@ToString(exclude = "league")
 @Builder
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -38,7 +38,7 @@ public class InviteModel implements Serializable {
     @JoinColumn(name = "invitee_user_id", referencedColumnName = "userId")
     private UserModel invitee;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "inviter_user_id", referencedColumnName = "userId")
     private UserModel inviter;
 
@@ -51,4 +51,6 @@ public class InviteModel implements Serializable {
     protected void onUpdate() {
         this.updateTime = LocalDateTime.now();
     }
+
+    public InviteModel() { }
 }

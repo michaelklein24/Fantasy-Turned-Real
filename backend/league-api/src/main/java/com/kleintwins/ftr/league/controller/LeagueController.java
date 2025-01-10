@@ -90,13 +90,13 @@ public class LeagueController {
         return ResponseEntity.status(HttpStatus.OK).body(LeagueDtoBuilder.buildGetLeaguesForUserResponse(leagueModels));
     }
 
-    @PostMapping("/:leagueId/invite")
+    @PostMapping("/{leagueId}/invite")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Invite user to league")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Invite successfully created",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CreateLeagueInviteResponse.class))),
+                            schema = @Schema(implementation = InviteUserToLeagueResponse.class))),
             @ApiResponse(responseCode = "400", description = "Bad Request: Request missing object",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = CustomErrorResponse.class))),
@@ -113,25 +113,25 @@ public class LeagueController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = CustomErrorResponse.class)))
     })
-    public ResponseEntity<CreateLeagueInviteResponse> inviteUserToLeague(
-            @RequestBody @Valid CreateLeagueInviteRequest createLeagueInviteRequest,
-            @PathVariable String leagueId,
+    public ResponseEntity<InviteUserToLeagueResponse> inviteUserToLeague(
+            @PathVariable("leagueId") String leagueId,
+            @RequestBody @Valid InviteUserToLeagueRequest inviteUserToLeagueRequest,
             HttpServletRequest request
     ) {
         String inviterUserId = jwtHelper.extractUserIdFromTokenInRequest(request);
-        String inviteeEmail = createLeagueInviteRequest.getInviteeEmail();
+        String inviteeEmail = inviteUserToLeagueRequest.getInviteeEmail();
 
-        InviteModel inviteModel = leagueService.createInvite(inviterUserId, inviteeEmail, leagueId);
+        InviteModel inviteModel = leagueService.createInvite(inviteeEmail, inviterUserId, leagueId);
         return ResponseEntity.status(201).body(LeagueDtoBuilder.buildCreateLeagueInviteResponse(inviteModel));
     }
 
-    @GetMapping("/:leagueId/invite")
+    @GetMapping("/{leagueId}/invite")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Fetch invites for league")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Invites successfully retrieved",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CreateLeagueInviteResponse.class))),
+                            schema = @Schema(implementation = GetInvitesForLeagueResponse.class))),
             @ApiResponse(responseCode = "400", description = "Bad Request: Missing leagueId path variable",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = CustomErrorResponse.class))),
@@ -146,19 +146,19 @@ public class LeagueController {
                             schema = @Schema(implementation = CustomErrorResponse.class)))
     })
     public ResponseEntity<GetInvitesForLeagueResponse> getInvitesForLeague(
-            @PathVariable String leagueId
+            @PathVariable("leagueId") String leagueId
     ) {
         List<InviteModel> inviteModels = leagueService.getInvitesForLeague(leagueId);
         return ResponseEntity.status(200).body(LeagueDtoBuilder.buildGetInvitesForLeagueResponse(inviteModels));
     }
 
-    @PutMapping("/:leagueId/invite")
+    @PutMapping("/{leagueId}/invite")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Update Invite Status")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Invites successfully updated",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CreateLeagueInviteResponse.class))),
+                            schema = @Schema(implementation = InviteUserToLeagueResponse.class))),
             @ApiResponse(responseCode = "403", description = "Forbidden: Insufficient permissions",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = CustomErrorResponse.class))),
@@ -171,7 +171,7 @@ public class LeagueController {
     })
     public void acceptOrRejectLeagueInvite(
             @RequestBody UpdateInviteStatusRequest updateInviteStatusRequest,
-            @PathVariable String leagueId,
+            @PathVariable("leagueId") String leagueId,
             HttpServletRequest request
     ) {
         String inviteeUserId = jwtHelper.extractUserIdFromTokenInRequest(request);

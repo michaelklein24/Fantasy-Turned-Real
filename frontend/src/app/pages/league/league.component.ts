@@ -14,8 +14,9 @@ import { map, Subscription } from 'rxjs';
 export class LeagueComponent implements OnInit, OnDestroy {
   constructor(private route: ActivatedRoute) {}
 
-  leagueSub : Subscription = new Subscription();
+  paramSub : Subscription = new Subscription();
 
+  leagueId: string | null = null;
   league: League = {}
 
   scoreboard = [
@@ -37,14 +38,11 @@ export class LeagueComponent implements OnInit, OnDestroy {
   ];
 
   ngOnInit(): void {
-    this.leagueSub = this.route.paramMap
-      .pipe(map(() => window.history.state))
-      .subscribe(param => {
-                    this.league = param.league
-      });
+    this.paramSub = this.route.paramMap
+      .subscribe((params) => this.leagueId = params.get('leagueId'));
   }
 
   ngOnDestroy(): void {
-    this.leagueSub.unsubscribe();
+    this.paramSub.unsubscribe();
   }
 }
