@@ -38,17 +38,24 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.showUserMenu = false;
   }
 
-  // Listen for clicks anywhere on the document
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
-    // Check if the click target is outside the dropdown
     const dropdown = document.querySelector('.absolute');
     const profileImage = document.querySelector('img[alt="User Profile"]');
-    
+    const menuItem = dropdown?.querySelector('a, button, li'); // Target menu items like <a> or <button>
+  
+    // Check if the click target is outside the dropdown and profile image
     if (this.showUserMenu && dropdown && !dropdown.contains(event.target as Node) && !profileImage?.contains(event.target as Node)) {
       this.closeUserMenu();
     }
+  
+    // Close the menu if the target is a menu item
+    if (this.showUserMenu && menuItem && menuItem.contains(event.target as Node)) {
+      this.closeUserMenu();
+    }
   }
+  
+  
 
   onLogout(): void {
     this.sessionService.clearSession();

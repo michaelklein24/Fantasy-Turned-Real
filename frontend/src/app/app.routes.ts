@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { DashboardPageComponent } from './features/dashboard/pages/dashboard/dashboard-page.component';
+import { DashboardPageComponent } from './pages/dashboard/dashboard-page.component';
 import { LeagueHomePageComponent } from './features/leagues/pages/league-home-page/league-home-page.component';
 import { LeaguePageComponent } from './features/leagues/pages/league-page/league-page.component';
 import { LeagueScorePageComponent } from './features/leagues/pages/league-score-page/league-score-page.component';

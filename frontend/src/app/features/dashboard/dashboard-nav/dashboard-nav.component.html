@@ -1,0 +1,48 @@
+<aside
+class="fixed top-[4rem] inset-y-0 right-0 w-3/7 md:w-1/4 bg-teal-500 text-white flex flex-col transform transition-transform duration-300 z-40"
+[class.translate-x-0]="isOpen"
+[class.translate-x-full]="!isOpen"
+[ngClass]="{'shadow-none': !isOpen, 'shadow-lg': isOpen}"
+>
+  <!-- Close Button -->
+  <div class="flex justify-end p-6">
+    <button
+      (click)="closeNav()"
+      aria-label="Close Navigation"
+      class="text-white hover:text-gray-300 focus:outline-none"
+    >
+      <span class="material-icons">close</span>
+    </button>
+  </div>
+
+  <!-- Navigation Content -->
+  <div class="p-4 hidden md-visible">
+    <img
+      src="../../../assets/whisker-wars-logo.png"
+      alt="Whisker Wars Logo"
+      class="h-32 w-32 mb-4 mx-auto"
+    />
+  </div>
+  <nav class="flex-grow">
+    <ul>
+      <li>
+        <a
+          routerLink="/dashboard"
+          class="flex items-center px-4 py-3 hover:bg-teal-400 transition w-full h-full"
+        >
+          <span class="material-icons-outlined mr-3">dashboard</span>
+          Dashboard
+        </a>
+      </li>
+      <li>
+        <a
+          routerLink="/dashboard/league"
+          class="flex items-center px-4 py-3 hover:bg-teal-400 transition"
+        >
+          <span class="material-icons mr-3">groups</span>
+          Leagues
+        </a>
+      </li>
+    </ul>
+  </nav>
+</aside>
