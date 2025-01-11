@@ -40,8 +40,8 @@ export class InviteUserToLeagueFormComponent implements OnInit, OnDestroy {
   async onSubmit(form: NgForm) {
     try {
       const email : string = form.value.email;
-      const response : AxiosResponse<InviteUserToLeagueResponse> = await this.leagueService.inviteUserToLeague(this.leagueId!, email)
-      this.inviteCreated.emit(response.data.invite);
+      const invite : Invite = await this.leagueService.inviteUserToLeague(this.leagueId!, email)
+      this.inviteCreated.emit(invite);
     } catch (error) {
       this.toastService.toastAxiosError('invite user', error, 5000);
     }

@@ -39,9 +39,9 @@ export class LeaguesPageComponent implements OnInit {
 
   async fetchLeagues(): Promise<void> {
     try {
-      const getLeaguesForUserResponse: AxiosResponse<GetLeaguesForUserResponse> = await this.leagueService.getLeaguesForUser();
-      if (getLeaguesForUserResponse.data.leagues) {
-        this.leagues = getLeaguesForUserResponse.data.leagues;
+      const getLeaguesForUserResponse: League[] = await this.leagueService.getLeaguesForUser();
+      if (getLeaguesForUserResponse) {
+        this.leagues = getLeaguesForUserResponse;
       } else {
         this.leagues = [];
       }

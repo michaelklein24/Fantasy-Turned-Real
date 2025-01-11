@@ -20,6 +20,9 @@ import { InviteStatusEntryComponent } from '../invite-status-entry/invite-status
   styleUrl: './invite-panel.component.css'
 })
 export class InvitePanelComponent implements OnInit, OnDestroy {
+handleCreatedInvite($event: Invite) {
+throw new Error('Method not implemented.');
+}
 
   constructor(private leagueService: LeagueService, private route: ActivatedRoute) { }
 
@@ -45,21 +48,21 @@ export class InvitePanelComponent implements OnInit, OnDestroy {
   }
 
   async fetchInvites(): Promise<void> {
-    const response : AxiosResponse<GetInvitesForLeagueResponse> = await this.leagueService.getInvitesForLeague(this.leagueId!);
-    console.log(response.data)
-    if (response.data.approved) {
-      this.approvedInvites = response.data.approved;
+    const response : GetInvitesForLeagueResponse = await this.leagueService.getInvitesForLeague(this.leagueId!);
+    console.log(response)
+    if (response.approved) {
+      this.approvedInvites = response.approved;
     }
-    if (response.data.pending) {
-      this.pendingInvites = response.data.pending;
+    if (response.pending) {
+      this.pendingInvites = response.pending;
     }
-    if (response.data.declined) {
-      this.declinedInvites = response.data.declined;
+    if (response.declined) {
+      this.declinedInvites = response.declined;
     }
   }
 
-  handleCreatedInvite(invite: Invite) {
-    this.pendingInvites.push(invite);
-  }
+  handleCreateInvite(invite : Invite) {
 
+  }
+  
 }

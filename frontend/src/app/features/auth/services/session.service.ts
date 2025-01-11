@@ -8,22 +8,35 @@ import { TokenService } from './token.service';
 export class SessionService implements OnDestroy {
 
     private _loginStatus = new BehaviorSubject<boolean>(this.tokenService.hasValidToken());
-    private _userId = new BehaviorSubject<string | null>(this.tokenService.hasValidToken() ? ((<any>this.tokenService.decodeToken(this.tokenService.getToken())).userId) : null);
+    private _userId = new BehaviorSubject<string | null>(this.tokenService.hasValidToken() ? this.extractUserId() : null);
 
     public userId$ = this._userId.asObservable();
     public loginStatus$ = this._loginStatus.asObservable();
 
-    private tokenCheckInterval : any;
+    private tokenCheckInterval: any;
 
     constructor(private tokenService: TokenService) {
         this.startTokenCheck();
+    }
+
+    private extractUserId(): string | null {
+        const token = this.tokenService.getToken();
+        if (token) {
+            try {
+                return (<any>this.tokenService.decodeToken(token))['userId'];
+            } catch (error) {
+                console.error('Invalid token format', error);
+                return null;
+            }
+        }
+        return null;
     }
 
     private setUserId(id: string | null) {
         this._userId.next(id);
     }
 
-    private setloginStatus(isUserLoggedIn: boolean) {
+    private setLoginStatus(isUserLoggedIn: boolean) {
         this._loginStatus.next(isUserLoggedIn);
     }
 
@@ -31,26 +44,29 @@ export class SessionService implements OnDestroy {
         if (token) {
             this.tokenService.saveToken(token);
         }
-        if (this.tokenService.hasValidToken()) {
-            let userId = (<any>this.tokenService.decodeToken(token))['userId'];
+        const isValid = this.tokenService.hasValidToken();
+        if (isValid) {
+            const userId = this.extractUserId();
             this.setUserId(userId);
-            this.setloginStatus(true);
-            return;
+            this.setLoginStatus(true);
+        } else {
+            this.setUserId(null);
+            this.setLoginStatus(false);
         }
-        this.setUserId(null);
-        this.setloginStatus(false);
     }
 
     public clearSession(): void {
         this.tokenService.deleteToken();
         this.setUserId(null);
-        this.setloginStatus(false);
+        this.setLoginStatus(false);
     }
 
     private startTokenCheck() {
         this.tokenCheckInterval = setInterval(() => {
-            this.tokenService.hasValidToken();
-        }, 60000); // Check every 60 seconds
+            if (!this.tokenService.hasValidToken()) {
+                this.clearSession();
+            }
+        }, 60000);
     }
 
     ngOnDestroy(): void {

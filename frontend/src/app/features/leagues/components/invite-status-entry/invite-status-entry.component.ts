@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Invite } from '../../../../core/services/api.service';
+import { Invite } from '../../../../../libs/generated';
 
 @Component({
   selector: 'app-invite-status-entry',

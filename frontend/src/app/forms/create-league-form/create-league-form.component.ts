@@ -4,6 +4,7 @@ import { AxiosResponse } from 'axios';
 import { CreateLeagueResponse, League } from '../../../libs/generated';
 import { ToastService } from '../../core/services/toast.service';
 import { LeagueService } from '../../features/leagues/services/league.service';
+import { AxiosError } from 'axios';
 
 @Component({
   selector: 'app-create-league-form',
@@ -21,19 +22,25 @@ export class CreateLeagueFormComponent {
   ) {}
 
   async onSubmit(form: NgForm): Promise<void> {
-    let league : League = {}
-
-    console.log(form.value)
-
-
+    if (form.invalid) {
+      this.toastService.toastError('Please fill in all the required fields', 3000);
+      return;
+    }
+  
+    const { leagueName, seasonNumber } = form.value;
+  
     try {
-      const leagueName : string = form.value.leagueName;
-      const seasonNumber : number = form.value.seasonNumber;
-      const response: AxiosResponse<CreateLeagueResponse> = await this.leagueService.createLeague(leagueName, seasonNumber);
-      this.createLeague.emit(response.data.league);
-    } catch (error: any) {
-      console.log(error);
-      this.toastService.toastAxiosError('create league', error, 5000);
+      const response: CreateLeagueResponse = await this.leagueService.createLeague(leagueName, seasonNumber);
+      this.createLeague.emit(response.league);
+      this.toastService.toastSuccess(`League ${leagueName} created successfully`, 5000);
+    } catch (error: AxiosError | any) {
+      if (error.isAxiosError) {
+        console.error('Axios error:', error.response?.data);
+        this.toastService.toastAxiosError('Create league failed', error, 5000);
+      } else {
+        console.error('Unexpected error:', error);
+        this.toastService.toastError('An unexpected error occurred. Please try again later.', 5000);
+      }
     }
   }
 }

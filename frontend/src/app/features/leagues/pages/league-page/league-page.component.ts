@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { League } from '../../../../core/services/api.service';
+import { League } from '../../../../../libs/generated';
 
 @Component({
   selector: 'app-league-page',

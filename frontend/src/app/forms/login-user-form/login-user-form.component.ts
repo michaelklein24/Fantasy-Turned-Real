@@ -22,19 +22,24 @@ export class LoginUserFormComponent {
     private router: Router
   ) {}
 
-  async onSubmit(form: NgForm) {
-    const email = form.value.email;
-    const password = form.value.password;
+  private isFormInvalid(form: NgForm): boolean {
+    if (form.invalid) {
+      this.toastService.toastError('Please fill in all required fields.', 3000);
+      return true;
+    }
+    return false;
+  }
 
+  async onSubmit(form: NgForm): Promise<void> {
+    if (this.isFormInvalid(form)) return;
+  
     try {
-      const response: AxiosResponse<LoginUserResponse> =
-        await this.authService.loginUser(email, password);
-      const token: string = response.data.accessToken!;
-      this.sessionService.startSession(token);
+      await this.authService.loginUser(form.value.email, form.value.password);
       this.router.navigate(['/dashboard']);
-    } catch (error: any) {
-      console.log(error);
-      this.toastService.toastAxiosError('register account', error, 5000);
+      this.toastService.toastSuccess('Login successful!', 3000);
+    } catch (error) {
+      console.error('Login failed:', error);
+      this.toastService.toastAxiosError('log in', error, 5000);
     }
   }
 }

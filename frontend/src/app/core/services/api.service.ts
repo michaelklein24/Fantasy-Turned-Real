@@ -1,60 +1,79 @@
 import { Injectable } from '@angular/core';
-import axios, { AxiosInstance } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { CookieService } from 'ngx-cookie-service';
 import { AuthControllerApi, LeagueControllerApi } from '../../../libs/generated';
+import { InternalAxiosRequestConfig } from 'axios';
+import { AxiosHeaders } from 'axios';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ApiService {
-
   private axiosInstance: AxiosInstance;
   public auth: AuthControllerApi;
   public league: LeagueControllerApi;
 
   constructor(private cookieService: CookieService) {
-    // Create axios instance
-    this.axiosInstance = axios.create({
-      baseURL: 'http://localhost:8080',
+    this.axiosInstance = this.createAxiosInstance();
+    this.auth = new AuthControllerApi(undefined, this.getBaseUrl(), this.axiosInstance);
+    this.league = new LeagueControllerApi(undefined, this.getBaseUrl(), this.axiosInstance);
+  }
+
+  private createAxiosInstance(): AxiosInstance {
+    const instance = axios.create({
+      baseURL: this.getBaseUrl(),
       timeout: 10000,
       headers: {
         'Content-Type': 'application/json',
       },
     });
 
-    this.initializeInterceptors();
+    this.initializeRequestInterceptors(instance);
+    this.initializeResponseInterceptors(instance);
 
-    this.auth = new AuthControllerApi(undefined, "http://localhost:8080", this.axiosInstance);
-    this.league = new LeagueControllerApi(undefined, "http://localhost:8080", this.axiosInstance);
+    return instance;
   }
 
-  private initializeInterceptors() {
-    this.axiosInstance.interceptors.request.use(
-      (config: any) => {
-        const token = this.cookieService.get('jwtToken');
+  private getBaseUrl(): string {
+    return 'http://localhost:8080';
+  }
 
-        // Define endpoints to exclude from adding Authorization header
-        const excludedEndpoints : string[] = [
-          '/auth/login', 
-          '/auth/register', 
-          '/auth/refresh-token'
+  private initializeRequestInterceptors(instance: AxiosInstance): void {
+    instance.interceptors.request.use(
+      (config: InternalAxiosRequestConfig) => {
+        const token = this.cookieService.get('jwtToken');
+        const excludedEndpoints: string[] = [
+          '/auth/login',
+          '/auth/register',
+          '/auth/refresh-token',
         ];
 
-        // Skip adding Authorization header if the URL matches any excluded endpoint
-        if (config.url && excludedEndpoints.some(endpoint => config.url.includes(endpoint))) {
-          return config;
+        if (config.url && !excludedEndpoints.some((endpoint) => config.url!.includes(endpoint))) {
+          if (token) {
+            if (!config.headers) {
+              config.headers = new AxiosHeaders();
+            }
+            config.headers.set('Authorization', `Bearer ${token}`);
+          }
         }
-
-        // Add Authorization header if token exists
-        if (token) {
-          config.headers!['Authorization'] = `Bearer ${token}`;
-        }
+        
 
         return config;
       },
-      (error: Error) => Promise.reject(error)
+      (error: any) => Promise.reject(error)
+    );
+  }
+
+  private initializeResponseInterceptors(instance: AxiosInstance): void {
+    instance.interceptors.response.use(
+      (response: AxiosResponse) => response,
+      (error: any) => {
+        const standardizedError = {
+          message: error.response?.data?.message || 'An unexpected error occurred.',
+          status: error.response?.status || 500,
+        };
+        return Promise.reject(standardizedError);
+      }
     );
   }
 }
-
-export * from '../../../libs/generated';
