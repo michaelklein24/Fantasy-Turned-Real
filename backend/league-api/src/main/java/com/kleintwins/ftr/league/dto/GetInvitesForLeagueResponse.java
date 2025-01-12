@@ -7,7 +7,5 @@ import java.util.List;
 
 @Data
 public class GetInvitesForLeagueResponse {
-    private List<Invite> approved = new ArrayList<>();
-    private List<Invite> pending = new ArrayList<>();
-    private List<Invite> declined = new ArrayList<>();
+    private List<Invite> invites = new ArrayList<>();
 }

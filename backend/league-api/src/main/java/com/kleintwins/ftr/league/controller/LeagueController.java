@@ -90,6 +90,35 @@ public class LeagueController {
         return ResponseEntity.status(HttpStatus.OK).body(LeagueDtoBuilder.buildGetLeaguesForUserResponse(leagueModels));
     }
 
+    @GetMapping("/{leagueId}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Get League By Id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful retrieval of leagues for user",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = GetLeagueByIdResponse.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized: Missing or invalid JWT token",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CustomErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "Forbidden: Insufficient permissions",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CustomErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "Not Found: League Not Found",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CustomErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error: Unexpected server issue",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CustomErrorResponse.class)))
+    })
+    public ResponseEntity<GetLeagueByIdResponse> getLeagueById(
+            @PathVariable("leagueId") String leagueId,
+            HttpServletRequest request
+    ) {
+        LeagueModel leagueModel = leagueService.getLeagueById(leagueId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(LeagueDtoBuilder.buildGetLeagueByIdResponse(leagueModel));
+    }
+
     @PostMapping("/{leagueId}/invite")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Invite user to league")

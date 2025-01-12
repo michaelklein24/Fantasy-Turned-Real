@@ -25,6 +25,11 @@ public class LeagueDtoBuilder {
         return new GetLeaguesForUserResponse(leagues);
     }
 
+    public static GetLeagueByIdResponse buildGetLeagueByIdResponse(LeagueModel leagueModel) {
+        League league = LeagueDtoBuilder.buildLeague(leagueModel);
+        return new GetLeagueByIdResponse(league);
+    }
+
     public static InviteUserToLeagueResponse buildCreateLeagueInviteResponse(InviteModel inviteModel) {
         return new InviteUserToLeagueResponse(LeagueDtoBuilder.buildInvite(inviteModel));
     }
@@ -33,15 +38,7 @@ public class LeagueDtoBuilder {
         GetInvitesForLeagueResponse response = new GetInvitesForLeagueResponse();
         for (InviteModel inviteModel : inviteModels) {
             Invite invite = LeagueDtoBuilder.buildInvite(inviteModel);
-            if (InviteStatus.APPROVED.equals(inviteModel.getStatus())) {
-                response.getApproved().add(invite);
-
-            } else if (InviteStatus.PENDING.equals(inviteModel.getStatus())) {
-                response.getPending().add(invite);
-
-            } else if (InviteStatus.DECLINED.equals(inviteModel.getStatus())) {
-                response.getDeclined().add(invite);
-            }
+            response.getInvites().add(invite);
         }
         return response;
     }

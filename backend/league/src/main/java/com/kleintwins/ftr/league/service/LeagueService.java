@@ -139,6 +139,7 @@ public class LeagueService {
         participantModel.setParticipantId(participantId);
         participantModel.setRole(leagueRole);
         participantModel.setLeague(leagueModel);
+        participantModel.setUser(userService.findUserByUserId(userId));
         return participantRepo.save(participantModel);
     }
 
