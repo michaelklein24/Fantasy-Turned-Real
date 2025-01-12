@@ -2,12 +2,15 @@ import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { League } from '../../../../../libs/generated';
+import { League } from '../../../../../libs/generated/typescript-angular';
 
 @Component({
   selector: 'app-league-page',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [
+    CommonModule, 
+    RouterModule
+  ],
   templateUrl: './league-page.component.html',
   styleUrl: './league-page.component.css',
 })

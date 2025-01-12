@@ -1,18 +1,23 @@
-<aside class="bg-teal-100 rounded-lg flex-grow">
-  <button
-  class="bg-teal-600 text-white px-4 py-1 rounded-lg shadow-md hover:bg-teal-700 transition duration-200 ease-in-out"
-  (click)="openModal()"
->create</button>
-  <div class="p-6">
-    <h1 class="text-2xl mb-5 font-bold text-teal-800">Active Wars</h1>
-    <ul class="space-y-4">
-      <app-league-entry *ngFor="let league of leagues" [league]="league"></app-league-entry>
-    </ul>
+<div class="bg-teal-100 rounded-lg flex-grow p-6 flex flex-col gap-4">
+  <div class="flex justify-between items-center">
+    <h1 class="text-2xl font-bold text-teal-800">Active Wars</h1>
+    <button
+      class="bg-teal-600 text-white px-3 py-1 rounded-lg shadow-md hover:bg-teal-700 transition duration-200 ease-in-out flex items-center justify-center space-x-2"
+      (click)="openModal()"
+    >
+      <span class="material-icons">add</span>
+      New League
+    </button>
   </div>
-</aside>
+
+  <ul class="space-y-4 flex flex-col gap-1">
+    <app-league-entry
+      *ngFor="let league of leagues"
+      [league]="league"
+    ></app-league-entry>
+  </ul>
+</div>
 
 <app-modal [isOpen]="isModalOpen" title="Create League" (close)="closeModal()">
-  <app-create-league-form
-    (createLeague)="handleLeagueCreation($event)"
-  ></app-create-league-form>
+  <app-create-league-form (leagueCreated)="closeModal()" />
 </app-modal>

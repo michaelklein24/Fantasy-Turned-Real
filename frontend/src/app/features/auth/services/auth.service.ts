@@ -1,47 +1,50 @@
 import { Injectable } from '@angular/core';
-import { AxiosResponse } from 'axios';
-import { LoginUserRequest, LoginUserResponse, RegisterUserRequest, RegisterUserResponse } from '../../../../libs/generated';
+import { catchError, map, take, tap } from 'rxjs/operators';
+import { LoginUserRequest, LoginUserResponse, RegisterUserRequest, RegisterUserResponse } from '../../../../libs/generated/typescript-angular';
 import { ApiService } from '../../../core/services/api.service';
 import { SessionService } from './session.service';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-
   constructor(
-    private apiService : ApiService,
+    private apiService: ApiService,
     private sessionService: SessionService
-  ) { }
+  ) {}
 
-  async registerUser(firstName: string, lastName: string, email: string, password: string): Promise<void> {
+  registerUser(firstName: string, lastName: string, email: string, password: string): Observable<void> {
     const request: RegisterUserRequest = { firstName, lastName, email, password };
 
-    try {
-      const response: AxiosResponse<RegisterUserResponse> =
-        await this.apiService.auth.register(request);
-
-      const token: string = response.data.accessToken!;
-      
-      this.sessionService.startSession(token);
-    } catch (error: any) {
-      console.error('Error during registration:', error);
-      throw error;
-    }
+    return this.apiService.auth.register(request).pipe(
+      take(1),
+      tap((response: RegisterUserResponse) => {
+        this.sessionService.startSession(response.accessToken!);
+      }),
+      map((response: RegisterUserResponse) => {}),
+      catchError((error: any) => {
+        console.error('Registration failed:', error);
+        throw error;
+      })
+    );
   }
 
-  async loginUser(email: string, password: string): Promise<void> {
+  loginUser(email: string, password: string): Observable<void> {
     const request: LoginUserRequest = { email, password };
 
-    try {
-      const response: AxiosResponse<LoginUserResponse> =
-        await this.apiService.auth.login(request);
-      const accessToken = response.data.accessToken!;
-      
-      this.sessionService.startSession(accessToken);
-    } catch (error: any) {
-      console.error('Error during login:', error);
-      throw error;
-    }
+    return this.apiService.auth.login(request).pipe(
+      take(1), // Unsubscribe automatically after 1 emission
+      tap((response: LoginUserResponse) => {
+        // Extract token and start session on successful login
+        const token = response.accessToken;
+        this.sessionService.startSession(response.accessToken!); // Start session with token
+      }),
+      map((response: LoginUserResponse) => {}),
+      catchError((error: any) => {
+        console.error('Login failed:', error);
+        throw error;
+      })
+    );
   }
 }

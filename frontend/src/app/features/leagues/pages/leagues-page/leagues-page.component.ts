@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { AxiosResponse } from 'axios';
-import { GetLeaguesForUserResponse, League } from '../../../../../libs/generated';
+import { Observable } from 'rxjs';
+import { League } from '../../../../../libs/generated/typescript-angular';
 import { ToastService } from '../../../../core/services/toast.service';
 import { CreateLeagueFormComponent } from '../../../../forms/create-league-form/create-league-form.component';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
@@ -13,10 +13,10 @@ import { LeagueService } from '../../services/league.service';
   selector: 'app-leagues-page',
   standalone: true,
   imports: [
-    RouterModule, 
-    CommonModule, 
-    CreateLeagueFormComponent, 
-    ModalComponent, 
+    RouterModule,
+    CommonModule,
+    CreateLeagueFormComponent,
+    ModalComponent,
     LeagueEntryComponent
   ],
   templateUrl: './leagues-page.component.html',
@@ -24,8 +24,9 @@ import { LeagueService } from '../../services/league.service';
 })
 export class LeaguesPageComponent implements OnInit {
 
-  leagues : League[] = [];
-  newLeagueName: string = '';
+  leagues$: Observable<League[]> | null = null;
+  leagues: League[] = [];
+
   isModalOpen = false;
 
   constructor(
@@ -34,21 +35,24 @@ export class LeaguesPageComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.fetchLeagues();
+    this.leagues$ = this.leagueService.getLeaguesForUser();
+    this.fetchLeagues()
   }
 
-  async fetchLeagues(): Promise<void> {
-    try {
-      const getLeaguesForUserResponse: League[] = await this.leagueService.getLeaguesForUser();
-      if (getLeaguesForUserResponse) {
-        this.leagues = getLeaguesForUserResponse;
-      } else {
-        this.leagues = [];
+  fetchLeagues(): void {
+    this.leagues$!.subscribe({
+      next: (leagues: League[]) => {
+        console.log(leagues)
+        if (leagues) {
+          this.leagues = leagues;
+        } else {
+          this.leagues = [];
+        }
+      },
+      error: (error) => {
+        this.toastService.toastApiError('Get leagues for user', error, 5000);
       }
-    } catch (error) {
-      this.toastService.toastAxiosError('get leagues for user', error, 5000)
-      this.leagues = [];
-    }
+    });
   }
 
   openModal(): void {
@@ -57,19 +61,6 @@ export class LeaguesPageComponent implements OnInit {
 
   closeModal(): void {
     this.isModalOpen = false;
+    console.log('test')
   }
-
-  handleLeagueCreation(league: League): void {
-    this.leagues.unshift(league);
-    this.closeModal();
-  }
-
-  disapproveInvite(name: string) {
-
-  }
-
-  approveInvite(name: string) {
-    
-  }
-
 }

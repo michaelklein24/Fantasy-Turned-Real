@@ -1,10 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { AxiosResponse } from 'axios';
-import { CreateLeagueResponse, League } from '../../../libs/generated';
 import { ToastService } from '../../core/services/toast.service';
 import { LeagueService } from '../../features/leagues/services/league.service';
-import { AxiosError } from 'axios';
 
 @Component({
   selector: 'app-create-league-form',
@@ -14,14 +11,15 @@ import { AxiosError } from 'axios';
   styleUrl: './create-league-form.component.css'
 })
 export class CreateLeagueFormComponent {
-  @Output() createLeague = new EventEmitter<League>();
+
+  @Output() leagueCreated : EventEmitter<void> = new EventEmitter();
 
   constructor(
     private leagueService: LeagueService,
     private toastService: ToastService
   ) {}
 
-  async onSubmit(form: NgForm): Promise<void> {
+  onSubmit(form: NgForm): void {
     if (form.invalid) {
       this.toastService.toastError('Please fill in all the required fields', 3000);
       return;
@@ -29,18 +27,15 @@ export class CreateLeagueFormComponent {
   
     const { leagueName, seasonNumber } = form.value;
   
-    try {
-      const response: CreateLeagueResponse = await this.leagueService.createLeague(leagueName, seasonNumber);
-      this.createLeague.emit(response.league);
-      this.toastService.toastSuccess(`League ${leagueName} created successfully`, 5000);
-    } catch (error: AxiosError | any) {
-      if (error.isAxiosError) {
-        console.error('Axios error:', error.response?.data);
-        this.toastService.toastAxiosError('Create league failed', error, 5000);
-      } else {
-        console.error('Unexpected error:', error);
-        this.toastService.toastError('An unexpected error occurred. Please try again later.', 5000);
-      }
-    }
+    this.leagueService.createLeague(leagueName, seasonNumber).subscribe({
+      next: (response) => {
+        this.leagueCreated.emit(); 
+        this.toastService.toastSuccess(`League ${leagueName} created successfully`, 5000);
+      },
+      error: (error) => {
+        this.toastService.toastApiError('create league', error, 5000);
+      },
+    });
   }
+  
 }

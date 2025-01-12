@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { League } from '../../../../../libs/generated';
+import { League } from '../../../../../libs/generated/typescript-angular';
 
 @Component({
   selector: 'app-league-entry',
