@@ -1,12 +1,13 @@
 package com.kleintwins.ftr.notification.service;
 
-import com.kleintwins.ftr.notification.code.NotificationType;
 import com.kleintwins.ftr.notification.model.NotificationModel;
 import com.kleintwins.ftr.notification.model.NotificationPayload;
 import com.kleintwins.ftr.notification.repository.NotificationRepository;
 import com.kleintwins.ftr.user.model.UserModel;
 import com.kleintwins.ftr.user.service.UserService;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -18,6 +19,8 @@ public class NotificationService {
 
     private final NotificationRepository notificationRepo;
     private final UserService userService;
+
+    private final SimpMessagingTemplate messagingTemplate;
 
     public List<NotificationModel> getNotificationsForUser(String userId) {
         UserModel userModel = userService.findUserByUserId(userId);
@@ -33,8 +36,12 @@ public class NotificationService {
                 .timestamp(LocalDateTime.now())
                 .build();
 
-         NotificationModel notificationModel = buildNotificationModel(userModel, payload);
-         notificationRepo.save(notificationModel);
+         NotificationModel notificationModel = notificationRepo.save(buildNotificationModel(userModel, payload));
+         sendNotificationToUser(userModel.getUserId(), notificationModel.getPayload());
+    }
+
+    private void sendNotificationToUser(@NonNull String userId, NotificationPayload notificationPayload) {
+        messagingTemplate.convertAndSend("/user/" + userId + "/notifications", notificationPayload);
     }
 
     private NotificationModel buildNotificationModel(UserModel user, NotificationPayload payload) {
@@ -47,7 +54,4 @@ public class NotificationService {
         return notificationModel;
     }
 
-    public NotificationModel saveNotification(NotificationModel notificationModel) {
-        return notificationRepo.save(notificationModel);
-    }
 }
