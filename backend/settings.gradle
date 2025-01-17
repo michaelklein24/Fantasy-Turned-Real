@@ -12,3 +12,6 @@ include 'show'
 include 'show-api'
 include 'user'
 include 'user-api'
+include 'notification'
+include 'notification-api'
+

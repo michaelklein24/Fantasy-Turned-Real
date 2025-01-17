@@ -2,4 +2,5 @@ dependencies {
     api project(":core")
     implementation project(":show-api")
     implementation project(":user-api")
+    implementation project(":notification-api")
 }

@@ -10,6 +10,9 @@ import com.kleintwins.ftr.league.model.*;
 import com.kleintwins.ftr.league.repository.InviteRepository;
 import com.kleintwins.ftr.league.repository.LeagueRepository;
 import com.kleintwins.ftr.league.repository.ParticipantRepository;
+import com.kleintwins.ftr.notification.model.NotificationModel;
+import com.kleintwins.ftr.notification.model.NotificationPayload;
+import com.kleintwins.ftr.notification.service.NotificationService;
 import com.kleintwins.ftr.show.code.Show;
 import com.kleintwins.ftr.show.model.SeasonModel;
 import com.kleintwins.ftr.show.service.SeasonService;
@@ -19,6 +22,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,6 +37,7 @@ public class LeagueService {
     private final I18nService i18nService;
     private final SeasonService seasonService;
     private final UserService userService;
+    private final NotificationService notificationService;
 
     @Transactional
     public LeagueModel createLeague(String name, String ownerId, Show show, int seasonSequence) {
@@ -120,6 +125,8 @@ public class LeagueService {
         if (InviteStatus.APPROVED.equals(newStatus)) {
             addUserToLeague(leagueId, inviteeUserId, LeagueRole.MEMBER);
         }
+
+
     }
 
     public ParticipantModel addUserToLeague(String leagueId, String userId, LeagueRole leagueRole) {

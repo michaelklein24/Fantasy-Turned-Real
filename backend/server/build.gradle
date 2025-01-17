@@ -2,4 +2,5 @@ dependencies {
     implementation project(':auth-api')
     implementation project(':league-api')
     implementation project(':show-api')
+    implementation project(':notification-api')
 }
