@@ -12,6 +12,6 @@
   </button>
 
   <!-- Dropdown List of Notifications -->
-  <app-notifications-dropdown *ngIf="isNotificationListVisible" [notifications]="notifications"></app-notifications-dropdown>
+  <app-notifications-dropdown *ngIf="isNotificationListVisible" [notifications]="notifications" (closeNotificationDropdown)="closeNotificationList()"></app-notifications-dropdown>
 
 </div>

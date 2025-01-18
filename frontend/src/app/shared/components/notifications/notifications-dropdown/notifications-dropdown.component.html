@@ -6,6 +6,6 @@
     mx-auto
     max-h-[calc(100vh-5rem)] lg:max-h-96"
 >
-    <app-notifications-dropdown-header></app-notifications-dropdown-header>
+    <app-notifications-dropdown-header (closeNotificationDropdown)="onCloseNotificationDropdown()"></app-notifications-dropdown-header>
     <app-notifications-dropdown-body [notifications]="notifications"></app-notifications-dropdown-body>
   </div>

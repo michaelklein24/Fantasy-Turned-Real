@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-notifications-dropdown-header',
@@ -8,7 +8,10 @@ import { Component } from '@angular/core';
   styleUrl: './notifications-dropdown-header.component.css'
 })
 export class NotificationsDropdownHeaderComponent {
+
+  @Output("closeNotificationDropdown") closeNotificationDropdownEventEmitter: EventEmitter<void> = new EventEmitter();
+
   closeNotificationDropdown() {
-    
+    this.closeNotificationDropdownEventEmitter.emit();
   }
 }
