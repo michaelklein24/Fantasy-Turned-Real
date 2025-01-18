@@ -1,6 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { TokenService } from './token.service';
+import { WebSocketService } from '../../../core/services/web-socket.service';
 
 @Injectable({
     providedIn: 'root'
@@ -15,7 +16,9 @@ export class SessionService implements OnDestroy {
 
     private tokenCheckInterval: any;
 
-    constructor(private tokenService: TokenService) {
+    constructor(
+        private tokenService: TokenService
+    ) {
         this.startTokenCheck();
     }
 

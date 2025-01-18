@@ -38,16 +38,7 @@
 
     <div *ngIf="isLoggedIn" class="flex gap-6 items-center">
 
-      <!-- Notification Icon -->
-      <div class="relative flex items-center justify-center">
-        <span class="material-icons-outlined">notifications</span>
-        <!-- Badge for Notifications -->
-        <span
-          class="absolute bottom-3 left-3 text-xs text-white bg-red-600 rounded-full w-4 h-4 flex items-center justify-center"
-        >
-          2
-        </span>
-      </div>
+      <app-notifications></app-notifications>
     
       <!-- Profile Icon -->
       <img

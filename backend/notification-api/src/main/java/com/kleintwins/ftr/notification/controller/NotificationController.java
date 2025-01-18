@@ -2,8 +2,12 @@ package com.kleintwins.ftr.notification.controller;
 
 import com.kleintwins.ftr.auth.helper.JwtHelper;
 import com.kleintwins.ftr.core.dto.CustomErrorResponse;
+import com.kleintwins.ftr.notification.dto.CreateNotificationRequest;
+import com.kleintwins.ftr.notification.dto.CreateNotificationResponse;
 import com.kleintwins.ftr.notification.dto.GetNotificationsResponse;
+import com.kleintwins.ftr.notification.dto.MarkNotificationsAsReadOrUnreadRequest;
 import com.kleintwins.ftr.notification.model.NotificationModel;
+import com.kleintwins.ftr.notification.model.NotificationPayload;
 import com.kleintwins.ftr.notification.service.NotificationService;
 import com.kleintwins.ftr.notification.util.NotificationDtoBuilder;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,6 +16,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,11 +32,11 @@ public class NotificationController {
     private final NotificationService notificationService;
     private final JwtHelper jwtHelper;
 
-    @PostMapping()
+    @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Fetch notifications for user")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Notifications successfully fetched",
+            @ApiResponse(responseCode = "200", description = "Notifications successfully fetched",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = GetNotificationsResponse.class))),
             @ApiResponse(responseCode = "400", description = "Bad request: Validation failed or invalid input",
@@ -52,6 +57,65 @@ public class NotificationController {
     ) {
         String userId = jwtHelper.extractUserIdFromTokenInRequest(request);
         List<NotificationModel> notificationModels = notificationService.getNotificationsForUser(userId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(NotificationDtoBuilder.buildGetNotificationsResponse(notificationModels));
+        return ResponseEntity.status(HttpStatus.OK).body(NotificationDtoBuilder.buildGetNotificationsResponse(notificationModels));
     }
+
+    @PostMapping()
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Create and send Notification to user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Notifications successfully created",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CreateNotificationResponse.class))),
+            @ApiResponse(responseCode = "400", description = "Bad request: Validation failed or invalid input",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CustomErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized: Missing or invalid JWT token",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CustomErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "Forbidden: Insufficient permissions",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CustomErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error: Unexpected server issue",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CustomErrorResponse.class)))
+    })
+    public ResponseEntity<CreateNotificationResponse> createNotification(
+        @RequestBody @Valid CreateNotificationRequest createNotificationRequest
+    ) {
+        String userId = createNotificationRequest.getUserId();
+        NotificationPayload payload = createNotificationRequest.getPayload();
+        NotificationModel notificationModel = notificationService.createNotification(userId, payload);
+        return ResponseEntity.status(HttpStatus.CREATED).body(NotificationDtoBuilder.buildCreateNotificationResponse(notificationModel));
+    }
+
+    @PutMapping()
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Mark Notifications as Read or Unread")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Notifications successfully marked as acknowledged or unacknowledged"),
+            @ApiResponse(responseCode = "404", description = "Not Found: Notification does not exist",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CustomErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized: Missing or invalid JWT token",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CustomErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "Forbidden: Insufficient permissions",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CustomErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error: Unexpected server issue",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CustomErrorResponse.class)))
+    })
+    public void markNotificationAsReadOrUnread(
+            @RequestBody @Valid MarkNotificationsAsReadOrUnreadRequest markNotificationsAsReadOrUnreadRequest,
+            HttpServletRequest request
+    ) {
+        String userId = jwtHelper.extractTokenFromRequest(request);
+        List<String> notificationIds = markNotificationsAsReadOrUnreadRequest.getNotificationIds();
+        boolean acknowledged = markNotificationsAsReadOrUnreadRequest.isAcknowledged();
+
+        notificationService.markUserNotificationsAsAcknowledged(userId, notificationIds, acknowledged);
+    }
+
 }

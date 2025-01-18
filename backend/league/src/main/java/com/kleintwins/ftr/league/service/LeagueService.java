@@ -51,7 +51,7 @@ public class LeagueService {
         ParticipantModel owner = addUserToLeague(savedLeague.getLeagueId(), ownerId, LeagueRole.OWNER);
 
         leagueModel.setParticipants(List.of(owner));
-        notificationService.notifyUserLeagueInvite(owner.getUser(), leagueModel.getLeagueId());
+        notificationService.notifyUserLeagueInvite(owner.getUser().getUserId(), leagueModel.getLeagueId());
         return leagueModel;
     }
 

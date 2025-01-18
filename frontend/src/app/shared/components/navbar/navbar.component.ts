@@ -3,11 +3,16 @@ import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { SessionService } from '../../../features/auth/services/session.service';
+import { NotificationsComponent } from '../notifications/notifications.component';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterModule, CommonModule],
+  imports: [
+    RouterModule, 
+    CommonModule,
+    NotificationsComponent
+  ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })

@@ -1,5 +1,6 @@
 package com.kleintwins.ftr.notification.util;
 
+import com.kleintwins.ftr.notification.dto.CreateNotificationResponse;
 import com.kleintwins.ftr.notification.dto.GetNotificationsResponse;
 import com.kleintwins.ftr.notification.dto.Notification;
 import com.kleintwins.ftr.notification.model.NotificationModel;
@@ -15,6 +16,12 @@ public class NotificationDtoBuilder {
             getNotificationsResponse.getNotifications().add(notification);
         }
         return getNotificationsResponse;
+    }
+
+    public static CreateNotificationResponse buildCreateNotificationResponse(NotificationModel notificationModel) {
+        return CreateNotificationResponse.builder()
+                .notification(toNotification(notificationModel))
+                .build();
     }
 
     public static Notification toNotification(NotificationModel notificationModel) {

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
-import { AuthControllerService, Configuration, LeagueControllerService } from '../../../libs/generated/typescript-angular';
+import { AuthControllerService, Configuration, LeagueControllerService, NotificationControllerService } from '../../../libs/generated/typescript-angular';
 
 @Injectable({
   providedIn: 'root',
@@ -9,6 +9,7 @@ import { AuthControllerService, Configuration, LeagueControllerService } from '.
 export class ApiService {
   public auth: AuthControllerService;
   public league: LeagueControllerService;
+  public notification: NotificationControllerService;
 
   constructor(private http: HttpClient, private cookieService: CookieService) {
     const config = this.getApiConfiguration();
@@ -16,6 +17,7 @@ export class ApiService {
 
     this.auth = new AuthControllerService(this.http, basePath, config);
     this.league = new LeagueControllerService(this.http, basePath, config);
+    this.notification = new NotificationControllerService(this.http, basePath, config);
   }
 
   /**

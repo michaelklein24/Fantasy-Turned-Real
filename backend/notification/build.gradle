@@ -1,5 +1,6 @@
 dependencies {
     api project(":core")
     api project(":user-api")
-    implementation "org.springframework.boot:spring-boot-starter-websocket:${springBootVersion}"
+    api project(":auth-api")
+    api project(":socket")
 }

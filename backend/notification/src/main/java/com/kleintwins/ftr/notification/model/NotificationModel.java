@@ -1,9 +1,11 @@
 package com.kleintwins.ftr.notification.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.kleintwins.ftr.notification.code.NotificationType;
 import com.kleintwins.ftr.user.model.UserModel;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Type;
 
 import java.time.LocalDateTime;
 
@@ -23,7 +25,7 @@ public class NotificationModel {
 
     private boolean acknowledged;
 
-    @Column(columnDefinition = "json")
+    @Convert(converter = NotificationPayloadJsonConverter.class)
     private NotificationPayload payload;
 
     private LocalDateTime createTime;
