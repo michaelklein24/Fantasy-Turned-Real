@@ -1,0 +1,23 @@
+<div class="flex items-center justify-between px-4 py-2 border-b border-gray-200 bg-gray-100 rounded-t font-medium text-gray-800 sticky top-0">
+    <div class="flex gap-2 items-center">
+        <button 
+        class="lg:hidden flex items-center text-gray-800 hover:text-gray-600 focus:outline-none"
+        (click)="closeNotificationDropdown()"
+      >
+        <span class="material-icons-outlined text-lg">arrow_back</span>
+      </button>
+    
+      <!-- Title -->
+      <span class="flex-1 text-center lg:text-left">Notifications</span>  
+    </div>
+    <!-- Back Icon (Small and Medium Screens) -->
+
+    <!-- View All Link -->
+    <a
+      href="/notifications"
+      class="text-sm text-blue-600 hover:underline focus:outline-none"
+    >
+      View All
+    </a>
+  </div>
+  

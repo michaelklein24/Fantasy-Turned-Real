@@ -1,16 +1,18 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { WebSocketService } from '../../../core/services/web-socket.service';
 import { SessionService } from '../../../features/auth/services/session.service';
 import { Subscription } from 'rxjs';
 import { NotificationService } from '../../../core/services/notification.service';
 import { Notification } from '../../../../libs/generated/typescript-angular';
 import { CommonModule } from '@angular/common';
+import { NotificationsDropdownComponent } from './notifications-dropdown/notifications-dropdown.component';
 
 @Component({
   selector: 'app-notifications',
   standalone: true,
   imports: [
-    CommonModule
+    CommonModule,
+    NotificationsDropdownComponent,
   ],
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.css']
@@ -19,7 +21,9 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
   private userIdSubscription: Subscription | undefined;
   private notificationsSubscription: Subscription | undefined;
-  public notifications: Notification[] = []
+  notifications: Notification[] = []
+  isNotificationListVisible: boolean = false;
+
 
   constructor(
     private webSocketService: WebSocketService,
@@ -48,5 +52,26 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     this.userIdSubscription?.unsubscribe();
     this.notificationsSubscription?.unsubscribe();
     this.webSocketService.disconnect();
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const dropdown = document.querySelector('#notification-dropdown');
+    const notificationIcon = document.querySelector('.material-icons-outlined');
+
+    // Check if the click target is outside the dropdown and notification icon
+    if (this.isNotificationListVisible && dropdown && 
+        !dropdown.contains(event.target as Node) && 
+        !notificationIcon?.contains(event.target as Node)) {
+      this.closeNotificationList();
+    }
+  }
+
+  toggleNotificationList(): void {
+    this.isNotificationListVisible = !this.isNotificationListVisible;
+  }
+
+  closeNotificationList(): void {
+    this.isNotificationListVisible = false;
   }
 }

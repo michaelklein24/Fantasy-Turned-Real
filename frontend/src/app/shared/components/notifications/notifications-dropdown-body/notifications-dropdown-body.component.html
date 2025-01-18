@@ -1,0 +1,11 @@
+<ul>
+    <app-notification-item
+      *ngFor="let notification of notifications"
+      [notification]="notification">
+    </app-notification-item>
+  
+    <li *ngIf="notifications.length === 0" class="px-4 py-3 text-center text-gray-500">
+      No notifications available.
+    </li>
+  </ul>
+  

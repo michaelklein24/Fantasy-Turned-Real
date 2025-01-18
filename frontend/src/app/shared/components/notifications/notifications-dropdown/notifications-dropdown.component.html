@@ -1,0 +1,11 @@
+<div
+  id="notification-dropdown"
+  class="absolute bg-white text-gray-700 rounded-lg shadow-lg z-50 overflow-auto 
+    left-2 right-2 top-[calc(100%+0.5rem)]
+    lg:w-96 lg:left-auto lg:right-0
+    mx-auto
+    max-h-[calc(100vh-5rem)] lg:max-h-96"
+>
+    <app-notifications-dropdown-header></app-notifications-dropdown-header>
+    <app-notifications-dropdown-body [notifications]="notifications"></app-notifications-dropdown-body>
+  </div>
