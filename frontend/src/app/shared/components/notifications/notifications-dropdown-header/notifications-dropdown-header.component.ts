@@ -1,9 +1,12 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-notifications-dropdown-header',
   standalone: true,
-  imports: [],
+  imports: [
+    RouterModule
+  ],
   templateUrl: './notifications-dropdown-header.component.html',
   styleUrl: './notifications-dropdown-header.component.css'
 })

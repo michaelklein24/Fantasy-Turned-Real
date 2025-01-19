@@ -9,12 +9,14 @@ import { LeaguesPageComponent } from './features/leagues/pages/leagues-page/leag
 import { LoginUserFormComponent } from './forms/login-user-form/login-user-form.component';
 import { RegisterUserFormComponent } from './forms/register-user-form/register-user-form.component';
 import { HomePageComponent } from './pages/home/home-page.component';
+import { NotificationsPageComponent } from './features/notifications/pages/notifications-page/notifications-page.component';
 
 export const routes: Routes = [
     { path: "register", component: RegisterUserFormComponent},
     { path: "login", component: LoginUserFormComponent},
     { path: "dashboard", component: DashboardPageComponent, children: [
         { path: "", component: HomePageComponent },
+        { path: "notification", component: NotificationsPageComponent },
         { path: "league", component: LeaguesPageComponent },
         { path: "league/:leagueId", component: LeaguePageComponent, children: [
             { path: "home", component: LeagueHomePageComponent },

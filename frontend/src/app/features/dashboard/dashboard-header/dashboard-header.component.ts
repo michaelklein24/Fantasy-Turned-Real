@@ -56,6 +56,8 @@ export class DashboardHeaderComponent implements OnInit, OnDestroy {
           this.headerText = 'League Not Found';
         },
       });
+    } else if (currentRoute.match(/\/dashboard\/notification/)) {
+      this.headerText = 'Notifications'
     } else {
       this.headerText = 'Dashboard'; // Default header
     }

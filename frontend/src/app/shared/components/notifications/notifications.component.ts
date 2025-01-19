@@ -58,11 +58,13 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   onDocumentClick(event: MouseEvent): void {
     const dropdown = document.querySelector('#notification-dropdown');
     const notificationIcon = document.querySelector('.material-icons-outlined');
+    const viewAllButton = document.querySelector('#viewAllNotifications')
 
     // Check if the click target is outside the dropdown and notification icon
     if (this.isNotificationListVisible && dropdown && 
         !dropdown.contains(event.target as Node) && 
-        !notificationIcon?.contains(event.target as Node)) {
+        !notificationIcon?.contains(event.target as Node) ||
+        viewAllButton?.contains(event.target as Node)) {
       this.closeNotificationList();
     }
   }
