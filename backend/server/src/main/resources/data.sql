@@ -16,7 +16,7 @@ VALUES
 INSERT INTO usr_password_history (active, created_date, expiry_date, encoded_password, password_id, user_id)
 VALUES
 (true, '2025-01-08', '2025-04-08', '$2a$10$Wg96X7oUcUPMfUTfkxZuRueniAPfGPB3Vp.zzQctcN7ju2NhFL16W', '7fd7be7a-529b-4004-b36f-b7f98ef71d97', '7db21f43-31e2-4fd7-8501-772039ad9f16'),
-(true, '2025-01-08', '2025-04-08', '$2a$10$z1o9X7lBcUPMfUTfkxZuRueniAPfGPB3Vp.zzQctcN7ju2NhFL16W', '123dbe1a-529b-4004-b36f-b7f98ef71d99', 'b18d2e3d-71d8-4a3e-9e4f-10f30c8bdf48'),
+(true, '2025-01-08', '2025-04-08', '$2a$10$evVfMsxwvUSUTxtvU1C02ur5JC72kn7DKKlLAoAwTE64EzvhDYIfm', '123dbe1a-529b-4004-b36f-b7f98ef71d99', 'b18d2e3d-71d8-4a3e-9e4f-10f30c8bdf48'),
 (true, '2025-01-08', '2025-04-08', '$2a$10$y2p9X7pBcUPMfUTfkxZuRueniAPfGPB3Vp.zzQctcN7ju2NhFL16W', '223dbe1a-529b-4004-b36f-b7f98ef71d88', 'c34f7e1f-0938-4be8-a75e-6a8300d6f7b9'),
 (true, '2025-01-08', '2025-04-08', '$2a$10$x3q9X7rBcUPMfUTfkxZuRueniAPfGPB3Vp.zzQctcN7ju2NhFL16W', '323dbe1a-529b-4004-b36f-b7f98ef71d77', 'd41a8e2a-8b21-4af8-9b09-993cd06f3f80'),
 (true, '2025-01-08', '2025-04-08', '$2a$10$a4s9X7tBcUPMfUTfkxZuRueniAPfGPB3Vp.zzQctcN7ju2NhFL16W', '423dbe1a-529b-4004-b36f-b7f98ef71d66', 'e71f6c2a-f3d3-42ea-8d17-1e24bc70dc58'),
@@ -25,13 +25,16 @@ VALUES
 (true, '2025-01-08', '2025-04-08', '$2a$10$z6v9X7qBcUPMfUTfkxZuRueniAPfGPB3Vp.zzQctcN7ju2NhFL16W', '723dbe1a-529b-4004-b36f-b7f98ef71d33', '9f82a0e7-df9c-4970-8766-d7d3c19d95e1');
 
 INSERT INTO lge_league (season_sequence, create_time, league_id, name, season_show)
-VALUES (47, '2025-01-08 14:38:53.763', '5f4da728-9eea-4969-a9b7-e6270027b13a', 'Corner By The Bookshelf', 'SURVIVOR');
+VALUES
+(47, '2025-01-08 14:38:53.763', '5f4da728-9eea-4969-a9b7-e6270027b13a', 'Corner By The Bookshelf', 'SURVIVOR'),
+(47, '2025-01-18 14:38:53.763', '276bfc66-edcc-4162-ab64-2ba02918092c', 'The ROCKstars', 'SURVIVOR');
 
 INSERT INTO lge_participant (time_joined, league_id, role, user_id)
 VALUES
 ('2025-01-08 14:38:53.773', '5f4da728-9eea-4969-a9b7-e6270027b13a', 'OWNER', '7db21f43-31e2-4fd7-8501-772039ad9f16'),
 ('2025-01-08 14:38:53.773', '5f4da728-9eea-4969-a9b7-e6270027b13a', 'MEMBER', 'b18d2e3d-71d8-4a3e-9e4f-10f30c8bdf48'),
-('2025-01-08 14:39:00.123', '5f4da728-9eea-4969-a9b7-e6270027b13a', 'MEMBER', 'c34f7e1f-0938-4be8-a75e-6a8300d6f7b9');
+('2025-01-08 14:39:00.123', '5f4da728-9eea-4969-a9b7-e6270027b13a', 'MEMBER', 'c34f7e1f-0938-4be8-a75e-6a8300d6f7b9'),
+('2025-01-18 14:38:53.773', '276bfc66-edcc-4162-ab64-2ba02918092c', 'OWNER', 'b18d2e3d-71d8-4a3e-9e4f-10f30c8bdf48');
 
 INSERT INTO lge_invite (league_id, invitee_user_id, inviter_user_id, create_time, update_time, status)
 VALUES
@@ -39,4 +42,37 @@ VALUES
 ('5f4da728-9eea-4969-a9b7-e6270027b13a', 'c34f7e1f-0938-4be8-a75e-6a8300d6f7b9', '7db21f43-31e2-4fd7-8501-772039ad9f16', '2025-01-08 14:40:30.000', '2025-01-08 14:40:30.000', 'APPROVED'),
 ('5f4da728-9eea-4969-a9b7-e6270027b13a', 'd41a8e2a-8b21-4af8-9b09-993cd06f3f80', '7db21f43-31e2-4fd7-8501-772039ad9f16', '2025-01-08 14:41:00.000', '2025-01-08 14:41:00.000', 'PENDING'),
 ('5f4da728-9eea-4969-a9b7-e6270027b13a', 'e71f6c2a-f3d3-42ea-8d17-1e24bc70dc58', '7db21f43-31e2-4fd7-8501-772039ad9f16', '2025-01-08 14:41:30.000', '2025-01-08 14:41:30.000', 'PENDING'),
-('5f4da728-9eea-4969-a9b7-e6270027b13a', 'f92a7e9b-4823-4c19-9194-dc77b891da8d', '7db21f43-31e2-4fd7-8501-772039ad9f16', '2025-01-08 14:42:00.000', '2025-01-08 14:42:00.000', 'DECLINED');
+('5f4da728-9eea-4969-a9b7-e6270027b13a', 'f92a7e9b-4823-4c19-9194-dc77b891da8d', '7db21f43-31e2-4fd7-8501-772039ad9f16', '2025-01-08 14:42:00.000', '2025-01-08 14:42:00.000', 'DECLINED'),
+('276bfc66-edcc-4162-ab64-2ba02918092c', '7db21f43-31e2-4fd7-8501-772039ad9f16', 'b18d2e3d-71d8-4a3e-9e4f-10f30c8bdf48', '2025-01-08 14:42:00.000', '2025-01-08 14:42:00.000', 'PENDING');
+
+
+INSERT INTO ntf_notification(
+acknowledged,
+create_time,
+update_time,
+actions,
+completed_action_label,
+icon,
+link,
+message,
+notification_id,
+reference_id,
+reference_type,
+title,
+user_id)
+VALUES
+(
+false,
+'2025-01-18 22:26:02.590',
+'2025-01-18 22:26:02.588',
+'[{"label":"Accept","httpMethod":"PUT","endpoint":"/league/276bfc66-edcc-4162-ab64-2ba02918092c/invite","requestBody":"{\"newStatus\": \"APPROVED\"}"},{"label":"Decline","httpMethod":"PUT","endpoint":"/league/276bfc66-edcc-4162-ab64-2ba02918092c/invite","requestBody":"{\"newStatus\": \"DECLINED\"}"}]',
+NULL,
+'group',
+NULL,
+'Steve has invited you to join the league: The ROCKstars',
+'aac08e86-3939-49e1-9526-5da749b4abef',
+'276bfc66-edcc-4162-ab64-2ba02918092c',
+'LEAGUE_INVITE',
+'League Invitation',
+'7db21f43-31e2-4fd7-8501-772039ad9f16'
+);

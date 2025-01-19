@@ -1,10 +1,60 @@
-<li class="cursor-pointer px-4 py-3 border-b border-gray-200 hover:bg-gray-50">
-    <div class="flex flex-col">
-      <div class="flex justify-between items-center">
-        <p class="font-medium text-sm text-gray-800">{{ notification.payload?.title }}</p>
-        <small class="text-xs text-gray-400">{{ notification.createTime | date: 'short' }}</small>
-      </div>
-      <p class="text-gray-600 text-xs mt-1">{{ notification.payload?.message }}</p>
+<li
+  class="cursor-pointer px-4 py-3 border-b border-gray-200 hover:bg-gray-50 flex items-start gap-4"
+>
+  <!-- Icon -->
+  <div *ngIf="notification.icon" class="flex-shrink-0">
+    <span
+      class="material-icons text-gray-600 w-6 h-6"
+      [ngStyle]="{ fontSize: '24px' }"
+    >
+      {{ notification.icon }}
+    </span>
+  </div>
+
+  <!-- Notification Content -->
+  <div class="flex-grow">
+    <!-- Title and Time -->
+    <div class="flex justify-between items-center">
+      <p
+        class="font-medium text-sm"
+      >
+        {{ notification.title }}
+      </p>
+      <small class="text-xs text-gray-400">
+        {{ notification.createTime | date : "short" }}
+      </small>
     </div>
-  </li>
-  
+
+    <!-- Message -->
+    <p class="text-gray-600 text-xs mt-1">
+      {{ notification.message }}
+    </p>
+
+    <!-- Actions or Completed Action -->
+    <div
+      *ngIf="notification.completedActionLabel; else actions"
+      class="mt-2"
+    >
+      <!-- Completed Action -->
+      <p class="text-xs italic">
+        {{ notification.completedActionLabel }}
+      </p>
+    </div>
+
+    <!-- Actions -->
+    <ng-template #actions>
+      <div
+        *ngIf="notification.actions!.length > 0"
+        class="mt-2 flex gap-2"
+      >
+        <button
+          *ngFor="let action of notification.actions"
+          class="text-sm text-blue-600 hover:underline"
+          (click)="handleAction(action)"
+        >
+          {{ action.label }}
+        </button>
+      </div>
+    </ng-template>
+  </div>
+</li>

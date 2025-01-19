@@ -1,13 +1,13 @@
 package com.kleintwins.ftr.notification.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.kleintwins.ftr.notification.code.NotificationType;
+import com.kleintwins.ftr.notification.code.NotificationReferenceType;
 import com.kleintwins.ftr.user.model.UserModel;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Type;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Table(name = "ntf_notification")
 @Entity
@@ -22,12 +22,18 @@ public class NotificationModel {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String notificationId;
-
     private boolean acknowledged;
-
-    @Convert(converter = NotificationPayloadJsonConverter.class)
-    private NotificationPayload payload;
-
+    private String title;
+    private String message;
+    private String icon;
+    private String link;
+    @Column(columnDefinition = "TEXT")
+    @Convert(converter = NotificationActionListConverter.class)
+    private List<NotificationAction> actions;
+    private String completedActionLabel;
+    @Enumerated(value = EnumType.STRING)
+    private NotificationReferenceType referenceType;
+    private String referenceId;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
 

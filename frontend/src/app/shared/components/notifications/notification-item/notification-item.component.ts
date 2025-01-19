@@ -1,6 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { Notification } from '../../../../../libs/generated/typescript-angular';
+import { Notification, NotificationAction } from '../../../../../libs/generated/typescript-angular';
 import { CommonModule } from '@angular/common';
+import { ApiService } from '../../../../core/services/api.service';
+import { NotificationService } from '../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-notification-item',
@@ -13,4 +15,18 @@ import { CommonModule } from '@angular/common';
 })
 export class NotificationItemComponent {
   @Input() notification!: Notification;
+
+  constructor(
+    private apiService: ApiService,
+    private notificationService: NotificationService
+  ) {}
+
+  handleAction(action: NotificationAction) {
+    this.apiService.performAction(action.endpoint!, action.requestBody!, action.httpMethod!).subscribe({
+      next: () => {
+        this.notificationService.updateNotificationCompletedActionLabel(this.notification.notificationId!, action.label! + 'd')
+        this.notificationService.markNotificationsAsRead(this.notification.notificationId).subscribe()
+      }
+    })
+  }
 }

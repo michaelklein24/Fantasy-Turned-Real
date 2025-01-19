@@ -1,7 +1,7 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { WebSocketService } from '../../../core/services/web-socket.service';
 import { SessionService } from '../../../features/auth/services/session.service';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { NotificationService } from '../../../core/services/notification.service';
 import { Notification } from '../../../../libs/generated/typescript-angular';
 import { CommonModule } from '@angular/common';
@@ -12,7 +12,7 @@ import { NotificationsDropdownComponent } from './notifications-dropdown/notific
   standalone: true,
   imports: [
     CommonModule,
-    NotificationsDropdownComponent,
+    NotificationsDropdownComponent
   ],
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.css']
@@ -68,10 +68,19 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   }
 
   toggleNotificationList(): void {
-    this.isNotificationListVisible = !this.isNotificationListVisible;
+    if (this.isNotificationListVisible) {
+      this.closeNotificationList();
+    } else {
+      this.isNotificationListVisible = true;
+    }
   }
 
   closeNotificationList(): void {
+    this.notificationService.markNotificationsAsRead().subscribe()
     this.isNotificationListVisible = false;
+  }
+
+  getNumberOfUnacknowledgedNotifications(): number {
+    return this.notifications.filter(n => !n.acknowledged).length
   }
 }

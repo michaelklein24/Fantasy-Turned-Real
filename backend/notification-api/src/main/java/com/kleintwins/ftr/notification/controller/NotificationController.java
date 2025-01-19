@@ -2,12 +2,12 @@ package com.kleintwins.ftr.notification.controller;
 
 import com.kleintwins.ftr.auth.helper.JwtHelper;
 import com.kleintwins.ftr.core.dto.CustomErrorResponse;
+import com.kleintwins.ftr.notification.code.NotificationReferenceType;
 import com.kleintwins.ftr.notification.dto.CreateNotificationRequest;
 import com.kleintwins.ftr.notification.dto.CreateNotificationResponse;
 import com.kleintwins.ftr.notification.dto.GetNotificationsResponse;
 import com.kleintwins.ftr.notification.dto.MarkNotificationsAsReadOrUnreadRequest;
 import com.kleintwins.ftr.notification.model.NotificationModel;
-import com.kleintwins.ftr.notification.model.NotificationPayload;
 import com.kleintwins.ftr.notification.service.NotificationService;
 import com.kleintwins.ftr.notification.util.NotificationDtoBuilder;
 import io.swagger.v3.oas.annotations.Operation;
@@ -84,8 +84,10 @@ public class NotificationController {
         @RequestBody @Valid CreateNotificationRequest createNotificationRequest
     ) {
         String userId = createNotificationRequest.getUserId();
-        NotificationPayload payload = createNotificationRequest.getPayload();
-        NotificationModel notificationModel = notificationService.createNotification(userId, payload);
+        NotificationReferenceType referenceType = createNotificationRequest.getReferenceType();
+        String referenceId = createNotificationRequest.getReferenceId();
+        String[] args = createNotificationRequest.getArgs();
+        NotificationModel notificationModel = notificationService.createNotification(userId, referenceId, referenceType, args);
         return ResponseEntity.status(HttpStatus.CREATED).body(NotificationDtoBuilder.buildCreateNotificationResponse(notificationModel));
     }
 
@@ -111,7 +113,7 @@ public class NotificationController {
             @RequestBody @Valid MarkNotificationsAsReadOrUnreadRequest markNotificationsAsReadOrUnreadRequest,
             HttpServletRequest request
     ) {
-        String userId = jwtHelper.extractTokenFromRequest(request);
+        String userId = jwtHelper.extractUserIdFromTokenInRequest(request);
         List<String> notificationIds = markNotificationsAsReadOrUnreadRequest.getNotificationIds();
         boolean acknowledged = markNotificationsAsReadOrUnreadRequest.isAcknowledged();
 

@@ -10,8 +10,8 @@ import com.kleintwins.ftr.league.model.*;
 import com.kleintwins.ftr.league.repository.InviteRepository;
 import com.kleintwins.ftr.league.repository.LeagueRepository;
 import com.kleintwins.ftr.league.repository.ParticipantRepository;
+import com.kleintwins.ftr.notification.code.NotificationReferenceType;
 import com.kleintwins.ftr.notification.model.NotificationModel;
-import com.kleintwins.ftr.notification.model.NotificationPayload;
 import com.kleintwins.ftr.notification.service.NotificationService;
 import com.kleintwins.ftr.show.code.Show;
 import com.kleintwins.ftr.show.model.SeasonModel;
@@ -20,14 +20,14 @@ import com.kleintwins.ftr.user.model.UserModel;
 import com.kleintwins.ftr.user.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class LeagueService {
 
     private final LeagueRepository leagueRepo;
@@ -51,7 +51,7 @@ public class LeagueService {
         ParticipantModel owner = addUserToLeague(savedLeague.getLeagueId(), ownerId, LeagueRole.OWNER);
 
         leagueModel.setParticipants(List.of(owner));
-        notificationService.notifyUserLeagueInvite(owner.getUser().getUserId(), leagueModel.getLeagueId());
+
         return leagueModel;
     }
 
@@ -91,6 +91,9 @@ public class LeagueService {
                 .status(InviteStatus.PENDING)
                 .build();
 
+        String[] args = {inviterUser.getFirstName(), leagueModel.getName()};
+        notificationService.createNotification(invitedUser.getUserId(), leagueModel.getLeagueId(), NotificationReferenceType.LEAGUE_INVITE, args);
+
         return inviteRepo.save(inviteModel);
     }
 
@@ -119,15 +122,40 @@ public class LeagueService {
             });
     }
 
+    @Transactional
     public void processInvite(String inviteeUserId, String leagueId, InviteStatus newStatus) {
         InviteModel inviteModel = getInviteModelById(inviteeUserId, leagueId);
         inviteModel.setStatus(newStatus);
 
+        // Add user to league if invite is approved
         if (InviteStatus.APPROVED.equals(newStatus)) {
             addUserToLeague(leagueId, inviteeUserId, LeagueRole.MEMBER);
         }
+        updateInviteNotification(leagueId, newStatus);
+    }
 
+    private void updateInviteNotification(String leagueId, InviteStatus newStatus) {
+        try {
+            NotificationModel notificationModel = notificationService.findLeagueInviteNotification(leagueId);
+            if (notificationModel == null) {
+                log.warn("Notification not found for league: {}", leagueId);
+                return;
+            }
+            String completedActionLabel = determineCompletedActionLabel(newStatus);
+            if (completedActionLabel != null) {
+                notificationService.updateNotificationCompletedAction(notificationModel, completedActionLabel);
+            }
+        } catch (EntityNotFound ex) {
+            log.error("Notification not found for league: {}", leagueId, ex);
+        }
+    }
 
+    private String determineCompletedActionLabel(InviteStatus newStatus) {
+        return switch (newStatus) {
+            case APPROVED -> "Approved";
+            case DECLINED -> "Declined";
+            default -> null;
+        };
     }
 
     public ParticipantModel addUserToLeague(String leagueId, String userId, LeagueRole leagueRole) {

@@ -1,13 +1,13 @@
 <div class="static lg:relative">
   <!-- Notification Icon -->
-  <button class="p-2 relative" (click)="toggleNotificationList()">
+  <button class="p-2 relative flex items-center" (click)="toggleNotificationList()">
     <span class="material-icons-outlined">notifications</span>
 
     <!-- Badge for Notifications -->
     <span 
-      [ngClass]="{'hidden': notifications.length === 0}"
+      [ngClass]="{'hidden': getNumberOfUnacknowledgedNotifications() < 1}"
       class="absolute top-0 right-0 text-xs text-white bg-red-600 rounded-full w-4 h-4 flex items-center justify-center">
-      {{ notifications.length }}
+      {{ getNumberOfUnacknowledgedNotifications() }}
     </span>
   </button>
 

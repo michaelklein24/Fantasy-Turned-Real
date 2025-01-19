@@ -61,7 +61,6 @@ export class LeagueService {
       take(1),
       tap((response: GetLeaguesForUserResponse) => {
         this.cacheService.set('leagues', response.leagues || [], this.cacheTTL);
-        console.log("test")
       }),
       map((response: GetLeaguesForUserResponse) => response.leagues!),
       catchError((error: any) => {
