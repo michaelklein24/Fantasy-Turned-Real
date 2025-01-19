@@ -1,1 +1,4 @@
-<p>notifications-page works!</p>
+<app-notifications-page-header/>
+<div class="bg-teal-50 lg:px-3">
+    <app-notification-item *ngFor="let notification of filteredNotifications" [notification]="notification"/>
+</div>

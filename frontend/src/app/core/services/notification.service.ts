@@ -5,6 +5,7 @@ import {
   map,
   Observable,
   of,
+  Subject,
   take,
   tap,
   throwError,
@@ -14,6 +15,8 @@ import {
   GetNotificationsResponse,
   MarkNotificationsAsReadOrUnreadRequest,
   Notification,
+  NotificationReferenceType,
+  SortOrder,
 } from '../../../libs/generated/typescript-angular';
 
 @Injectable({
@@ -25,7 +28,17 @@ export class NotificationService {
     this.notifications
   );
 
+  private filteredNotifications: Notification[] = [];
+  private filteredNotificationsSubject = new BehaviorSubject<Notification[]>(
+    this.filteredNotifications
+  );
+
   public notifications$ = this.notificationsSubject.asObservable();
+  public filteredNotifications$ =
+    this.filteredNotificationsSubject.asObservable();
+
+  private order: 'ASC' | 'DESC' = 'ASC';
+  private notificationTypes: NotificationReferenceType[] = [];
 
   constructor(private apiService: ApiService) {}
 
@@ -47,21 +60,96 @@ export class NotificationService {
     );
   }
 
+  private setNotificationTypes(notificationTypes: NotificationReferenceType[]) {
+    this.notificationTypes = notificationTypes;
+  }
+
+  private setOrder(order: SortOrder) {
+    this.order = order;
+  }
+
+  getNotificationsWithSpecForUser(
+    order?: SortOrder,
+    notificationTypes?: NotificationReferenceType[],
+    fetchSize: number = 100
+  ): Observable<Notification[]> {
+    if (notificationTypes) {
+      this.setNotificationTypes(notificationTypes);
+    }
+    if (order) {
+      this.setOrder(order);
+    }
+
+    return this.apiService.notification
+      .getNotificationsForUser(this.order, fetchSize, this.notificationTypes)
+      .pipe(
+        take(1),
+        tap((response: GetNotificationsResponse) => {
+          this.filteredNotifications = response.notifications!;
+          this.filteredNotificationsSubject.next(this.filteredNotifications);
+        }),
+        map((response: GetNotificationsResponse) => response.notifications!),
+        catchError((error: any) => {
+          console.error(
+            'Error fetching leagues for user:',
+            error.response?.data || error.message
+          );
+          return throwError(() => error);
+        })
+      );
+  }
+
   // Add notification to the list
   addNotification(notification: Notification): void {
     this.notifications.unshift(notification);
     this.notificationsSubject.next(this.notifications);
-  }
-
-  updateNotificationCompletedActionLabel(notificationId: string, completedActionLabel: string) {
-    const notification = this.notifications.find(n => n.notificationId === notificationId);
-    if (notification) {
-      notification.completedActionLabel = completedActionLabel;
-      this.notificationsSubject.next([...this.notifications]);
-    } else {
-      console.error('Notification not found for id:', notificationId);
+    if (this.shouldAddToFilteredNotifications(notification)) {
+      if (this.order == SortOrder.Desc) {
+        this.filteredNotifications.push(notification);
+      } else {
+        this.filteredNotifications.unshift(notification)
+      }
+      this.filteredNotificationsSubject.next(this.filteredNotifications);
     }
   }
+
+  private shouldAddToFilteredNotifications(notification: Notification): boolean {
+    return this.notificationTypes.length === 0 || 
+      (notification.referenceType! && this.notificationTypes.includes(notification.referenceType))
+    }
+
+    updateNotificationCompletedActionLabel(
+      notificationId: string,
+      completedActionLabel: string
+    ) {
+      
+      const updateNotification = (
+        list: Notification[],
+        subject: Subject<Notification[]>
+      ) => {
+        const notification = list.find((n) => n.notificationId === notificationId);
+        if (notification) {
+          notification.completedActionLabel = completedActionLabel;
+          subject.next([...list]); // Notify subscribers with a new array reference
+          return true;
+        }
+        return false;
+      };
+    
+      const updatedNotifications = updateNotification(
+        this.notifications,
+        this.notificationsSubject
+      );
+      const updatedFilteredNotifications = updateNotification(
+        this.filteredNotifications,
+        this.filteredNotificationsSubject
+      );
+    
+      if (!updatedNotifications && !updatedFilteredNotifications) {
+        console.error('Notification not found for id:', notificationId);
+      }
+    }
+    
 
   // Mark notifications as read (single or multiple)
   markNotificationsAsRead(notificationId?: string): Observable<Notification[]> {
@@ -81,7 +169,7 @@ export class NotificationService {
       );
       return of(this.notifications).pipe(take(1));
     }
-  
+
     const request: MarkNotificationsAsReadOrUnreadRequest = {
       notificationIds: notificationIdsToBeMarked,
       acknowledged: true,
@@ -89,8 +177,7 @@ export class NotificationService {
 
     console.log(request);
 
-
-    console.log(request)
+    console.log(request);
     return this.apiService.notification
       .markNotificationAsReadOrUnread(request)
       .pipe(

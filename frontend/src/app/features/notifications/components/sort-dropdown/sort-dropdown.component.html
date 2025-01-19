@@ -1,0 +1,34 @@
+<div class="inline-block text-left">
+  <button
+    (click)="toggleSortDropdown()"
+    type="button"
+    class="group inline-flex items-center justify-center text-sm font-medium text-gray-500 hover:text-gray-900"
+    aria-expanded="isSortDropdownVisible"
+    aria-haspopup="true"
+  >
+    Sort
+    <span class="material-icons-outlined">keyboard_arrow_down</span>
+  </button>
+
+  <div
+    *ngIf="isSortDropdownVisible"
+    class="absolute z-10 mt-2 w-40 right-4 rounded-md bg-white shadow-2xl ring-1 ring-black/5 focus:outline-none"
+    role="menu"
+    aria-orientation="vertical"
+  >
+    <div class="py-1" role="none">
+      <button
+        *ngFor="let option of sortOptions"
+        class="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+        [ngClass]="{
+          'font-bold text-gray-900': selectedSortOption.value === option.value,
+          'text-gray-500': selectedSortOption.value !== option.value
+        }"
+        (click)="selectSort(option)"
+        role="menuitem"
+      >
+        {{ option.label }}
+      </button>
+    </div>
+  </div>
+</div>

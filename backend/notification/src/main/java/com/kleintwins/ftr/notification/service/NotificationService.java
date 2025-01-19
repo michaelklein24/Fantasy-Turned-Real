@@ -1,6 +1,7 @@
 package com.kleintwins.ftr.notification.service;
 
 import com.kleintwins.ftr.auth.exception.UserNotPermitted;
+import com.kleintwins.ftr.core.SortOrder;
 import com.kleintwins.ftr.core.exception.EntityNotFound;
 import com.kleintwins.ftr.core.service.I18nService;
 import com.kleintwins.ftr.notification.code.NotificationReferenceType;
@@ -13,6 +14,9 @@ import com.kleintwins.ftr.user.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -31,6 +35,19 @@ public class NotificationService {
     public List<NotificationModel> getNotificationsForUser(String userId) {
         UserModel userModel = userService.findUserByUserId(userId);
         return notificationRepo.findByUser(userModel);
+    }
+
+    public List<NotificationModel> getNotificationsForUser(String userId, SortOrder order, int fetchSize, List<NotificationReferenceType> notificationTypes) {
+        UserModel userModel = userService.findUserByUserId(userId);
+        Sort sortOrder = Sort.by("createTime");
+        if (SortOrder.DESC.equals(order)) {
+            sortOrder = sortOrder.descending();
+        } else {
+            sortOrder = sortOrder.ascending();
+        }
+        Pageable pageable = PageRequest.of(0, fetchSize, sortOrder);
+        return notificationRepo.findNotifications(userModel, notificationTypes, pageable).getContent();
+
     }
 
     private void sendNotificationToUser(@NonNull String userId, NotificationModel notificationModel) {

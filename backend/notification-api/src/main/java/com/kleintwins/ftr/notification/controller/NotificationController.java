@@ -1,6 +1,7 @@
 package com.kleintwins.ftr.notification.controller;
 
 import com.kleintwins.ftr.auth.helper.JwtHelper;
+import com.kleintwins.ftr.core.SortOrder;
 import com.kleintwins.ftr.core.dto.CustomErrorResponse;
 import com.kleintwins.ftr.notification.code.NotificationReferenceType;
 import com.kleintwins.ftr.notification.dto.CreateNotificationRequest;
@@ -53,12 +54,21 @@ public class NotificationController {
                             schema = @Schema(implementation = CustomErrorResponse.class)))
     })
     public ResponseEntity<GetNotificationsResponse> getNotificationsForUser(
-            HttpServletRequest request
+            HttpServletRequest request,
+            @RequestParam(value = "order", defaultValue = "ASC") SortOrder order,
+            @RequestParam(value = "fetchSize", defaultValue = "20") int fetchSize,
+            @RequestParam(value = "notificationTypes", required = false) List<NotificationReferenceType> notificationTypes
     ) {
         String userId = jwtHelper.extractUserIdFromTokenInRequest(request);
-        List<NotificationModel> notificationModels = notificationService.getNotificationsForUser(userId);
-        return ResponseEntity.status(HttpStatus.OK).body(NotificationDtoBuilder.buildGetNotificationsResponse(notificationModels));
+
+        List<NotificationModel> notificationModels = notificationService.getNotificationsForUser(
+                userId, order, fetchSize, notificationTypes
+        );
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(NotificationDtoBuilder.buildGetNotificationsResponse(notificationModels));
     }
+
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
