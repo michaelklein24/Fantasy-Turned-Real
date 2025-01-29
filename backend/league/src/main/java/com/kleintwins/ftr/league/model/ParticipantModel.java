@@ -4,6 +4,7 @@ import com.kleintwins.ftr.league.code.LeagueRole;
 import com.kleintwins.ftr.user.model.UserModel;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.Delegate;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -20,6 +21,7 @@ import java.util.List;
 public class ParticipantModel implements Serializable {
 
     @EmbeddedId
+    @Delegate
     private ParticipantId participantId;
 
     @Enumerated(value = EnumType.STRING)
