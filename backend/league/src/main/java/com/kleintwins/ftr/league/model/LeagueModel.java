@@ -27,6 +27,10 @@ public class LeagueModel {
     private List<ParticipantModel> participants;
 
     @ManyToOne
+    @JoinColumns({
+            @JoinColumn(name = "season_sequence", referencedColumnName = "season_sequence"),
+            @JoinColumn(name = "show", referencedColumnName = "show")
+    })
     private SeasonModel season;
 
     @Column(nullable = false, updatable = false)

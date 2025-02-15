@@ -1,4 +1,4 @@
-INSERT INTO ssn_season (sequence, show, start_time, end_time, total_episodes)
+INSERT INTO ssn_season (season_sequence, show, start_time, end_time, total_episodes)
 VALUES ('47', 'SURVIVOR', '2025-02-15 20:00:00', '2025-05-15 22:00:00', 13);
 
 INSERT INTO usr_user (user_id, role, email, first_name, last_name)
@@ -24,7 +24,7 @@ VALUES
 (true, '2025-01-08', '2025-04-08', '$2a$10$k7m9X7pBcUPMfUTfkxZuRueniAPfGPB3Vp.zzQctcN7ju2NhFL16W', '623dbe1a-529b-4004-b36f-b7f98ef71d44', '8b7d9e9d-62e3-4f7b-a7b7-b2d76ec2d2f0'),
 (true, '2025-01-08', '2025-04-08', '$2a$10$z6v9X7qBcUPMfUTfkxZuRueniAPfGPB3Vp.zzQctcN7ju2NhFL16W', '723dbe1a-529b-4004-b36f-b7f98ef71d33', '9f82a0e7-df9c-4970-8766-d7d3c19d95e1');
 
-INSERT INTO lge_league (season_sequence, create_time, league_id, name, season_show)
+INSERT INTO lge_league (season_sequence, create_time, league_id, name, show)
 VALUES
 (47, '2025-01-08 14:38:53.763', '5f4da728-9eea-4969-a9b7-e6270027b13a', 'Corner By The Bookshelf', 'SURVIVOR'),
 (47, '2025-01-18 14:38:53.763', '276bfc66-edcc-4162-ab64-2ba02918092c', 'The ROCKstars', 'SURVIVOR');

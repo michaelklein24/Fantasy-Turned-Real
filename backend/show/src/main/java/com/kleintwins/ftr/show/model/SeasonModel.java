@@ -1,17 +1,16 @@
 package com.kleintwins.ftr.show.model;
 
-//import com.kleintwins.ftr.league.model.LeagueModel;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Table(name = "ssn_season")
 @Entity
 @Getter
 @Setter
-@ToString(exclude = "leagues")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,6 +21,10 @@ public class SeasonModel {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private int totalEpisodes;
-//    @OneToMany(mappedBy = "season", cascade = CascadeType.DETACH)
-//    private List<LeagueModel> leagues;
+
+    @ManyToMany(mappedBy = "seasons", fetch = FetchType.EAGER)
+    private List<ContestantModel> contestants;
+
+    @OneToMany(mappedBy = "season")
+    private List<EpisodeModel> episodes;
 }

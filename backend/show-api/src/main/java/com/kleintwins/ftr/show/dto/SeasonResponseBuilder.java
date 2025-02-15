@@ -6,7 +6,7 @@ public class SeasonResponseBuilder {
 
     public static Season buildSeason(SeasonModel seasonModel) {
         return Season.builder()
-                .sequence(seasonModel.getSeasonId().getSequence())
+                .sequence(seasonModel.getSeasonId().getSeasonSequence())
                 .show(seasonModel.getSeasonId().getShow())
                 .startTime(seasonModel.getStartTime())
                 .endTime(seasonModel.getEndTime())
