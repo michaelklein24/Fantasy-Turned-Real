@@ -9,13 +9,15 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class SeasonService {
     private final SeasonRepository seasonRepo;
     private final I18nService i18nService;
 
-    public SeasonModel findSeasonByShowAndSeasonId(Show show, int sequence) {
+    public SeasonModel getSeasonByShowAndSeasonId(Show show, int sequence) {
         SeasonId id = new SeasonId(show, sequence);
 
         // Use `seasonRepo.findById(id)` directly
@@ -27,6 +29,10 @@ public class SeasonService {
             );
             return new EntityNotFoundException(errorMsg);
         });
+    }
+
+    public List<SeasonModel> getSeasonsForShow(Show show) {
+        return seasonRepo.findBySeasonIdShow(show);
     }
 
 

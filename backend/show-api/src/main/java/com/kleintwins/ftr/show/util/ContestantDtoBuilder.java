@@ -1,5 +1,8 @@
-package com.kleintwins.ftr.show.dto;
+package com.kleintwins.ftr.show.util;
 
+import com.kleintwins.ftr.show.dto.Contestant;
+import com.kleintwins.ftr.show.dto.ContestantSocial;
+import com.kleintwins.ftr.show.dto.GetContestantsResponse;
 import com.kleintwins.ftr.show.model.ContestantModel;
 import com.kleintwins.ftr.show.model.ContestantSocialModel;
 

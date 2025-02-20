@@ -41,7 +41,7 @@ public class LeagueService {
 
     @Transactional
     public LeagueModel createLeague(String name, String ownerId, Show show, int seasonSequence) {
-        SeasonModel seasonModel = seasonService.findSeasonByShowAndSeasonId(show, seasonSequence);
+        SeasonModel seasonModel = seasonService.getSeasonByShowAndSeasonId(show, seasonSequence);
 
         LeagueModel leagueModel = new LeagueModel();
         leagueModel.setName(name);

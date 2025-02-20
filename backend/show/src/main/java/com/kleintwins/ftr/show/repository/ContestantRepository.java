@@ -13,5 +13,5 @@ import java.util.List;
 public interface ContestantRepository extends JpaRepository<ContestantModel, String > {
     List<ContestantModel> findAllBySeasonsSeasonIdShow(Show show);
 
-    List<ContestantModel> findAllBySeasonsSeasonIdEpisodeIdAndStatusesStatus(EpisodeId episodeId, ContestantStatus status);
+    List<ContestantModel> findAllBySeasonsEpisodesEpisodeIdAndStatusesStatus(EpisodeId episodeId, ContestantStatus status);
 }

@@ -1,10 +1,9 @@
 package com.kleintwins.ftr.league.util;
 
 import com.kleintwins.ftr.auth.util.UserDtoBuilder;
-import com.kleintwins.ftr.league.code.InviteStatus;
 import com.kleintwins.ftr.league.dto.*;
 import com.kleintwins.ftr.league.model.InviteModel;
-import com.kleintwins.ftr.show.dto.SeasonResponseBuilder;
+import com.kleintwins.ftr.show.util.SeasonResponseBuilder;
 import com.kleintwins.ftr.show.dto.Season;
 import com.kleintwins.ftr.league.model.LeagueModel;
 import com.kleintwins.ftr.league.model.ParticipantModel;

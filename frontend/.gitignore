@@ -42,3 +42,4 @@ testem.log
 Thumbs.db
 
 /src/libs/generated/typescript-angular*
+.env

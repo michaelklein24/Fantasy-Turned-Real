@@ -1,0 +1,51 @@
+<div class="container mx-auto p-4">
+  <div class="mb-6">
+    <h2 class="text-2xl font-semibold mb-4">Shows</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div
+        class="rounded-xl overflow-hidden shadow-lg cursor-pointer transition transform hover:scale-105"
+      >
+        <img
+          src="../../../assets/survivor.jpg"
+          alt="Survivor"
+          class="w-full h-48 object-cover object-top"
+        />
+        <div class="p-4 bg-gray-900 text-white text-center">
+          <h3 class="text-lg font-bold">Survivor</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex justify-end">
+    <app-dropdown (itemSelected)="handleSeasonSelection($event)" [label]="'Season ' + selectedSeasonSequence" [menuItems]="getSeasonSequenceOptions()"></app-dropdown>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+    <div
+      *ngFor="let contestant of contestants"
+      class="rounded-xl overflow-hidden shadow-lg bg-white"
+    >
+      <img
+        [src]="getUrlForContestantImage(selectedShow, selectedSeasonSequence, contestant.firstName!, contestant.lastName!)"
+        [alt]="contestant.firstName + ' ' + contestant.lastName"
+        class="w-full h-64 object-cover object-[50%_8%]"
+      />
+      <div class="p-4 text-center">
+        <h3 class="text-lg font-bold">{{ contestant.firstName }} {{ contestant.lastName }}</h3>
+        <div class="mt-2 flex justify-center gap-3">
+          <a
+            *ngFor="let social of contestant.socials"
+            [href]="getSocialUrl(social)"
+            target="_blank"
+            class="text-blue-500 hover:underline flex items-center gap-1"
+          >
+            <img *ngIf="social.platform === 'INSTAGRAM'" src="../../../assets/instagram.svg" alt="Instagram" class="w-5 h-5">
+            <img *ngIf="social.platform === 'X'" src="../../../assets/x.svg" alt="X" class="w-5 h-5">
+            <span>{{ social.handle }}</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

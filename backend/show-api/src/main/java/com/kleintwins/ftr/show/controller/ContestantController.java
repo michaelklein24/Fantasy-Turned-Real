@@ -3,7 +3,7 @@ package com.kleintwins.ftr.show.controller;
 import com.kleintwins.ftr.core.dto.CustomErrorResponse;
 import com.kleintwins.ftr.show.code.ContestantStatus;
 import com.kleintwins.ftr.show.code.Show;
-import com.kleintwins.ftr.show.dto.ContestantDtoBuilder;
+import com.kleintwins.ftr.show.util.ContestantDtoBuilder;
 import com.kleintwins.ftr.show.dto.GetContestantsResponse;
 import com.kleintwins.ftr.show.model.ContestantModel;
 import com.kleintwins.ftr.show.service.ContestantService;
@@ -12,14 +12,11 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -36,13 +33,7 @@ public class ContestantController {
             @ApiResponse(responseCode = "200", description = "Contestants successfully fetched",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = GetContestantsResponse.class))),
-            @ApiResponse(responseCode = "400", description = "Bad request: Validation failed or invalid input",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CustomErrorResponse.class))),
-            @ApiResponse(responseCode = "401", description = "Unauthorized: Missing or invalid JWT token",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CustomErrorResponse.class))),
-            @ApiResponse(responseCode = "404", description = "Not Found: Contestants cannot be found with the following request",
+            @ApiResponse(responseCode = "400", description = "Bad request: Invalid Input",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = CustomErrorResponse.class))),
             @ApiResponse(responseCode = "500", description = "Internal server error: Unexpected server issue",

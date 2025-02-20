@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +24,7 @@ public class ContestantService {
     }
 
     public List<ContestantModel> getContestantsForSeason(Show show, int seasonSequence) {
-        SeasonModel seasonModel = seasonService.findSeasonByShowAndSeasonId(show, seasonSequence);
+        SeasonModel seasonModel = seasonService.getSeasonByShowAndSeasonId(show, seasonSequence);
         return seasonModel.getContestants();
     }
 
@@ -39,18 +38,18 @@ public class ContestantService {
         SeasonId seasonId = new SeasonId(show, seasonSequence);
         EpisodeId episodeId = new EpisodeId(episodeSequence, seasonId);
 
-        return contestantRepo.findAllBySeasonsSeasonIdEpisodeIdAndStatusesStatus(episodeId, contestantStatus);
+        return contestantRepo.findAllBySeasonsEpisodesEpisodeIdAndStatusesStatus(episodeId, contestantStatus);
     }
 
     public List<ContestantModel> getContestantsForEpisodeByStatus(ContestantStatus contestantStatus, EpisodeId episodeId) {
         Show show = episodeId.getSeasonId().getShow();
         Integer seasonSequence = episodeId.getSeasonId().getSeasonSequence();
         Integer episodeSequence = episodeId.getEpisodeSequence();
-        return getContestantsForEpisodeByStatus(contestantStatus, show, seasonSequence, episodeSequence)
+        return getContestantsForEpisodeByStatus(contestantStatus, show, seasonSequence, episodeSequence);
     }
 
-    public List<ContestantModel> getAliveContestantsByBeginningOfEpisode(ShEpisodeId episodeId) {
-        return getContestantsForEpisodeByStatus(episodeId);
+    public List<ContestantModel> getAliveContestantsByBeginningOfEpisode(EpisodeId episodeId) {
+        return getContestantsForEpisodeByStatus(ContestantStatus.ALIVE, episodeId);
     }
 
 }

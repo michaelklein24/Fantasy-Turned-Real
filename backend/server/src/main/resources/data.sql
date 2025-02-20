@@ -1,5 +1,6 @@
 INSERT INTO ssn_season (season_sequence, show, start_time, end_time, total_episodes)
-VALUES ('47', 'SURVIVOR', '2025-02-15 20:00:00', '2025-05-15 22:00:00', 13);
+VALUES ('46', 'SURVIVOR', '2025-02-28 20:00:00', '2025-05-22 22:00:00', 14),
+('47', 'SURVIVOR', '2025-09-18 20:00:00', '2025-05-18 22:00:00', 13);
 
 INSERT INTO usr_user (user_id, role, email, first_name, last_name)
 VALUES
@@ -76,3 +77,71 @@ NULL,
 'League Invitation',
 '7db21f43-31e2-4fd7-8501-772039ad9f16'
 );
+
+-- Insert contestants into the shw_contestant table
+INSERT INTO shw_contestant (contestant_id, first_name, last_name)
+VALUES
+    ('1e4d1a2b-1234-4a56-9876-abcdef123456', 'Alysha', 'Welch'),
+    ('2f5e2b3c-5678-4b67-8765-bcdef2345678', 'Andy', 'Rueda'),
+    ('3g6f3c4d-9101-4c78-7654-cdef34567890', 'Anika', 'Dhar'),
+    ('4h7g4d5e-1121-4d89-6543-def456789012', 'Caroline', 'Vidmar'),
+    ('5i8h5e6f-3141-4e90-5432-ef5678901234', 'Gabe', 'Ortis'),
+    ('6j9i6f7g-5161-4f01-4321-f67890123456', 'Jon', 'Lovett'),
+    ('7k0j7g8h-7181-4g12-3210-678901234567', 'Kishan', 'Patel'),
+    ('8l1k8h9i-9201-4h23-2109-789012345678', 'Kyle', 'Otswald'),
+    ('9m2l9i0j-1221-4i34-1098-890123456789', 'Rachel', 'Lamont'),
+    ('0n3m0j1k-3241-4j45-0987-901234567890', 'Rome', 'Cooney'),
+    ('1o4n1k2l-5261-4k56-9876-012345678901', 'Sam', 'Phalen'),
+    ('2p5o2l3m-7281-4l67-8765-123456789012', 'Sierra', 'Wright'),
+    ('3q6p3m4n-9301-4m78-7654-234567890123', 'Solomon', 'Yi'),
+    ('4r7q4n5o-1321-4n89-6543-345678901234', 'Sue', 'Smey'),
+    ('5s8r5o6p-3341-4o90-5432-456789012345', 'Teeny', 'Chirichillo'),
+    ('6t9s6p7q-5361-4p01-4321-567890123456', 'Terran', 'Foster'),
+    ('7u0t7q8r-7381-4q12-3210-678901234567', 'Tiyana', 'Hallums'),
+    ('12a34567-bc89-4d12-abcd-efg456789012', 'Jemila', 'Hussain-Adams'),
+    ('22b45678-cd90-5e23-bcde-789012345678', 'Ben', 'Katzman'),
+    ('33c56789-de01-6f34-cdef-234567890123', 'Jessica', 'Chong'),
+    ('44d67890-ef12-7g45-dfgh-345678901234', 'Bhanu', 'Gopal'),
+    ('55e78901-fg23-8h56-efgh-456789012345', 'Kenzie', 'Petty'),
+    ('66f89012-gh34-9i67-ghij-567890123456', 'Charlie', 'Davis'),
+    ('77g90123-hi45-0j78-ijk1-678901234567', 'Liz', 'Wilcox'),
+    ('88h01234-jk56-1l89-lm12-789012345678', 'Maria', 'Shrime Gonzalez'),
+    ('99i12345-kl67-2m90-mn23-890123456789', 'Q', 'Burdette'),
+    ('10j23456-lm78-3n01-no34-901234567890', 'Venus', 'Vafa'),
+    ('11k34567-mn89-4o12-op45-012345678901', 'Tiffany Nicole', 'Ervin'),
+    ('12l45678-no01-5p23-pq56-123456789012', 'Tim', 'Spicer'),
+    ('13m56789-op23-6q45-qr67-234567890123', 'Moriah', 'Gaynor');
+
+-- Link contestants to season 47 in shw_season_contestant
+INSERT INTO shw_season_contestant (contestant_id, season_sequence, show)
+VALUES
+    ('1e4d1a2b-1234-4a56-9876-abcdef123456', '47', 'SURVIVOR'),
+    ('2f5e2b3c-5678-4b67-8765-bcdef2345678', '47', 'SURVIVOR'),
+    ('3g6f3c4d-9101-4c78-7654-cdef34567890', '47', 'SURVIVOR'),
+    ('4h7g4d5e-1121-4d89-6543-def456789012', '47', 'SURVIVOR'),
+    ('5i8h5e6f-3141-4e90-5432-ef5678901234', '47', 'SURVIVOR'),
+    ('6j9i6f7g-5161-4f01-4321-f67890123456', '47', 'SURVIVOR'),
+    ('7k0j7g8h-7181-4g12-3210-678901234567', '47', 'SURVIVOR'),
+    ('8l1k8h9i-9201-4h23-2109-789012345678', '47', 'SURVIVOR'),
+    ('9m2l9i0j-1221-4i34-1098-890123456789', '47', 'SURVIVOR'),
+    ('0n3m0j1k-3241-4j45-0987-901234567890', '47', 'SURVIVOR'),
+    ('1o4n1k2l-5261-4k56-9876-012345678901', '47', 'SURVIVOR'),
+    ('2p5o2l3m-7281-4l67-8765-123456789012', '47', 'SURVIVOR'),
+    ('3q6p3m4n-9301-4m78-7654-234567890123', '47', 'SURVIVOR'),
+    ('4r7q4n5o-1321-4n89-6543-345678901234', '47', 'SURVIVOR'),
+    ('5s8r5o6p-3341-4o90-5432-456789012345', '47', 'SURVIVOR'),
+    ('6t9s6p7q-5361-4p01-4321-567890123456', '47', 'SURVIVOR'),
+    ('7u0t7q8r-7381-4q12-3210-678901234567', '47', 'SURVIVOR'),
+    ('12a34567-bc89-4d12-abcd-efg456789012', '46', 'SURVIVOR'),
+    ('22b45678-cd90-5e23-bcde-789012345678', '46', 'SURVIVOR'),
+    ('33c56789-de01-6f34-cdef-234567890123', '46', 'SURVIVOR'),
+    ('44d67890-ef12-7g45-dfgh-345678901234', '46', 'SURVIVOR'),
+    ('55e78901-fg23-8h56-efgh-456789012345', '46', 'SURVIVOR'),
+    ('66f89012-gh34-9i67-ghij-567890123456', '46', 'SURVIVOR'),
+    ('77g90123-hi45-0j78-ijk1-678901234567', '46', 'SURVIVOR'),
+    ('88h01234-jk56-1l89-lm12-789012345678', '46', 'SURVIVOR'),
+    ('99i12345-kl67-2m90-mn23-890123456789', '46', 'SURVIVOR'),
+    ('10j23456-lm78-3n01-no34-901234567890', '46', 'SURVIVOR'),
+    ('11k34567-mn89-4o12-op45-012345678901', '46', 'SURVIVOR'),
+    ('12l45678-no01-5p23-pq56-123456789012', '46', 'SURVIVOR'),
+    ('13m56789-op23-6q45-qr67-234567890123', '46', 'SURVIVOR');
