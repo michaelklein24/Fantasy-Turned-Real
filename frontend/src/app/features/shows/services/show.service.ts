@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { catchError, map, Observable, take, throwError } from 'rxjs';
+import { catchError, map, Observable, of, take, tap, throwError } from 'rxjs';
 import { GetSeasonsResponse, GetShowsResponse, Season, Show } from '../../../../libs/generated/typescript-angular';
 import { ApiService } from '../../../core/services/api.service';
+import { CacheService } from '../../../core/services/cache.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,13 +10,26 @@ import { ApiService } from '../../../core/services/api.service';
 export class ShowService {
 
   constructor(
-    private apiService: ApiService
+    private apiService: ApiService,
+    private cacheService: CacheService
   ) { }
 
-  getSeasonsForShow(show: Show): Observable<Season[]> {
+  private readonly cacheTTL = 5 * 60 * 1000; // 5 minutes
+
+  getSeasonsForShow(show: Show, forceRefresh = false): Observable<Season[]> {
+    if (!forceRefresh) {
+      const cachedSeasons = this.cacheService.get<Season[]>(`${show.toLowerCase()}_seasons`);
+      if (cachedSeasons) {
+        return of(cachedSeasons);
+      }
+    }
+
     return this.apiService.show.getSeasons(show).pipe(
       take(1),
       map((response: GetSeasonsResponse) => response.seasons!),
+      tap((seasons: Season[]) => {
+        this.cacheService.set(`${show.toLowerCase()}_seasons`, seasons || []);
+      }),
       catchError((error: any) => {
         console.error('Error fetching leagues for user:', error.response?.data || error.message);
         return throwError(() => error);
@@ -23,10 +37,20 @@ export class ShowService {
     )
   }
 
-  getShows(): Observable<Show[]> {
+  getShows(forceRefresh = false): Observable<Show[]> {
+    if (!forceRefresh) {
+      const cachedSeasons = this.cacheService.get<Show[]>(`shows`);
+      if (cachedSeasons) {
+        return of(cachedSeasons);
+      }
+    }
+
     return this.apiService.show.getShows().pipe(
       take(1),
       map((response: GetShowsResponse) => response.shows!),
+      tap((shows: Show[]) => {
+        this.cacheService.set(`shows`, shows || []);
+      }),
       catchError((error: any) => {
         console.error('Error fetching leagues for user:', error.response?.data || error.message);
         return throwError(() => error);
