@@ -59,12 +59,14 @@ export class NavbarComponent implements OnInit, OnDestroy {
       this.closeUserMenu();
     }
   }
-  
-  
 
   onLogout(): void {
     this.sessionService.clearSession();
     this.showUserMenu = false;
+    this.router.navigate(["/"])
+  }
+
+  navigateHome(): void {
     this.router.navigate(["/"])
   }
 
