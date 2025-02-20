@@ -35,7 +35,7 @@ public class ShowController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Contestants successfully fetched",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = GetContestantsResponse.class))),
+                            schema = @Schema(implementation = GetShowsResponse.class))),
             @ApiResponse(responseCode = "400", description = "Bad request: Invalid Input",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = CustomErrorResponse.class))),

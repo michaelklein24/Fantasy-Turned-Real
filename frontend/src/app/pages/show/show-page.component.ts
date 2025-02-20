@@ -22,6 +22,7 @@ export class ShowPageComponent implements OnInit, OnDestroy {
   selectedSeasonSequence: number = 47;
   contestants: Contestant[] = []
   seasons: Season[] = []
+  shows: Show[] = []
 
   constructor(
     private contestantService: ContestantService,
@@ -32,6 +33,7 @@ export class ShowPageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadContestants();
     this.loadSeasons();
+    this.loadShows();
   }
 
   ngOnDestroy(): void {
@@ -47,6 +49,12 @@ export class ShowPageComponent implements OnInit, OnDestroy {
   private loadSeasons(): void {
     this.showService.getSeasonsForShow(this.selectedShow).subscribe((seasons: Season[]) => {
       this.seasons = seasons;
+    })
+  }
+
+  private loadShows(): void {
+    this.showService.getShows().subscribe((shows: Show[]) => {
+      this.shows = shows;
     })
   }
 
@@ -68,6 +76,13 @@ export class ShowPageComponent implements OnInit, OnDestroy {
       default:
         return '#';
     }
+  }
+
+  getUrlForSeasonTitleImage(show: Show) {
+    const folderPath = `show:${show.toLowerCase()}`;
+    const fileName = `title_image.jpg`;
+    const imageUrl = this.imageService.getImageUrl(folderPath, fileName);
+    return imageUrl;
   }
 
   getUrlForContestantImage(show: Show, seasonSequence: number, firstName: string, lastName: string): string {

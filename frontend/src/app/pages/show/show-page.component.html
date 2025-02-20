@@ -2,11 +2,11 @@
   <div class="mb-6">
     <h2 class="text-2xl font-semibold mb-4">Shows</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div
+      <div *ngFor="let show of shows"
         class="rounded-xl overflow-hidden shadow-lg cursor-pointer transition transform hover:scale-105"
       >
         <img
-          src="../../../assets/survivor.jpg"
+          [src]="getUrlForSeasonTitleImage(show)"
           alt="Survivor"
           class="w-full h-48 object-cover object-top"
         />
