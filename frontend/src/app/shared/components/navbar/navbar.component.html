@@ -13,6 +13,19 @@
     >
   </div>
 
+  <div class="flex-1">
+    <ul class="flex items-center justify-end space-x-4">
+      <li class="hover:cursor-pointer">
+        <a
+          routerLink="/shows"
+          routerLinkActive="active"
+          class="text-white-600 py-2 px-4 rounded-lg font-medium hover:text-gray-200 transition"
+          >Shows</a
+        >
+      </li>
+    </ul>
+  </div>
+
   <!-- User Section -->
   <div class="">
     <ul *ngIf="!isLoggedIn" class="flex items-center space-x-4">
