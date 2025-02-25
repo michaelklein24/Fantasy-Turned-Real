@@ -4,14 +4,15 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       <div *ngFor="let show of shows"
         class="rounded-xl overflow-hidden shadow-lg cursor-pointer transition transform hover:scale-105"
+        (click)="handleShowSelection(show)"
       >
         <img
           [src]="getUrlForSeasonTitleImage(show)"
-          alt="Survivor"
+          [alt]="show"
           class="w-full h-48 object-cover object-top"
         />
         <div class="p-4 bg-gray-900 text-white text-center">
-          <h3 class="text-lg font-bold">Survivor</h3>
+          <h3 class="text-lg font-bold">{{ show | capitalizeFirst | replaceChar:'_':' '}}</h3>
         </div>
       </div>
     </div>

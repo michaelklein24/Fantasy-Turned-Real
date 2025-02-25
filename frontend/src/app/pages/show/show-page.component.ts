@@ -5,29 +5,43 @@ import { ContestantService } from '../../features/shows/services/contestant.serv
 import { CommonModule } from '@angular/common';
 import { ImageService } from '../../core/services/image.service';
 import { ShowService } from '../../features/shows/services/show.service';
+import { ConfigService } from '../../core/services/config.service';
+import { CapitalizeFirstPipe } from "../../shared/pipes/capitalize-first.pipe";
+import { ReplaceCharPipe } from '../../shared/pipes/replace-char.pipe';
 
 @Component({
   selector: 'app-show-page',
   standalone: true,
   imports: [
     DropdownComponent,
-    CommonModule
-  ],
+    CommonModule,
+    CapitalizeFirstPipe,
+    ReplaceCharPipe
+],
   templateUrl: './show-page.component.html',
   styleUrl: './show-page.component.css'
 })
 export class ShowPageComponent implements OnInit, OnDestroy {
 
   selectedShow: Show = Show.Survivor;
+
   selectedSeasonSequence: number = 47;
   contestants: Contestant[] = []
   seasons: Season[] = []
   shows: Show[] = []
 
+  // TODO: Make this configurable on servers
+  currentSeasons = [
+    { show: Show.Survivor, season: 47 },
+    { show: Show.Traitors, season: 3 },
+    { show: Show.RuPaulsDragRace, season: 17 }
+  ]
+
   constructor(
     private contestantService: ContestantService,
     private imageService: ImageService,
-    private showService: ShowService
+    private showService: ShowService,
+    private configService: ConfigService
   ) {}
 
   ngOnInit(): void {
@@ -86,7 +100,7 @@ export class ShowPageComponent implements OnInit, OnDestroy {
   }
 
   getUrlForContestantImage(show: Show, seasonSequence: number, firstName: string, lastName: string): string {
-    const folderPath = `shows:${show.toLowerCase()}:season:${seasonSequence}`;
+    const folderPath = `show:${show.toLowerCase()}:season:${seasonSequence}`;
     const fileName = `${firstName.toLowerCase()}_${lastName.toLowerCase()}.webp`;
     const imageUrl = this.imageService.getImageUrl(folderPath, fileName);
     return imageUrl;
@@ -100,5 +114,17 @@ export class ShowPageComponent implements OnInit, OnDestroy {
       }
       return option;
     })
+  }
+
+  handleShowSelection(show: Show): void {
+    for (const currentSeason of this.currentSeasons) {
+      if (show === currentSeason.show) {
+        this.selectedShow = show;
+        this.selectedSeasonSequence = currentSeason.season;
+        this.loadContestants();
+        this.loadSeasons();
+      }
+    }
+
   }
 }
