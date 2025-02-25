@@ -4,5 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(enumAsRef = true)
 public enum Show {
-    SURVIVOR
+    SURVIVOR,
+    TRAITORS,
+    RU_PAULS_DRAG_RACE
 }
