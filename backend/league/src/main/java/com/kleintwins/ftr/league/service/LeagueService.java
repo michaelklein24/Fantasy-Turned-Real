@@ -4,6 +4,7 @@ import com.kleintwins.ftr.core.exception.EntityNotFound;
 import com.kleintwins.ftr.core.service.I18nService;
 import com.kleintwins.ftr.league.code.InviteStatus;
 import com.kleintwins.ftr.league.code.LeagueRole;
+import com.kleintwins.ftr.league.code.SurveyType;
 import com.kleintwins.ftr.league.exception.ParticipantAlreadyInLeague;
 import com.kleintwins.ftr.league.exception.UserAlreadyInvited;
 import com.kleintwins.ftr.league.model.*;
@@ -14,6 +15,7 @@ import com.kleintwins.ftr.notification.code.NotificationReferenceType;
 import com.kleintwins.ftr.notification.model.NotificationModel;
 import com.kleintwins.ftr.notification.service.NotificationService;
 import com.kleintwins.ftr.show.code.Show;
+import com.kleintwins.ftr.show.model.EpisodeModel;
 import com.kleintwins.ftr.show.model.SeasonModel;
 import com.kleintwins.ftr.show.service.SeasonService;
 import com.kleintwins.ftr.user.model.UserModel;
@@ -38,6 +40,7 @@ public class LeagueService {
     private final SeasonService seasonService;
     private final UserService userService;
     private final NotificationService notificationService;
+    private final SurveyService surveyService;
 
     @Transactional
     public LeagueModel createLeague(String name, String ownerId, Show show, int seasonSequence) {
@@ -51,6 +54,17 @@ public class LeagueService {
         ParticipantModel owner = addUserToLeague(savedLeague.getLeagueId(), ownerId, LeagueRole.OWNER);
 
         leagueModel.setParticipants(List.of(owner));
+
+        for (EpisodeModel episodeModel : seasonModel.getEpisodes()) {
+            surveyService.createSurvey(
+                    savedLeague,
+                    String.format("Episode %d - %s", episodeModel.getEpisodeId().getEpisodeSequence(), episodeModel.getName()),
+                    SurveyType.EPISODE,
+                    episodeModel.getAirTime().minusDays(5),
+                    episodeModel.getAirTime(),
+                    null
+            );
+        }
 
         return leagueModel;
     }

@@ -20,13 +20,9 @@ public class SurveyService {
     private final QuestionRepository questionRepo;
     private final ParticipantAnswerRepository participantAnswerRepo;
 
-    private final LeagueService leagueService;
     private final I18nService i18nService;
 
-    public SurveyModel createSurvey(String leagueId, String name, SurveyType surveyType, LocalDateTime startDate, LocalDateTime endDate, List<QuestionModel> questionModels) {
-
-        LeagueModel leagueModel = leagueService.getLeagueById(leagueId);
-
+    public SurveyModel createSurvey(LeagueModel leagueModel, String name, SurveyType surveyType, LocalDateTime startDate, LocalDateTime endDate, List<QuestionModel> questionModels) {
         SurveyModel surveyModel = new SurveyModel();
         surveyModel.setLeague(leagueModel);
         surveyModel.setName(name);
@@ -56,11 +52,10 @@ public class SurveyService {
 
     // Creates or Updates participant's answers to questions
     public List<ParticipantAnswerModel> submitParticipantAnswersForSurvey(
-            ParticipantId participantId,
+            ParticipantModel participantModel,
             Map<QuestionId, List<AnswerOptionModel>> questionsWithAnswers) {
 
         List<ParticipantAnswerModel> participantAnswerModels = new ArrayList<>();
-        ParticipantModel participantModel = leagueService.getParticipantById(participantId);
 
         for (Map.Entry<QuestionId, List<AnswerOptionModel>> entry : questionsWithAnswers.entrySet()) {
             QuestionId questionId = entry.getKey();
@@ -70,7 +65,7 @@ public class SurveyService {
 
             // Check if an existing answer exists for this question and participant
             Optional<ParticipantAnswerModel> existingAnswerOpt = participantAnswerRepo
-                    .findByParticipantParticipantIdAndQuestionQuestionId(participantId, questionId);
+                    .findByParticipantAndQuestion(participantModel, questionModel);
 
             ParticipantAnswerModel participantAnswerModel;
 
