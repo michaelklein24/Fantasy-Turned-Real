@@ -5,6 +5,58 @@ VALUES ('46', 'SURVIVOR', '2025-02-28 20:00:00', '2025-05-22 22:00:00', 14),
 ('2', 'TRAITORS', '2024-01-12 20:00:00', '2024-03-07 22:00:00', 12),
 ('3', 'TRAITORS', '2025-01-09 20:00:00', '2025-03-06 22:00:00', 12);
 
+INSERT INTO ssn_episode (episode_sequence, season_sequence, air_time, name, show)
+VALUES
+(1, 46, '2025-02-28 20:00:00.000', 'This is Where the Legends Are Made', 'SURVIVOR'),
+(2, 46, '2025-03-06 20:00:00.000', 'Scorpio Energy', 'SURVIVOR'),
+(3, 46, '2025-03-13 20:00:00.000', 'Wackadoodles Win', 'SURVIVOR'),
+(4, 46, '2025-03-20 20:00:00.000', 'Don''t Touch the Oven', 'SURVIVOR'),
+(5, 46, '2025-03-27 20:00:00.000', 'Tiki Man', 'SURVIVOR'),
+(6, 46, '2025-04-03 20:00:00.000', 'Cancel Christmas', 'SURVIVOR'),
+(7, 46, '2025-04-10 20:00:00.000', 'Episode Several', 'SURVIVOR'),
+(8, 46, '2025-04-17 20:00:00.000', 'Hide ''N Seek', 'SURVIVOR'),
+(9, 46, '2025-04-24 20:00:00.000', 'Spicy Jeff', 'SURVIVOR'),
+(10, 46, '2025-05-01 20:00:00.000', 'Run the Red Light', 'SURVIVOR'),
+(11, 46, '2025-05-08 20:00:00.000', 'My Messy, Sweet Little Friend', 'SURVIVOR'),
+(12, 46, '2025-05-15 20:00:00.000', 'Mamma Bear', 'SURVIVOR'),
+(13, 46, '2025-05-22 20:00:00.000', 'Friends Going to War', 'SURVIVOR'),
+-- Episodes for TRAITORS Season 3
+(1, 3, '2025-01-09 20:00:00.000', 'Let Battle Commence', 'TRAITORS'),
+(2, 3, '2025-01-09 21:00:00.000', 'Revenge Is a Dish Best Served Cold', 'TRAITORS'),
+(3, 3, '2025-01-09 22:00:00.000', 'Nail in a Coffin', 'TRAITORS'),
+(4, 3, '2025-01-16 20:00:00.000', 'I Will Bury You Under the Sand', 'TRAITORS'),
+(5, 3, '2025-01-23 20:00:00.000', 'All This Murderous Power', 'TRAITORS'),
+(6, 3, '2025-01-30 20:00:00.000', 'A Dysfunctional Family', 'TRAITORS'),
+(7, 3, '2025-02-06 20:00:00.000', 'Til Death Us Do Part', 'TRAITORS'),
+(8, 3, '2025-02-13 20:00:00.000', 'A B**** Is Lying', 'TRAITORS'),
+(9, 3, '2025-02-20 20:00:00.000', 'A Silent Assassin', 'TRAITORS'),
+(10, 3, '2025-02-27 20:00:00.000', 'The Grand Finale', 'TRAITORS'),
+-- Episodes for TRAITORS Season 1
+(1, 1, '2023-01-12 20:00:00.000', 'The Game Is Afoot', 'TRAITORS'),
+(2, 1, '2023-01-12 21:00:00.000', 'Buried Alive', 'TRAITORS'),
+(3, 1, '2023-01-12 22:00:00.000', 'Murder in the Dark', 'TRAITORS'),
+(4, 1, '2023-01-19 20:00:00.000', 'Life or Death Situation', 'TRAITORS'),
+(5, 1, '2023-01-26 20:00:00.000', 'Getting Away with Murder', 'TRAITORS'),
+(6, 1, '2023-02-02 20:00:00.000', 'Suspicion and Sabotage', 'TRAITORS'),
+(7, 1, '2023-02-09 20:00:00.000', 'The Mask is Slipping', 'TRAITORS'),
+(8, 1, '2023-02-16 20:00:00.000', 'Cabins in the Woods', 'TRAITORS'),
+(9, 1, '2023-02-23 20:00:00.000', 'Trust No One', 'TRAITORS'),
+(10, 1, '2023-02-28 20:00:00.000', 'The Grand Finale', 'TRAITORS'),
+-- Episodes for TRAITORS Season 2
+(1, 2, '2024-01-12 20:00:00.000', 'Betrayers, Fakes and Fraudsters', 'TRAITORS'),
+(2, 2, '2024-01-12 21:00:00.000', 'Welcome to the Dark Side', 'TRAITORS'),
+(3, 2, '2024-01-12 22:00:00.000', 'Murder in Plain Sight', 'TRAITORS'),
+(4, 2, '2024-01-19 20:00:00.000', 'The Funeral', 'TRAITORS'),
+(5, 2, '2024-01-26 20:00:00.000', 'A Killer Move', 'TRAITORS'),
+(6, 2, '2024-02-02 20:00:00.000', 'Backstab and Betrayal', 'TRAITORS'),
+(7, 2, '2024-02-09 20:00:00.000', 'Blood on Their Hands', 'TRAITORS'),
+(8, 2, '2024-02-16 20:00:00.000', 'Knives at Dawn', 'TRAITORS'),
+(9, 2, '2024-02-23 20:00:00.000', 'A Game of Death', 'TRAITORS'),
+(10, 2, '2024-02-29 20:00:00.000', 'The Weight of Deceit', 'TRAITORS'),
+(11, 2, '2024-03-07 20:00:00.000', 'One Final Hurdle', 'TRAITORS'),
+(12, 2, '2024-03-14 20:00:00.000', 'Reunion', 'TRAITORS');
+
+
 INSERT INTO usr_user (user_id, role, email, first_name, last_name)
 VALUES
 ('7db21f43-31e2-4fd7-8501-772039ad9f16', 'USER', 'tony.stark@test.com', 'Tony', 'Stark'),
