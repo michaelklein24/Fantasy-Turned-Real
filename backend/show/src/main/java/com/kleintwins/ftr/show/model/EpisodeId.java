@@ -19,4 +19,6 @@ public class EpisodeId implements Serializable {
         this.episodeSequence = episodeSequence;
         this.seasonId = seasonId;
     }
+
+    public EpisodeId() {}
 }
