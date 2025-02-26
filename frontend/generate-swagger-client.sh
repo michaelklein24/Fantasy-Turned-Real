@@ -16,6 +16,8 @@ fi
 echo "Making directory: $DIRECTORY"
 mkdir -p "$DIRECTORY"
 
+echo $INPUT_URL
+
 echo "Start of run openapi generator cli command"
 # Run the Swagger Codegen to generate the library
 ./node_modules/.bin/openapi-generator-cli generate \
