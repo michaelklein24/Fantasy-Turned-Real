@@ -17,7 +17,7 @@ echo "Making directory: $DIRECTORY"
 mkdir -p "$DIRECTORY"
 
 # Run the Swagger Codegen to generate the library
-npx @openapitools/openapi-generator-cli generate \
+./node_modules/.bin/openapi-generator-cli generate \
   -i "$INPUT_URL" \
   -g typescript-angular \
   -o ./src/libs/generated/typescript-angular \
