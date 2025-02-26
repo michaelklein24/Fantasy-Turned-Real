@@ -30,6 +30,9 @@ mkdir -p "$DIRECTORY"
 
 echo "Using the YAML file from $YAML_FILE"
 
+npm uninstall @openapitools/openapi-generator-cli
+npm install @openapitools/openapi-generator-cli
+
 echo "Start of run openapi generator cli command"
 # Run the Swagger Codegen to generate the library using the YAML file from the dist folder
 ./node_modules/.bin/openapi-generator-cli generate \
