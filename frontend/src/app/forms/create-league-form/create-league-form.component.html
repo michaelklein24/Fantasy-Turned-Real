@@ -7,19 +7,28 @@
       id="leagueName"
       name="leagueName"
       ngModel
-      class="w-full mt-2 p-2 border rounded"
+      class="w-full p-2 border rounded"
       required
     />
-    <label for="seasonNumber" class="block text-sm font-medium"
-    >Season Number</label
-    >
-    <input
-    id="seasonNumber"
-    name="seasonNumber"
-    ngModel
-    class="w-full mt-2 p-2 border rounded"
-    required
-  />
+    <div class="flex gap-4 mt-4">
+      <app-dropdown class="flex-1" 
+      [label]="showMenuItems.length ? showMenuItems[0].label : 'Select Show'" 
+      [menuItems]="showMenuItems" 
+      [(ngModel)]="selectedShow.value"
+      (itemSelected)="onShowSelection($event)"
+      name="show" id="show">
+    </app-dropdown>
+    
+    <app-dropdown class="flex-1" 
+      [label]="seasonMenuItems.length ? seasonMenuItems[0].label : 'Select Season'" 
+      [menuItems]="seasonMenuItems" 
+      [(ngModel)]="selectedSeason.value"
+      (itemSelected)="onSeasonSelection($event)"
+      name="season" id="season">
+    </app-dropdown>
+    
+    </div>
+
   </div>
   <button
     type="submit"

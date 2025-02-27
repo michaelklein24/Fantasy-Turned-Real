@@ -1,3 +1,9 @@
+INSERT INTO shw_show (show)
+VALUES
+('SURVIVOR'),
+('TRAITORS'),
+('RU_PAULS_DRAG_RACE');
+
 INSERT INTO ssn_season (season_sequence, show, start_time, end_time, total_episodes)
 VALUES ('46', 'SURVIVOR', '2025-02-28 20:00:00', '2025-05-22 22:00:00', 14),
 ('47', 'SURVIVOR', '2025-09-18 20:00:00', '2025-05-18 22:00:00', 13),

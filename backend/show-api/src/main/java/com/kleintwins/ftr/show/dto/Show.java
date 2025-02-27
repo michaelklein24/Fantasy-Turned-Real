@@ -5,6 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class GetShowsResponse {
-    List<Show> shows;
+public class Show {
+    private String name;
+    private List<Season> seasons;
 }

@@ -1,6 +1,5 @@
 package com.kleintwins.ftr.league.dto;
 
-import com.kleintwins.ftr.show.code.Show;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -12,7 +11,7 @@ public class CreateLeagueRequest {
     @NotNull(message = "Season sequence number is required")
     private int seasonSequence;
     @NotNull(message = "Show is required")
-    private Show show;
+    private String show;
 
     public CreateLeagueRequest() {}
 

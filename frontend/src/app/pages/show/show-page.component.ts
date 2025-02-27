@@ -23,7 +23,7 @@ import { ReplaceCharPipe } from '../../shared/pipes/replace-char.pipe';
 })
 export class ShowPageComponent implements OnInit, OnDestroy {
 
-  selectedShow: Show = Show.Survivor;
+  selectedShow: string = 'SURVIVOR';
 
   selectedSeasonSequence: number = 47;
   contestants: Contestant[] = []
@@ -32,9 +32,9 @@ export class ShowPageComponent implements OnInit, OnDestroy {
 
   // TODO: Make this configurable on servers
   currentSeasons = [
-    { show: Show.Survivor, season: 47 },
-    { show: Show.Traitors, season: 3 },
-    { show: Show.RuPaulsDragRace, season: 17 }
+    { show: 'SURVIVOR', season: 47 },
+    { show: 'TRAITORS', season: 3 },
+    { show: 'RU_PAULS_DRAG_RACE', season: 17 }
   ]
 
   constructor(
@@ -46,7 +46,6 @@ export class ShowPageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadContestants();
-    this.loadSeasons();
     this.loadShows();
   }
 
@@ -60,15 +59,11 @@ export class ShowPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  private loadSeasons(): void {
-    this.showService.getSeasonsForShow(this.selectedShow).subscribe((seasons: Season[]) => {
-      this.seasons = seasons;
-    })
-  }
-
   private loadShows(): void {
     this.showService.getShows().subscribe((shows: Show[]) => {
-      this.shows = shows;
+      this.shows = shows; 
+      this.selectedSeasonSequence && shows[0].seasons?.map((season: Season) => season.sequence)
+      this.selectedShow && shows[0].name;
     })
   }
 
@@ -92,15 +87,15 @@ export class ShowPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  getUrlForSeasonTitleImage(show: Show) {
-    const folderPath = `show:${show.toLowerCase()}`;
+  getUrlForSeasonTitleImage(show: string) {
+    const folderPath = `show:${show}`.toLowerCase();
     const fileName = `title_image.jpg`;
     const imageUrl = this.imageService.getImageUrl(folderPath, fileName);
     return imageUrl;
   }
 
-  getUrlForContestantImage(show: Show, seasonSequence: number, firstName: string, lastName: string): string {
-    const folderPath = `show:${show.toLowerCase()}:season:${seasonSequence}`;
+  getUrlForContestantImage(show: string, seasonSequence: number, firstName: string, lastName: string): string {
+    const folderPath = `show:${show}:season:${seasonSequence}`;
     const fileName = `${firstName.toLowerCase()}_${lastName.toLowerCase()}.webp`;
     const imageUrl = this.imageService.getImageUrl(folderPath, fileName);
     return imageUrl;
@@ -119,10 +114,9 @@ export class ShowPageComponent implements OnInit, OnDestroy {
   handleShowSelection(show: Show): void {
     for (const currentSeason of this.currentSeasons) {
       if (show === currentSeason.show) {
-        this.selectedShow = show;
+        this.selectedShow = show.name!;
         this.selectedSeasonSequence = currentSeason.season;
         this.loadContestants();
-        this.loadSeasons();
       }
     }
 

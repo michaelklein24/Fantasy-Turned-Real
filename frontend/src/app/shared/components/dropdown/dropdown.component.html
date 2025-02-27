@@ -1,7 +1,7 @@
-<div class="relative inline-block text-left">
+<div class="relative inline-block text-left w-full">
     <div>
       <button type="button" 
-        class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50" 
+        class="inline-flex w-full justify-between gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50" 
         (click)="toggleMenu()"
         aria-expanded="true"
         aria-haspopup="true">
@@ -12,7 +12,7 @@
       </button>
     </div>
   
-    <div *ngIf="isOpen" class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white ring-1 shadow-lg ring-black/5 focus:outline-none">
+    <div *ngIf="isOpen" class="absolute right-0 z-10 mt-2 w-full origin-top-right rounded-md bg-white ring-1 shadow-lg ring-black/5 focus:outline-none">
       <div class="py-1">
         <ng-container *ngFor="let item of menuItems">
           <p 

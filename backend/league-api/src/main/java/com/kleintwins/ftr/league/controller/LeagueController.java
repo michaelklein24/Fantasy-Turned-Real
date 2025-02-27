@@ -5,7 +5,6 @@ import com.kleintwins.ftr.league.code.InviteStatus;
 import com.kleintwins.ftr.league.dto.*;
 import com.kleintwins.ftr.league.model.InviteModel;
 import com.kleintwins.ftr.league.util.LeagueDtoBuilder;
-import com.kleintwins.ftr.show.code.Show;
 import com.kleintwins.ftr.core.dto.CustomErrorResponse;
 import com.kleintwins.ftr.league.model.LeagueModel;
 import com.kleintwins.ftr.league.service.LeagueService;
@@ -57,7 +56,7 @@ public class LeagueController {
     ) {
         String name = createLeagueRequest.getName();
         String userId = jwtHelper.extractUserIdFromTokenInRequest(request);
-        Show show = createLeagueRequest.getShow();
+        String show = createLeagueRequest.getShow();
         int seasonSequence = createLeagueRequest.getSeasonSequence();
         LeagueModel createdLeague = leagueService.createLeague(name, userId, show, seasonSequence);
 

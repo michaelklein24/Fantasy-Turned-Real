@@ -18,17 +18,17 @@ export class ShowService {
 
   getSeasonsForShow(show: Show, forceRefresh = false): Observable<Season[]> {
     if (!forceRefresh) {
-      const cachedSeasons = this.cacheService.get<Season[]>(`${show.toLowerCase()}_seasons`);
+      const cachedSeasons = this.cacheService.get<Season[]>(`${show.name!.toLowerCase()}_seasons`);
       if (cachedSeasons) {
         return of(cachedSeasons);
       }
     }
 
-    return this.apiService.show.getSeasons(show).pipe(
+    return this.apiService.show.getSeasons(show.name!).pipe(
       take(1),
       map((response: GetSeasonsResponse) => response.seasons!),
       tap((seasons: Season[]) => {
-        this.cacheService.set(`${show.toLowerCase()}_seasons`, seasons || []);
+        this.cacheService.set(`${show.name!.toLowerCase()}_seasons`, seasons || []);
       }),
       catchError((error: any) => {
         console.error('Error fetching leagues for user:', error.response?.data || error.message);
@@ -39,9 +39,9 @@ export class ShowService {
 
   getShows(forceRefresh = false): Observable<Show[]> {
     if (!forceRefresh) {
-      const cachedSeasons = this.cacheService.get<Show[]>(`shows`);
-      if (cachedSeasons) {
-        return of(cachedSeasons);
+      const cachedShows = this.cacheService.get<[]>(`shows`);
+      if (cachedShows) {
+        return of(cachedShows);
       }
     }
 

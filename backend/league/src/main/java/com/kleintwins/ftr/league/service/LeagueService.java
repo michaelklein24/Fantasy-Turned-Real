@@ -14,7 +14,6 @@ import com.kleintwins.ftr.league.repository.ParticipantRepository;
 import com.kleintwins.ftr.notification.code.NotificationReferenceType;
 import com.kleintwins.ftr.notification.model.NotificationModel;
 import com.kleintwins.ftr.notification.service.NotificationService;
-import com.kleintwins.ftr.show.code.Show;
 import com.kleintwins.ftr.show.model.EpisodeModel;
 import com.kleintwins.ftr.show.model.SeasonModel;
 import com.kleintwins.ftr.show.service.SeasonService;
@@ -43,7 +42,7 @@ public class LeagueService {
     private final SurveyService surveyService;
 
     @Transactional
-    public LeagueModel createLeague(String name, String ownerId, Show show, int seasonSequence) {
+    public LeagueModel createLeague(String name, String ownerId, String show, int seasonSequence) {
         SeasonModel seasonModel = seasonService.getSeasonByShowAndSeasonId(show, seasonSequence);
 
         LeagueModel leagueModel = new LeagueModel();
