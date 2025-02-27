@@ -13,7 +13,7 @@ export class ContestantService {
     private apiService: ApiService
   ) { }
 
-  getContestantsForSeason(show: Show, seasonSequence: number): Observable<Contestant[]> {
+  getContestantsForSeason(show: string, seasonSequence: number): Observable<Contestant[]> {
     return this.apiService.contestant.getContestants(show, seasonSequence).pipe(
       take(1),
       map((response: GetContestantsResponse) => response.contestants!),

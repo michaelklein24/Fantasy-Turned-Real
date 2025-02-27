@@ -27,4 +27,8 @@ public class SeasonModel {
 
     @OneToMany(mappedBy = "season")
     private List<EpisodeModel> episodes;
+
+    @ManyToOne
+    @JoinColumn(name = "show", referencedColumnName = "show", insertable = false, updatable = false)
+    private ShowModel show;
 }

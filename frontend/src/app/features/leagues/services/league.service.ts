@@ -25,10 +25,10 @@ export class LeagueService {
 
   constructor(private apiService: ApiService, private cacheService: CacheService) {}
 
-  createLeague(name: string, seasonNumber: number): Observable<CreateLeagueResponse> {
+  createLeague(name: string, show: string, seasonNumber: number): Observable<CreateLeagueResponse> {
     const request: CreateLeagueRequest = {
       name,
-      show: Show.Survivor,
+      show: show,
       seasonSequence: seasonNumber,
     };
 

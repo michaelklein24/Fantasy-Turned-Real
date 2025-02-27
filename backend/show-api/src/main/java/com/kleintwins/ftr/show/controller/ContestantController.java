@@ -2,7 +2,6 @@ package com.kleintwins.ftr.show.controller;
 
 import com.kleintwins.ftr.core.dto.CustomErrorResponse;
 import com.kleintwins.ftr.show.code.ContestantStatus;
-import com.kleintwins.ftr.show.code.Show;
 import com.kleintwins.ftr.show.util.ContestantDtoBuilder;
 import com.kleintwins.ftr.show.dto.GetContestantsResponse;
 import com.kleintwins.ftr.show.model.ContestantModel;
@@ -41,7 +40,7 @@ public class ContestantController {
                             schema = @Schema(implementation = CustomErrorResponse.class)))
     })
     public ResponseEntity<GetContestantsResponse> getContestants(
-            @RequestParam(name = "show", required = false) Show show,
+            @RequestParam(name = "show", required = false) String show,
             @RequestParam(name = "seasonSequence", required = false) Integer seasonSequence,
             @RequestParam(name = "status", required = false) ContestantStatus contestantStatus,
             @RequestParam(name = "episodeSequence", required = false) Integer episodeSequence

@@ -1,7 +1,6 @@
 package com.kleintwins.ftr.show.service;
 
 import com.kleintwins.ftr.show.code.ContestantStatus;
-import com.kleintwins.ftr.show.code.Show;
 import com.kleintwins.ftr.show.model.ContestantModel;
 import com.kleintwins.ftr.show.model.EpisodeId;
 import com.kleintwins.ftr.show.model.SeasonId;
@@ -23,17 +22,17 @@ public class ContestantService {
         return contestantRepo.findAll();
     }
 
-    public List<ContestantModel> getContestantsForSeason(Show show, int seasonSequence) {
+    public List<ContestantModel> getContestantsForSeason(String show, int seasonSequence) {
         SeasonModel seasonModel = seasonService.getSeasonByShowAndSeasonId(show, seasonSequence);
         return seasonModel.getContestants();
     }
 
-    public List<ContestantModel> getContestantsForShow(Show show) {
+    public List<ContestantModel> getContestantsForShow(String show) {
         return contestantRepo.findAllBySeasonsSeasonIdShow(show);
     }
 
     public List<ContestantModel> getContestantsForEpisodeByStatus(
-            ContestantStatus contestantStatus, Show show, Integer seasonSequence, Integer episodeSequence) {
+            ContestantStatus contestantStatus, String show, Integer seasonSequence, Integer episodeSequence) {
 
         SeasonId seasonId = new SeasonId(show, seasonSequence);
         EpisodeId episodeId = new EpisodeId(episodeSequence, seasonId);
@@ -42,7 +41,7 @@ public class ContestantService {
     }
 
     public List<ContestantModel> getContestantsForEpisodeByStatus(ContestantStatus contestantStatus, EpisodeId episodeId) {
-        Show show = episodeId.getSeasonId().getShow();
+        String show = episodeId.getSeasonId().getShow();
         Integer seasonSequence = episodeId.getSeasonId().getSeasonSequence();
         Integer episodeSequence = episodeId.getEpisodeSequence();
         return getContestantsForEpisodeByStatus(contestantStatus, show, seasonSequence, episodeSequence);
