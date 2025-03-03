@@ -1,6 +1,7 @@
 package com.kleintwins.ftr.league.service;
 
 import com.kleintwins.ftr.core.exception.EntityNotFound;
+import com.kleintwins.ftr.core.service.AbstractService;
 import com.kleintwins.ftr.core.service.I18nService;
 import com.kleintwins.ftr.league.model.*;
 import com.kleintwins.ftr.league.code.SurveyType;
@@ -15,23 +16,45 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-public class SurveyService {
+public class SurveyService extends AbstractService {
     private final SurveyRepository surveyRepo;
     private final QuestionRepository questionRepo;
     private final ParticipantAnswerRepository participantAnswerRepo;
 
     private final I18nService i18nService;
 
+    public List<SurveyModel> getSurveysForLeague(String leagueId) {
+        return surveyRepo.findAllByLeagueLeagueId(leagueId);
+    }
+
+    public SurveyModel createSurvey(LeagueModel leagueModel, String name, SurveyType surveyType, LocalDateTime startDate, LocalDateTime endDate) {
+        return createSurvey(leagueModel, name, surveyType, startDate, endDate, null);
+    }
+
+
     public SurveyModel createSurvey(LeagueModel leagueModel, String name, SurveyType surveyType, LocalDateTime startDate, LocalDateTime endDate, List<QuestionModel> questionModels) {
         SurveyModel surveyModel = new SurveyModel();
         surveyModel.setLeague(leagueModel);
         surveyModel.setName(name);
         surveyModel.setType(surveyType);
-        surveyModel.setStartDate(startDate);
-        surveyModel.setEndDate(endDate);
+        surveyModel.setStartTime(startDate);
+        surveyModel.setEndTime(endDate);
         surveyModel.setQuestions(questionModels);
 
         return surveyRepo.save(surveyModel);
+    }
+
+    public void updateSurvey(String surveyId, String name, LocalDateTime startTime, LocalDateTime endTime) {
+        SurveyModel surveyModel = getSurveyById(surveyId);
+        applyIfNotNull(name, surveyModel::setName);
+        applyIfNotNull(startTime, surveyModel::setStartTime);
+        applyIfNotNull(endTime, surveyModel::setEndTime);
+        surveyRepo.save(surveyModel);
+    }
+
+    public void deleteSurvey(String surveyId) {
+        SurveyModel surveyModel = getSurveyById(surveyId);
+        surveyRepo.delete(surveyModel);
     }
 
     public List<QuestionModel> addQuestionsToSurvey(String surveyId, List<QuestionModel> questionModels) {

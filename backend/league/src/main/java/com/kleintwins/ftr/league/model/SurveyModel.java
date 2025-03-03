@@ -33,10 +33,10 @@ public class SurveyModel {
     private SurveyType type;
 
     @Column(nullable = false, updatable = false)
-    private LocalDateTime startDate;
+    private LocalDateTime startTime;
 
     @Column(nullable = false, updatable = false)
-    private LocalDateTime endDate;
+    private LocalDateTime endTime;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createTime;
