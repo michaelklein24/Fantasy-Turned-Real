@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
-import { AuthControllerService, Configuration, ContestantControllerService, LeagueControllerService, NotificationControllerService, ShowControllerService } from '../../../libs/generated/typescript-angular';
+import { AuthControllerService, Configuration, ContestantControllerService, LeagueControllerService, NotificationControllerService, ShowControllerService, SurveyControllerService } from '../../../libs/generated/typescript-angular';
 import { catchError, Observable, take, throwError } from 'rxjs';
 
 @Injectable({
@@ -13,6 +13,7 @@ export class ApiService {
   public notification: NotificationControllerService;
   public contestant: ContestantControllerService;
   public show: ShowControllerService;
+  public survey: SurveyControllerService;
 
 
   constructor(private http: HttpClient, private cookieService: CookieService) {
@@ -24,6 +25,7 @@ export class ApiService {
     this.notification = new NotificationControllerService(this.http, basePath, config);
     this.contestant = new ContestantControllerService(this.http, basePath, config);
     this.show = new ShowControllerService(this.http, basePath, config);
+    this.survey = new SurveyControllerService(this.http, basePath, config);
   }
 
   /**

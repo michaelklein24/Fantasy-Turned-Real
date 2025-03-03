@@ -22,7 +22,8 @@ public class LeagueEventListener {
                     String.format("Episode %d - %s", episodeModel.getEpisodeId().getEpisodeSequence(), episodeModel.getName()),
                     SurveyType.EPISODE,
                     episodeModel.getAirTime().minusDays(5),
-                    episodeModel.getAirTime()
+                    episodeModel.getAirTime(),
+                    null
             );
         }
     }

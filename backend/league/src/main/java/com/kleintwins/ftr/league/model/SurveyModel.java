@@ -64,9 +64,6 @@ public class SurveyModel {
         this.questions = questions;
     }
 
-    public SurveyModel() {
-    }
-
     @PrePersist
     protected void onCreate() {
         this.createTime = LocalDateTime.now();

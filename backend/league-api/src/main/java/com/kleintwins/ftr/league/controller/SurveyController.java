@@ -103,7 +103,8 @@ public class SurveyController {
                 request.getName(),
                 SurveyType.SPECIAL,
                 request.getStartDate(),
-                request.getEndDate()
+                request.getEndDate(),
+                null
         );
         return SurveyDtoBuilder.buildCreateSurveyResponse(surveyModel);
     }

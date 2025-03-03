@@ -46,20 +46,6 @@ public class SurveyService extends AbstractService {
         SurveyStatusModel surveyStatusModel = new SurveyStatusModel(new SurveyStatusId(survey.getSurveyId(), surveyStatus), survey);
         return surveyStatusRepo.save(surveyStatusModel);
     }
-    
-    public void updateSurvey(String surveyId, String name, LocalDateTime startTime, LocalDateTime endTime) {
-        SurveyModel surveyModel = getSurveyById(surveyId);
-        surveyModel.setName(name);
-        applyIfNotNull(name, surveyModel::setName);
-        applyIfNotNull(startTime, surveyModel::setStartTime);
-        applyIfNotNull(endTime, surveyModel::setEndTime);
-        surveyRepo.save(surveyModel);
-    }
-
-    public void deleteSurvey(String surveyId) {
-        SurveyModel surveyModel = getSurveyById(surveyId);
-        surveyRepo.delete(surveyModel);
-    }
 
     public void updateSurvey(String surveyId, String name, LocalDateTime startTime, LocalDateTime endTime) {
         SurveyModel surveyModel = getSurveyById(surveyId);
