@@ -11,6 +11,7 @@ import com.kleintwins.ftr.league.model.*;
 import com.kleintwins.ftr.league.repository.InviteRepository;
 import com.kleintwins.ftr.league.repository.LeagueRepository;
 import com.kleintwins.ftr.league.repository.ParticipantRepository;
+import com.kleintwins.ftr.league.task.ILeagueCreationTask;
 import com.kleintwins.ftr.notification.code.NotificationReferenceType;
 import com.kleintwins.ftr.notification.model.NotificationModel;
 import com.kleintwins.ftr.notification.service.NotificationService;
@@ -39,7 +40,8 @@ public class LeagueService {
     private final SeasonService seasonService;
     private final UserService userService;
     private final NotificationService notificationService;
-    private final SurveyService surveyService;
+
+    private final List<ILeagueCreationTask> leagueCreationTasks;
 
     @Transactional
     public LeagueModel createLeague(String name, String ownerId, String show, int seasonSequence) {
@@ -54,16 +56,8 @@ public class LeagueService {
 
         leagueModel.setParticipants(List.of(owner));
 
-        for (EpisodeModel episodeModel : seasonModel.getEpisodes()) {
-            surveyService.createSurvey(
-                    savedLeague,
-                    String.format("Episode %d - %s", episodeModel.getEpisodeId().getEpisodeSequence(), episodeModel.getName()),
-                    SurveyType.EPISODE,
-                    episodeModel.getAirTime().minusDays(5),
-                    episodeModel.getAirTime(),
-                    null
-            );
-        }
+        for (ILeagueCreationTask leagueCreationTask : leagueCreationTasks)
+            leagueCreationTask.doWork(leagueModel);
 
         return leagueModel;
     }

@@ -1,43 +1,72 @@
 package com.kleintwins.ftr.league.service;
 
 import com.kleintwins.ftr.core.exception.EntityNotFound;
+import com.kleintwins.ftr.core.service.AbstractService;
 import com.kleintwins.ftr.core.service.I18nService;
-import com.kleintwins.ftr.league.model.*;
+import com.kleintwins.ftr.league.code.SurveyStatus;
 import com.kleintwins.ftr.league.code.SurveyType;
+import com.kleintwins.ftr.league.model.*;
 import com.kleintwins.ftr.league.repository.ParticipantAnswerRepository;
 import com.kleintwins.ftr.league.repository.QuestionRepository;
 import com.kleintwins.ftr.league.repository.SurveyRepository;
+import com.kleintwins.ftr.league.repository.SurveyStatusRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class SurveyService {
+public class SurveyService extends AbstractService {
     private final SurveyRepository surveyRepo;
     private final QuestionRepository questionRepo;
     private final ParticipantAnswerRepository participantAnswerRepo;
+    private final SurveyStatusRepository surveyStatusRepo;
 
-    private final I18nService i18nService;
+    public SurveyModel createSurvey(LeagueModel leagueModel, String name, SurveyType surveyType,
+                                    LocalDateTime startDate, LocalDateTime endDate,
+                                    List<QuestionModel> questionModels) {
 
-    public SurveyModel createSurvey(LeagueModel leagueModel, String name, SurveyType surveyType, LocalDateTime startDate, LocalDateTime endDate, List<QuestionModel> questionModels) {
-        SurveyModel surveyModel = new SurveyModel();
-        surveyModel.setLeague(leagueModel);
+        SurveyModel surveyModel = new SurveyModel(leagueModel, name, surveyType, startDate, endDate, questionModels);
+        surveyModel = surveyRepo.save(surveyModel);
+
+        SurveyStatusModel surveyStatusModel = createSurveyStatus(surveyModel, startDate, endDate);
+        surveyModel.setStatuses(List.of(surveyStatusModel));
+
+        return surveyModel;
+    }
+
+    private SurveyStatusModel createSurveyStatus(SurveyModel survey, LocalDateTime startDate, LocalDateTime endDate) {
+        LocalDateTime now = LocalDateTime.now();
+        SurveyStatus surveyStatus = (startDate.isBefore(now) && endDate.isAfter(now)) ? SurveyStatus.OPEN : SurveyStatus.CLOSED;
+
+        SurveyStatusModel surveyStatusModel = new SurveyStatusModel(new SurveyStatusId(survey.getSurveyId(), surveyStatus), survey);
+        return surveyStatusRepo.save(surveyStatusModel);
+    }
+    
+    public void updateSurvey(String surveyId, String name, LocalDateTime startTime, LocalDateTime endTime) {
+        SurveyModel surveyModel = getSurveyById(surveyId);
         surveyModel.setName(name);
-        surveyModel.setType(surveyType);
-        surveyModel.setStartDate(startDate);
-        surveyModel.setEndDate(endDate);
-        surveyModel.setQuestions(questionModels);
+        applyIfNotNull(name, surveyModel::setName);
+        applyIfNotNull(startTime, surveyModel::setStartTime);
+        applyIfNotNull(endTime, surveyModel::setEndTime);
 
-        return surveyRepo.save(surveyModel);
+        surveyRepo.save(surveyModel);
+    }
+
+    public void deleteSurvey(String surveyId) {
+        SurveyModel surveyModel = getSurveyById(surveyId);
+        surveyRepo.delete(surveyModel);
     }
 
     public List<QuestionModel> addQuestionsToSurvey(String surveyId, List<QuestionModel> questionModels) {
         SurveyModel surveyModel = getSurveyById(surveyId);
         surveyModel.setQuestions(questionModels);
-       return surveyRepo.save(surveyModel).getQuestions();
+        return surveyRepo.save(surveyModel).getQuestions();
     }
 
     public void deleteQuestionById(String questionSequence, String surveyId) {
@@ -112,6 +141,10 @@ public class SurveyService {
                 leagueId
         );
         return getParticipantAnswerById(participantAnswerId);
+    }
+
+    public List<SurveyModel> getSurveysForLeague(String leagueId) {
+        return surveyRepo.findAllByLeagueLeagueId(leagueId);
     }
 
     public SurveyModel getSurveyById(String surveyId) {
