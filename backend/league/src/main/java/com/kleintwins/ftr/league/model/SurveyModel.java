@@ -44,6 +44,9 @@ public class SurveyModel {
     @Column(nullable = false, updatable = false)
     private LocalDateTime updateTime;
 
+    @OneToMany(mappedBy = "survey")
+    private List<SurveyStatusModel> statuses;
+
     @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<QuestionModel> questions = new ArrayList<>();
@@ -52,6 +55,17 @@ public class SurveyModel {
     @JoinColumn(name = "league_id", nullable = false)
     private LeagueModel league;
 
+    public SurveyModel(LeagueModel league, String name, SurveyType type, LocalDateTime startTime, LocalDateTime endTime, List<QuestionModel> questions) {
+        this.league = league;
+        this.name = name;
+        this.type = type;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.questions = questions;
+    }
+
+    public SurveyModel() {
+    }
 
     @PrePersist
     protected void onCreate() {
