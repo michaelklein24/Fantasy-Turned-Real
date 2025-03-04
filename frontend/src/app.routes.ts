@@ -11,6 +11,7 @@ import { RegisterUserFormComponent } from "./forms/register-user-form/register-u
 import { DashboardPageComponent } from "./pages/dashboard/dashboard-page.component";
 import { HomePageComponent } from "./pages/home/home-page.component";
 import { ShowPageComponent } from "./pages/show/show-page.component";
+import { SurveyPageComponent } from "./features/leagues/pages/survey-page/survey-page.component";
 
 
 export const routes: Routes = [
@@ -31,6 +32,7 @@ export const routes: Routes = [
           { path: 'home', component: LeagueHomePageComponent },
           { path: 'score', component: LeagueScorePageComponent },
           { path: 'survey', component: LeagueSurveyPageComponent },
+          { path: 'survey/:surveyId', component: SurveyPageComponent },
           { path: 'settings', component: LeagueSettingsPageComponent },
         ],
       },

@@ -33,6 +33,7 @@
       <tr
         *ngFor="let survey of surveys"
         class="hover:bg-gray-50 border-b border-gray-200 cursor-pointer"
+        (click)="handleSurveyClick(survey.id!)"
       >
         <td class="py-4 px-6 text-sm">{{ survey.name }}</td>
         <td class="py-4 px-6 text-sm">{{ survey.type }}</td>

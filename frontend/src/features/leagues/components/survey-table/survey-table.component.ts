@@ -1,11 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  League,
-  Survey,
-} from '../../../../libs/generated/typescript-angular';
+import { League, Survey } from '../../../../libs/generated/typescript-angular';
 import { SurveyService } from '../../services/survey.service';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -23,7 +20,8 @@ export class SurveyTableComponent implements OnInit, OnDestroy {
 
   constructor(
     private surveyService: SurveyService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -43,5 +41,19 @@ export class SurveyTableComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.paramsSubscription?.unsubscribe();
+  }
+
+  handleSurveyClick(surveyId: string): void {
+    console.log('Navigating with surveyId', surveyId);
+
+    // Get the current path, including the parent route
+    const currentPath = this.route.snapshot.url
+      .map((segment) => segment.path)
+      .join('/');
+
+    // Navigate relative to the parent path and append the surveyId
+    this.router.navigate([`../${currentPath}`, surveyId], {
+      relativeTo: this.route,
+    });
   }
 }
