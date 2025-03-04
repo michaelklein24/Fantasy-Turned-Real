@@ -17,7 +17,7 @@ public class Survey {
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
     private List<Question> questions;
-    private SurveyStatus status = SurveyStatus.OPEN;
+    private SurveyStatus status;
     private int totalPoints;
     private int pointsEarned;
 }
