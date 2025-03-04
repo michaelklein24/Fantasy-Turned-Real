@@ -1,5 +1,7 @@
 package com.kleintwins.ftr.league.model;
 
+import com.kleintwins.ftr.core.exception.EntityNotFound;
+import com.kleintwins.ftr.league.code.SurveyStatus;
 import com.kleintwins.ftr.league.code.SurveyType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -8,6 +10,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Entity
@@ -78,6 +81,11 @@ public class SurveyModel {
     public void removeQuestion(QuestionModel question) {
         questions.remove(question);
         question.setSurvey(null);
+    }
+
+    public SurveyStatusModel getCurrentStatus() {
+        return statuses.stream().max(Comparator.comparing(SurveyStatusModel::getCreateTime))
+                .orElseThrow(() -> new EntityNotFound("Survey Status was not found"));
     }
 }
 
