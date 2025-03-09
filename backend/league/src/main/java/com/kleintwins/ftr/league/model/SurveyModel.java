@@ -48,7 +48,7 @@ public class SurveyModel {
     private LocalDateTime updateTime;
 
     @OneToMany(mappedBy = "survey")
-    private List<SurveyStatusModel> statuses;
+    private List<SurveyStatusModel> statuses = new ArrayList<>();
 
     @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default

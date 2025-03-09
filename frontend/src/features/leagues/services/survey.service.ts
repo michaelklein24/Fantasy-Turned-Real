@@ -47,11 +47,11 @@ export class SurveyService {
   public createSurvey(
     leagueId: string,
     name: string,
-    startDate: Date,
-    endDate: Date
+    startTime: Date,
+    endTime: Date
   ): Observable<Survey> {
-    const start: string = startDate.toISOString().split('T')[0];
-    const end: string = endDate.toISOString().split('T')[0];
+    const start: string = startTime.toISOString().split('.')[0]; 
+    const end: string = endTime.toISOString().split('.')[0];
 
     const request: CreateSurveyRequest = {
       leagueId: leagueId,

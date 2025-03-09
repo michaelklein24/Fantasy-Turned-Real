@@ -1,6 +1,7 @@
 package com.kleintwins.ftr.league.controller;
 
 import com.kleintwins.ftr.core.dto.CustomErrorResponse;
+import com.kleintwins.ftr.league.code.SurveyStatus;
 import com.kleintwins.ftr.league.code.SurveyType;
 import com.kleintwins.ftr.league.dto.*;
 import com.kleintwins.ftr.league.model.LeagueModel;
@@ -104,6 +105,7 @@ public class SurveyController {
                 SurveyType.SPECIAL,
                 request.getStartDate(),
                 request.getEndDate(),
+                SurveyStatus.DRAFT,
                 null
         );
         return SurveyDtoBuilder.buildCreateSurveyResponse(surveyModel);
