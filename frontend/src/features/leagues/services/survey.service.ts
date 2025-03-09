@@ -79,15 +79,17 @@ export class SurveyService {
     startDate: Date,
     endDate: Date
   ): Observable<void> {
-    const start: string = startDate.toISOString().split('T')[0];
-    const end: string = endDate.toISOString().split('T')[0];
-
+    const start: string = startDate.toISOString().split('.')[0]; 
+    const end: string = endDate.toISOString().split('.')[0];
+  
     const request: UpdateSurveyRequest = {
       name: name,
       startDate: start,
       endDate: end,
     };
-
+  
+    console.log(request);
+  
     return this.apiService.survey.updateSurvey(surveyId, request).pipe(
       take(1),
       catchError((error: any) => {
@@ -99,6 +101,7 @@ export class SurveyService {
       })
     );
   }
+  
 
   public deleteSurvey(surveyId: string): Observable<void> {
     return this.apiService.survey.deleteSurvey(surveyId).pipe(
