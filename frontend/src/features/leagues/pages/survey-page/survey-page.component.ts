@@ -5,14 +5,13 @@ import { Survey } from '../../../../libs/generated/typescript-angular';
 import { CommonModule } from '@angular/common';
 import { SurveyDetailsPanelComponent } from '../../components/survey-details-panel/survey-details-panel.component';
 import { getDefaultSurvey } from '../../../../shared/constants/survey-default';
-import { QuestionsPanelComponent } from '../../components/questions-panel/questions-panel.component';
 
 @Component({
   selector: 'app-survey-page',
   templateUrl: './survey-page.component.html',
   standalone: true,
   styleUrls: ['./survey-page.component.css'],
-  imports: [CommonModule, SurveyDetailsPanelComponent, QuestionsPanelComponent],
+  imports: [CommonModule, SurveyDetailsPanelComponent],
 })
 export class SurveyPageComponent implements OnInit {
   survey: Survey = getDefaultSurvey();

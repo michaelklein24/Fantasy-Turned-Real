@@ -5,6 +5,7 @@ import com.kleintwins.ftr.core.service.AbstractService;
 import com.kleintwins.ftr.core.service.I18nService;
 import com.kleintwins.ftr.league.code.SurveyStatus;
 import com.kleintwins.ftr.league.code.SurveyType;
+import com.kleintwins.ftr.league.exception.CreationNotAllowed;
 import com.kleintwins.ftr.league.model.*;
 import com.kleintwins.ftr.league.repository.ParticipantAnswerRepository;
 import com.kleintwins.ftr.league.repository.QuestionRepository;
@@ -28,21 +29,18 @@ public class SurveyService extends AbstractService {
     private final SurveyStatusRepository surveyStatusRepo;
 
     public SurveyModel createSurvey(LeagueModel leagueModel, String name, SurveyType surveyType,
-                                    LocalDateTime startDate, LocalDateTime endDate,
+                                    LocalDateTime startTime, LocalDateTime endTime, SurveyStatus surveyStatus,
                                     List<QuestionModel> questionModels) {
-        SurveyModel surveyModel = new SurveyModel(leagueModel, name, surveyType, startDate, endDate, questionModels);
+        SurveyModel surveyModel = new SurveyModel(leagueModel, name, surveyType, startTime, endTime, questionModels);
         surveyModel = surveyRepo.save(surveyModel);
 
-        SurveyStatusModel surveyStatusModel = createSurveyStatus(surveyModel, startDate, endDate);
+        SurveyStatusModel surveyStatusModel = createSurveyStatus(surveyModel, surveyStatus);
         surveyModel.setStatuses(List.of(surveyStatusModel));
 
         return surveyModel;
     }
 
-    private SurveyStatusModel createSurveyStatus(SurveyModel survey, LocalDateTime startDate, LocalDateTime endDate) {
-        LocalDateTime now = LocalDateTime.now();
-        SurveyStatus surveyStatus = (startDate.isBefore(now) && endDate.isAfter(now)) ? SurveyStatus.OPEN : SurveyStatus.CLOSED;
-
+    private SurveyStatusModel createSurveyStatus(SurveyModel survey, SurveyStatus surveyStatus) {
         SurveyStatusModel surveyStatusModel = new SurveyStatusModel(new SurveyStatusId(survey.getSurveyId(), surveyStatus), survey);
         return surveyStatusRepo.save(surveyStatusModel);
     }
@@ -52,6 +50,13 @@ public class SurveyService extends AbstractService {
         applyIfNotNull(name, surveyModel::setName);
         applyIfNotNull(startTime, surveyModel::setStartTime);
         applyIfNotNull(endTime, surveyModel::setEndTime);
+
+        LocalDateTime now = LocalDateTime.now();
+
+        SurveyStatus surveyStatus = startTime.isBefore(now) && endTime.isAfter(now) ? SurveyStatus.OPEN : SurveyStatus.CLOSED;
+        SurveyStatusModel surveyStatusModel = createSurveyStatus(surveyModel, surveyStatus);
+        surveyModel.getStatuses().add(surveyStatusModel);
+
         surveyRepo.save(surveyModel);
     }
 

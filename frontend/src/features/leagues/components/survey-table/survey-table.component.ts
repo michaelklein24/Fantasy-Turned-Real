@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { League, Survey } from '../../../../libs/generated/typescript-angular';
 import { SurveyService } from '../../services/survey.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
@@ -15,6 +21,8 @@ import { Subscription } from 'rxjs';
 export class SurveyTableComponent implements OnInit, OnDestroy {
   surveys: Survey[] = [];
   leagueId: string | undefined;
+
+  @Output() openCreateSurveyForm: EventEmitter<void> = new EventEmitter();
 
   paramsSubscription: Subscription | undefined;
 
@@ -55,5 +63,9 @@ export class SurveyTableComponent implements OnInit, OnDestroy {
     this.router.navigate([`../${currentPath}`, surveyId], {
       relativeTo: this.route,
     });
+  }
+
+  handleOpenCreateSurveyForm() {
+    this.openCreateSurveyForm.emit();
   }
 }

@@ -1,1 +1,5 @@
-<app-survey-table class="mx-2"></app-survey-table>
+<app-survey-table class="mx-2" (openCreateSurveyForm)="openCreateSurveyModal()"></app-survey-table>
+
+<app-modal [isOpen]="isCreateSurveyModalOpen" title="Create Survey" (close)="closeCreateSurveyModal()">
+  <app-create-survey-form />
+</app-modal>

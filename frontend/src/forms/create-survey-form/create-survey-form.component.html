@@ -1,0 +1,46 @@
+<form (ngSubmit)="onSubmit(form)" #form="ngForm">
+  <div class="mb-4 flex flex-col gap-3">
+    <div>
+      <label for="surveyName" class="block text-sm font-medium"
+        >Survey Name</label
+      >
+      <input
+        id="surveyName"
+        name="surveyName"
+        ngModel
+        class="w-full p-2 border rounded"
+        required
+      />
+    </div>
+
+    <div>
+      <label for="startTime" class="block text-sm font-medium"
+        >Start Time</label
+      >
+      <input
+        id="startTime"
+        name="startTime"
+        ngModel
+        type="datetime-local"
+        class="border border-gray-300 p-2 rounded w-full"
+      />
+    </div>
+
+    <div>
+      <label for="endTime" class="block text-sm font-medium">End Time</label>
+      <input
+        id="endTime"
+        name="endTime"
+        ngModel
+        type="datetime-local"
+        class="border border-gray-300 p-2 rounded w-full"
+      />
+    </div>
+  </div>
+  <button
+    type="submit"
+    class="bg-teal-600 text-white py-2 px-4 rounded hover:bg-teal-700"
+  >
+    Submit
+  </button>
+</form>

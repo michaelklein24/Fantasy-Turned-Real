@@ -1,5 +1,6 @@
 package com.kleintwins.ftr.league.event;
 
+import com.kleintwins.ftr.league.code.SurveyStatus;
 import com.kleintwins.ftr.league.code.SurveyType;
 import com.kleintwins.ftr.league.model.LeagueModel;
 import com.kleintwins.ftr.league.service.SurveyService;
@@ -17,12 +18,15 @@ public class LeagueEventListener {
     public void handleLeagueCreated(LeagueSurveysInitializationEvent event) {
         LeagueModel leagueModel = event.getLeagueModel();
         for (EpisodeModel episodeModel : leagueModel.getSeason().getEpisodes()) {
+            // TODO: If Season is isn't completed then do not allow for survey Creation
+            // LocalDateTime now = LocalDateTime.now();
             surveyService.createSurvey(
                     leagueModel,
                     String.format("Episode %d - %s", episodeModel.getEpisodeId().getEpisodeSequence(), episodeModel.getName()),
                     SurveyType.EPISODE,
                     episodeModel.getAirTime().minusDays(5),
                     episodeModel.getAirTime(),
+                    SurveyStatus.CLOSED,
                     null
             );
         }

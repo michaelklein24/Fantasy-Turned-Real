@@ -76,7 +76,6 @@ export class CreateLeagueFormComponent implements OnInit {
       );
       return;
     }
-    console.log(form.value);
     const { leagueName, show, season } = form.value;
 
     this.leagueService.createLeague(leagueName, show, season).subscribe({
