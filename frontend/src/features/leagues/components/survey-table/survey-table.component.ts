@@ -1,27 +1,29 @@
-import { CommonModule } from '@angular/common';
 import {
   Component,
-  EventEmitter,
-  OnDestroy,
   OnInit,
+  OnDestroy,
   Output,
+  EventEmitter,
 } from '@angular/core';
-import { League, Survey } from '../../../../libs/generated/typescript-angular';
 import { SurveyService } from '../../services/survey.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { SurveyStatusBadgeComponent } from "../survey-status-badge/survey-status-badge.component";
+import { SurveyStatusBadgeComponent } from '../survey-status-badge/survey-status-badge.component';
+import { Survey } from '../../../../libs/generated/typescript-angular';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-survey-table',
   standalone: true,
-  imports: [CommonModule, SurveyStatusBadgeComponent],
+  imports: [SurveyStatusBadgeComponent, CommonModule],
   templateUrl: './survey-table.component.html',
   styleUrl: './survey-table.component.css',
 })
 export class SurveyTableComponent implements OnInit, OnDestroy {
   surveys: Survey[] = [];
   leagueId: string | undefined;
+  sortColumn: string = '';
+  sortDirection: boolean = true; // true for ascending, false for descending
 
   @Output() openCreateSurveyForm: EventEmitter<void> = new EventEmitter();
 
@@ -43,7 +45,6 @@ export class SurveyTableComponent implements OnInit, OnDestroy {
     this.surveyService
       .getSurveysForLeague(this.leagueId!)
       .subscribe((surveys: Survey[]) => {
-        console.log(surveys);
         this.surveys = surveys;
       });
   }
@@ -53,14 +54,9 @@ export class SurveyTableComponent implements OnInit, OnDestroy {
   }
 
   handleSurveyClick(surveyId: string): void {
-    console.log('Navigating with surveyId', surveyId);
-
-    // Get the current path, including the parent route
     const currentPath = this.route.snapshot.url
       .map((segment) => segment.path)
       .join('/');
-
-    // Navigate relative to the parent path and append the surveyId
     this.router.navigate([`../${currentPath}`, surveyId], {
       relativeTo: this.route,
     });
@@ -68,5 +64,23 @@ export class SurveyTableComponent implements OnInit, OnDestroy {
 
   handleOpenCreateSurveyForm() {
     this.openCreateSurveyForm.emit();
+  }
+
+  sortTable(column: string): void {
+    if (this.sortColumn === column) {
+      this.sortDirection = !this.sortDirection;
+    } else {
+      this.sortColumn = column;
+      this.sortDirection = true;
+    }
+
+    this.surveys.sort((a: Survey, b: Survey) => {
+      const valueA = a[column as keyof Survey];
+      const valueB = b[column as keyof Survey];
+
+      if (valueA! < valueB!) return this.sortDirection ? -1 : 1;
+      if (valueA! > valueB!) return this.sortDirection ? 1 : -1;
+      return 0;
+    });
   }
 }
