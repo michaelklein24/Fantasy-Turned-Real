@@ -10,11 +10,12 @@ import { League, Survey } from '../../../../libs/generated/typescript-angular';
 import { SurveyService } from '../../services/survey.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { SurveyStatusBadgeComponent } from "../survey-status-badge/survey-status-badge.component";
 
 @Component({
   selector: 'app-survey-table',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, SurveyStatusBadgeComponent],
   templateUrl: './survey-table.component.html',
   styleUrl: './survey-table.component.css',
 })

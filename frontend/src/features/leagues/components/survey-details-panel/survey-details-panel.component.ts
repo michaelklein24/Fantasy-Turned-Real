@@ -5,11 +5,12 @@ import { getDefaultSurvey } from '../../../../shared/constants/survey-default';
 import { FormsModule } from '@angular/forms';
 import { DropdownComponent } from '../../../../shared/components/dropdown/dropdown.component';
 import { SurveyService } from '../../services/survey.service';
+import { SurveyStatusBadgeComponent } from "../survey-status-badge/survey-status-badge.component";
 
 @Component({
   selector: 'app-survey-details-panel',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SurveyStatusBadgeComponent],
   templateUrl: './survey-details-panel.component.html',
   styleUrl: './survey-details-panel.component.css',
 })
