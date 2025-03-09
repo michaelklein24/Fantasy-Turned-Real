@@ -1,13 +1,11 @@
 <div class="bg-white shadow-md rounded-lg p-6 mb-6 m-3 relative">
-  <!-- Header Section -->
   <div class="flex justify-between items-center mb-4">
     <h2 class="text-lg font-bold text-teal-600">Survey Overview</h2>
-
-    <!-- Icons Section (Top Right) -->
     <div class="flex gap-4 text-gray-600">
-      <span class="material-icons cursor-pointer hover:text-teal-600" (click)="handleOpenCreateSurveyForm()">add</span>
-      <span class="material-icons cursor-pointer hover:text-teal-600"
-        >sort</span
+      <span
+        class="material-icons cursor-pointer hover:text-teal-600"
+        (click)="handleOpenCreateSurveyForm()"
+        >add</span
       >
       <span class="material-icons cursor-pointer hover:text-teal-600"
         >filter_list</span
@@ -15,18 +13,145 @@
     </div>
   </div>
 
-  <!-- Survey Table -->
   <table class="table-auto w-full border-separate border-spacing-0 rounded-lg">
     <thead>
       <tr class="bg-teal-600 text-white text-sm uppercase tracking-wider">
-        <th class="py-3 px-6 text-left">Name</th>
-        <th class="py-3 px-6 text-left">Survey Type</th>
-        <th class="py-3 px-6 text-left">Status</th>
-        <th class="py-3 px-6 text-left">Start Time</th>
-        <th class="py-3 px-6 text-left">End Time</th>
-        <th class="py-3 px-6 text-left">Question Number</th>
-        <th class="py-3 px-6 text-left">Total Points</th>
-        <th class="py-3 px-6 text-left">Points Earned</th>
+        <th
+          class="py-3 px-6 text-left cursor-pointer"
+          (click)="sortTable('name')"
+        >
+          <div class="flex items-center justify-between">
+            Name
+            <span
+              class="material-icons transform transition-transform duration-300"
+              [ngClass]="{
+                'rotate-90': sortColumn === 'name' && sortDirection,
+                '-rotate-90': sortColumn === 'name' && !sortDirection
+              }"
+            >
+              keyboard_arrow_right
+            </span>
+          </div>
+        </th>
+        <th
+          class="py-3 px-6 text-left cursor-pointer"
+          (click)="sortTable('type')"
+        >
+          <div class="flex items-center justify-between">
+            Survey Type
+            <span
+              class="material-icons transform transition-transform duration-300"
+              [ngClass]="{
+                'rotate-90': sortColumn === 'type' && sortDirection,
+                '-rotate-90': sortColumn === 'type' && !sortDirection
+              }"
+            >
+              keyboard_arrow_right
+            </span>
+          </div>
+        </th>
+        <th
+          class="py-3 px-6 text-left cursor-pointer"
+          (click)="sortTable('status')"
+        >
+          <div class="flex items-center justify-between">
+            Status
+            <span
+              class="material-icons transform transition-transform duration-300"
+              [ngClass]="{
+                'rotate-90': sortColumn === 'status' && sortDirection,
+                '-rotate-90': sortColumn === 'status' && !sortDirection
+              }"
+            >
+              keyboard_arrow_right
+            </span>
+          </div>
+        </th>
+        <th
+          class="py-3 px-6 text-left cursor-pointer"
+          (click)="sortTable('startTime')"
+        >
+          <div class="flex items-center justify-between">
+            Start Time
+            <span
+              class="material-icons transform transition-transform duration-300"
+              [ngClass]="{
+                'rotate-90': sortColumn === 'startTime' && sortDirection,
+                '-rotate-90': sortColumn === 'startTime' && !sortDirection
+              }"
+            >
+              keyboard_arrow_right
+            </span>
+          </div>
+        </th>
+        <th
+          class="py-3 px-6 text-left cursor-pointer"
+          (click)="sortTable('endTime')"
+        >
+          <div class="flex items-center justify-between">
+            End Time
+            <span
+              class="material-icons transform transition-transform duration-300"
+              [ngClass]="{
+                'rotate-90': sortColumn === 'endTime' && sortDirection,
+                '-rotate-90': sortColumn === 'endTime' && !sortDirection
+              }"
+            >
+              keyboard_arrow_right
+            </span>
+          </div>
+        </th>
+        <th
+          class="py-3 px-6 text-left cursor-pointer"
+          (click)="sortTable('questionCount')"
+        >
+          <div class="flex items-center justify-between">
+            Question Number
+            <span
+              class="material-icons transform transition-transform duration-300"
+              [ngClass]="{
+                'rotate-90': sortColumn === 'questionCount' && sortDirection,
+                '-rotate-90': sortColumn === 'questionCount' && !sortDirection
+              }"
+            >
+              keyboard_arrow_right
+            </span>
+          </div>
+        </th>
+        <th
+          class="py-3 px-6 text-left cursor-pointer"
+          (click)="sortTable('totalPoints')"
+        >
+          <div class="flex items-center justify-between">
+            Total Points
+            <span
+              class="material-icons transform transition-transform duration-300"
+              [ngClass]="{
+                'rotate-90': sortColumn === 'totalPoints' && sortDirection,
+                '-rotate-90': sortColumn === 'totalPoints' && !sortDirection
+              }"
+            >
+              keyboard_arrow_right
+            </span>
+          </div>
+        </th>
+        <th
+          class="py-3 px-6 text-left cursor-pointer"
+          (click)="sortTable('pointsEarned')"
+        >
+          <div class="flex items-center justify-between">
+            Points Earned
+            <span
+              class="material-icons transform transition-transform duration-300"
+              [ngClass]="{
+                'rotate-90': sortColumn === 'pointsEarned' && sortDirection,
+                '-rotate-90': sortColumn === 'pointsEarned' && !sortDirection
+              }"
+            >
+              keyboard_arrow_right
+            </span>
+          </div>
+        </th>
       </tr>
     </thead>
     <tbody>
@@ -38,7 +163,7 @@
         <td class="py-4 px-6 text-sm">{{ survey.name }}</td>
         <td class="py-4 px-6 text-sm">{{ survey.type }}</td>
         <td class="py-4 px-6 text-sm">
-          <app-survey-status-badge [status]="survey.status!"/>
+          <app-survey-status-badge [status]="survey.status!" />
         </td>
         <td class="py-4 px-6 text-sm">
           {{ survey.startTime | date : "MM/dd/yyyy, h:mm a" }}
