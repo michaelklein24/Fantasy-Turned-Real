@@ -1,0 +1,25 @@
+<span
+  *ngIf="status === 'OPEN'"
+  class="inline-block py-1 px-3 text-xs font-semibold text-green-800 bg-green-200 rounded-full"
+  >Open</span
+>
+<span
+  *ngIf="status === 'SCORED'"
+  class="inline-block py-1 px-3 text-xs font-semibold text-blue-800 bg-blue-200 rounded-full"
+  >Scored</span
+>
+<span
+  *ngIf="status === 'PENDING'"
+  class="inline-block py-1 px-3 text-xs font-semibold text-yellow-800 bg-yellow-200 rounded-full"
+  >Pending</span
+>
+<span
+  *ngIf="status === 'CLOSED'"
+  class="inline-block py-1 px-3 text-xs font-semibold text-red-800 bg-red-200 rounded-full"
+  >Closed</span
+>
+<span
+  *ngIf="status === 'DRAFT'"
+  class="inline-block py-1 px-3 text-xs font-semibold text-blue-800 bg-teal-200 rounded-full"
+  >Draft</span
+>
