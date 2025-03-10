@@ -105,6 +105,7 @@ export class SurveyService {
 
   public deleteSurvey(surveyId: string): Observable<void> {
     return this.apiService.survey.deleteSurvey(surveyId).pipe(
+      take(1),
       catchError((error: any) => {
         console.error(
           `Error deleting survey with ID ${surveyId}:`,
