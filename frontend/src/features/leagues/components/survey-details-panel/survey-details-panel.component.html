@@ -1,16 +1,40 @@
-<div class="bg-white shadow-lg rounded-xl p-6 mb-6 m-3 border border-gray-200 relative">
+<div
+  class="bg-white shadow-lg rounded-xl p-6 mb-6 m-3 border border-gray-200 relative"
+>
   <!-- Header Section -->
   <div class="flex justify-between items-center mb-4 gap-3">
     <h2 class="text-2xl font-semibold text-teal-600 flex-1">
       <span *ngIf="!isEditing">{{ survey.name }}</span>
-      <input *ngIf="isEditing" [(ngModel)]="survey.name" class="border border-gray-300 p-1 rounded w-full" />
+      <input
+        *ngIf="isEditing"
+        [(ngModel)]="survey.name"
+        class="border border-gray-300 p-1 rounded w-full"
+      />
     </h2>
 
     <!-- Icons Section -->
     <div class="flex gap-3 text-gray-600">
-      <span *ngIf="!isEditing" (click)="enterEditMode()" class="material-icons cursor-pointer hover:text-teal-600">edit</span>
-      <span *ngIf="isEditing" (click)="saveChanges()" class="material-icons cursor-pointer hover:text-teal-600">save</span>
-      <span class="material-icons cursor-pointer hover:text-teal-600">delete</span>
+      <span
+        *ngIf="!isEditing"
+        (click)="enterEditMode()"
+        class="material-icons cursor-pointer hover:text-teal-600"
+        >edit</span
+      >
+      <span
+        *ngIf="isEditing"
+        (click)="saveChanges()"
+        class="material-icons cursor-pointer hover:text-teal-600"
+        >save</span
+      >
+      <span
+        class="material-icons cursor-pointer hover:text-teal-600"
+        (click)="
+          (survey.status === 'DRAFT' || survey.status === 'CLOSED') &&
+            deleteSurvey()
+        "
+      >
+        delete
+      </span>
     </div>
   </div>
 
@@ -19,15 +43,29 @@
     <!-- Start Time -->
     <div>
       <p class="font-semibold text-gray-700">Start Time:</p>
-      <p *ngIf="!isEditing" class="text-gray-500">{{ survey.startTime | date: 'MM/dd/yyyy, h:mm a' }}</p>
-      <input *ngIf="isEditing" [(ngModel)]="survey.startTime" type="datetime-local" class="border border-gray-300 p-1 rounded w-full" />
+      <p *ngIf="!isEditing" class="text-gray-500">
+        {{ survey.startTime | date : "MM/dd/yyyy, h:mm a" }}
+      </p>
+      <input
+        *ngIf="isEditing"
+        [(ngModel)]="survey.startTime"
+        type="datetime-local"
+        class="border border-gray-300 p-1 rounded w-full"
+      />
     </div>
 
     <!-- End Time -->
     <div>
       <p class="font-semibold text-gray-700">End Time:</p>
-      <p *ngIf="!isEditing" class="text-gray-500">{{ survey.endTime | date: 'MM/dd/yyyy, h:mm a' }}</p>
-      <input *ngIf="isEditing" [(ngModel)]="survey.endTime" type="datetime-local" class="border border-gray-300 p-1 rounded w-full" />
+      <p *ngIf="!isEditing" class="text-gray-500">
+        {{ survey.endTime | date : "MM/dd/yyyy, h:mm a" }}
+      </p>
+      <input
+        *ngIf="isEditing"
+        [(ngModel)]="survey.endTime"
+        type="datetime-local"
+        class="border border-gray-300 p-1 rounded w-full"
+      />
     </div>
   </div>
 
@@ -43,7 +81,7 @@
     <!-- Status -->
     <div>
       <p class="font-semibold text-gray-700">Status:</p>
-      <app-survey-status-badge [status]="survey.status!"/>
+      <app-survey-status-badge [status]="survey.status!" />
     </div>
 
     <!-- Total Questions -->
@@ -61,7 +99,9 @@
     <!-- Points Earned -->
     <div class="col-span-2">
       <p class="font-semibold text-gray-700">Points Earned:</p>
-      <p class="text-gray-500">{{ survey.status === "SCORED" ? survey.pointsEarned : "-" }}</p>
+      <p class="text-gray-500">
+        {{ survey.status === "SCORED" ? survey.pointsEarned : "-" }}
+      </p>
     </div>
   </div>
 </div>
