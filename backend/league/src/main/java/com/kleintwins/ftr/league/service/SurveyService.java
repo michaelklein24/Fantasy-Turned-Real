@@ -56,12 +56,6 @@ public class SurveyService extends AbstractService {
         applyIfNotNull(startTime, surveyModel::setStartTime);
         applyIfNotNull(endTime, surveyModel::setEndTime);
 
-        LocalDateTime now = LocalDateTime.now();
-
-        SurveyStatus surveyStatus = startTime.isBefore(now) && endTime.isAfter(now) ? SurveyStatus.OPEN : SurveyStatus.CLOSED;
-        SurveyStatusModel surveyStatusModel = createSurveyStatus(surveyModel, surveyStatus);
-        surveyModel.getStatuses().add(surveyStatusModel);
-
         surveyRepo.save(surveyModel);
     }
 
