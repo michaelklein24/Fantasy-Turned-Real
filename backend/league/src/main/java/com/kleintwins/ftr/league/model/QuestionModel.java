@@ -1,5 +1,6 @@
 package com.kleintwins.ftr.league.model;
 
+import com.kleintwins.ftr.league.code.AnswerOptionType;
 import com.kleintwins.ftr.league.code.QuestionType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -36,6 +37,9 @@ public class QuestionModel {
     private QuestionType questionType;
 
     private int points; // Points assigned if correct
+
+    @Enumerated(value = EnumType.STRING)
+    private AnswerOptionType answerOptionType;
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default

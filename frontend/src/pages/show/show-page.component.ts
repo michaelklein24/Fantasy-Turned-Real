@@ -67,8 +67,8 @@ export class ShowPageComponent implements OnInit, OnDestroy {
     })
   }
 
-  handleSeasonSelection(selectedItem: DropdownMenuItem): void {
-    const seasonSequence = Number(selectedItem.value);
+  handleSeasonSelection(selectedItem: DropdownMenuItem[]): void {
+    const seasonSequence = Number(selectedItem[0].value);
     console.log(seasonSequence)
     if (seasonSequence !== this.selectedSeasonSequence) {
       this.selectedSeasonSequence = seasonSequence;

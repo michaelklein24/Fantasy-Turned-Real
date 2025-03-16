@@ -12,12 +12,12 @@ public class CorrectAnswerId {
     private String surveyId;
 
     @Column(name = "question_sequence", nullable = false)
-    private String questionSequence;
+    private Integer questionSequence;
 
     public CorrectAnswerId() {
     }
 
-    public CorrectAnswerId(String surveyId, String questionSequence) {
+    public CorrectAnswerId(String surveyId, Integer questionSequence) {
         this.surveyId = surveyId;
         this.questionSequence = questionSequence;
     }

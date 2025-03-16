@@ -59,13 +59,13 @@ export class CreateLeagueFormComponent implements OnInit {
     });
   }
 
-  onShowSelection(selectedItem: DropdownMenuItem): void {
-    this.selectedShow = selectedItem;
-    this.buildSeasonMenuItems(selectedItem.value);
+  onShowSelection(selectedItem: DropdownMenuItem[]): void {
+    this.selectedShow = selectedItem[0];
+    this.buildSeasonMenuItems(selectedItem[0].value);
   }
 
-  onSeasonSelection(selectedItem: DropdownMenuItem): void {
-    this.selectedSeason = selectedItem;
+  onSeasonSelection(selectedItem: DropdownMenuItem[]): void {
+    this.selectedSeason = selectedItem[0];
   }
 
   onSubmit(form: NgForm): void {

@@ -1,0 +1,12 @@
+<div
+  class="bg-white shadow-lg rounded-xl p-6 mb-6 m-3 border border-gray-200 relative flex flex-col gap-3"
+>
+  <h2 class="text-2xl font-semibold text-teal-600 flex-1">Questions</h2>
+  <ol>
+    <div *ngFor="let question of questions">
+      <app-question-entry [question]="question"></app-question-entry>
+    </div>
+  </ol>
+
+  <button class="bg-teal-600 text-white py-2 px-4 rounded hover:bg-teal-700 mx-3">Submit</button>
+</div>

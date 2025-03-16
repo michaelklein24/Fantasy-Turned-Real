@@ -3,6 +3,9 @@ package com.kleintwins.ftr.league.service;
 import com.kleintwins.ftr.core.exception.EntityNotFound;
 import com.kleintwins.ftr.core.service.AbstractService;
 import com.kleintwins.ftr.core.service.I18nService;
+import com.kleintwins.ftr.core.service.SequenceService;
+import com.kleintwins.ftr.league.code.AnswerOptionType;
+import com.kleintwins.ftr.league.code.QuestionType;
 import com.kleintwins.ftr.league.code.SurveyStatus;
 import com.kleintwins.ftr.league.code.SurveyType;
 import com.kleintwins.ftr.league.exception.CreationNotAllowed;
@@ -27,6 +30,8 @@ public class SurveyService extends AbstractService {
     private final QuestionRepository questionRepo;
     private final ParticipantAnswerRepository participantAnswerRepo;
     private final SurveyStatusRepository surveyStatusRepo;
+
+    private final SequenceService sequenceService;
 
     public SurveyModel createSurvey(LeagueModel leagueModel, String name, SurveyType surveyType,
                                     LocalDateTime startTime, LocalDateTime endTime, SurveyStatus surveyStatus,
@@ -71,12 +76,29 @@ public class SurveyService extends AbstractService {
         return surveyRepo.save(surveyModel).getQuestions();
     }
 
-    public void deleteQuestionById(String questionSequence, String surveyId) {
+    public void deleteQuestionById(Integer questionSequence, String surveyId) {
         QuestionId questionId = new QuestionId();
         questionId.setSequence(questionSequence);
         questionId.setSurveyId(surveyId);
         deleteQuestionById(questionId);
     }
+
+    public QuestionModel createQuestion(String text, QuestionType questionType,
+                                        int points, AnswerOptionType answerOptionType, String surveyId) {
+        QuestionId questionId = new QuestionId();
+        questionId.setSurveyId(surveyId);
+        questionId.setSequence(sequenceService.getNextSequence(SurveyModel.class, surveyId));
+
+        QuestionModel questionModel = new QuestionModel();
+        questionModel.setQuestionId(questionId);
+        questionModel.setText(text);
+        questionModel.setQuestionType(questionType);
+        questionModel.setPoints(points);
+        questionModel.setAnswerOptionType(answerOptionType);
+
+        return questionRepo.save(questionModel);
+    }
+
     public void deleteQuestionById(QuestionId questionId) {
         questionRepo.deleteById(questionId);
     }
@@ -135,7 +157,7 @@ public class SurveyService extends AbstractService {
         questionRepo.save(questionModel);
     }
 
-    public ParticipantAnswerModel getParticipantAnswerById(String surveyId, String questionSequence, String userId, String leagueId) {
+    public ParticipantAnswerModel getParticipantAnswerById(String surveyId, Integer questionSequence, String userId, String leagueId) {
         ParticipantAnswerId participantAnswerId = new ParticipantAnswerId(
                 surveyId,
                 questionSequence,
@@ -171,7 +193,7 @@ public class SurveyService extends AbstractService {
                 });
     }
 
-    public QuestionModel getQuestionById(String sequence, String surveyId) {
+    public QuestionModel getQuestionById(Integer sequence, String surveyId) {
         QuestionId questionId = new QuestionId();
         questionId.setSequence(sequence);
         questionId.setSurveyId(surveyId);

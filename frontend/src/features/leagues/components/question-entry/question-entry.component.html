@@ -1,0 +1,48 @@
+<li>
+  <div class="p-3 bg-white flex items-center justify-between">
+    <div class="flex gap-2">
+      <p class="text-lg font-semibold">{{ question?.sequence }}.</p>
+      <p class="text-lg text-gray-700">{{ question?.text }}</p>
+    </div>
+    <p class="text-gray-500">Points Available: {{ question?.points }}</p>
+  </div>
+
+  <div class="px-3">
+    <!-- Single Choice (Dropdown) -->
+    <div *ngIf="question?.type === 'SINGLE_CHOICE'">
+      <app-dropdown
+        [menuItems]="mappedAnswerOptions"
+        [label]="'Select an answer'"
+        (itemSelected)="onAnswerSelected($event, false)"
+      ></app-dropdown>
+    </div>
+
+    <!-- Multiple Choice (Multi-select Dropdown) -->
+    <div *ngIf="question?.type === 'MULTIPLE_CHOICE'">
+      <app-dropdown
+        [menuItems]="mappedAnswerOptions"
+        [label]="'Select multiple answers'"
+        [multiSelect]="true"
+        (itemSelected)="onAnswerSelected($event, true)"
+      ></app-dropdown>
+    </div>
+
+    <!-- True/False -->
+    <div *ngIf="question?.type === 'TRUE_FALSE'">
+      <app-dropdown
+        [menuItems]="mappedAnswerOptions"
+        [label]="'Select an answer'"
+        (itemSelected)="onAnswerSelected($event)"
+      ></app-dropdown>
+    </div>
+
+    <!-- Text Entry -->
+    <div *ngIf="question?.type === 'TEXT_ENTRY'">
+      <input
+        type="text"
+        class="border rounded p-2 w-full"
+        placeholder="Enter your answer..."
+      />
+    </div>
+  </div>
+</li>

@@ -5,6 +5,7 @@ import com.kleintwins.ftr.league.code.SurveyStatus;
 import com.kleintwins.ftr.league.code.SurveyType;
 import com.kleintwins.ftr.league.dto.*;
 import com.kleintwins.ftr.league.model.LeagueModel;
+import com.kleintwins.ftr.league.model.QuestionModel;
 import com.kleintwins.ftr.league.model.SurveyModel;
 import com.kleintwins.ftr.league.service.LeagueService;
 import com.kleintwins.ftr.league.service.SurveyService;
@@ -147,5 +148,70 @@ public class SurveyController {
     })
     public void deleteSurvey(@PathVariable("surveyId") String surveyId) {
         surveyService.deleteSurvey(surveyId);
+    }
+
+    @PutMapping("/{surveyId}/question")
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Create Question for Survey")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Successful created question",
+                    content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "401", description = "Unauthorized: Missing or invalid JWT token",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CustomErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "Forbidden: Insufficient permissions",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CustomErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error: Unexpected server issue",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CustomErrorResponse.class)))
+    })
+    public CreateQuestionForSurveyResponse createQuestionForSurvey(
+            @RequestBody CreateQuestionForSurveyRequest request,
+            @PathVariable("surveyId") String surveyId) {
+        QuestionModel questionModel = surveyService.createQuestion(request.getText(), request.getType(),
+                request.getPoints(), request.getAnswerOptionType(), surveyId);
+
+        return null;
+    }
+
+    @PutMapping("/{surveyId}/question/{questionSequence}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Update Question for Survey")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Successful updated question",
+                    content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "401", description = "Unauthorized: Missing or invalid JWT token",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CustomErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "Forbidden: Insufficient permissions",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CustomErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error: Unexpected server issue",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CustomErrorResponse.class)))
+    })
+    public void updateQuestionForSurvey(@RequestBody UpdateQuestionRequest request) {
+
+    }
+
+    @DeleteMapping("/{surveyId}/question/{questionSequence}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Delete Question for Survey")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Successful deleted question",
+                    content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "401", description = "Unauthorized: Missing or invalid JWT token",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CustomErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "Forbidden: Insufficient permissions",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CustomErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error: Unexpected server issue",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CustomErrorResponse.class)))
+    })
+    public void deleteQuestionForSurvey() {
+
     }
 }

@@ -11,7 +11,7 @@ public class ParticipantAnswerId {
     private String surveyId;
 
     @Column(name = "question_sequence", nullable = false)
-    private String questionSequence;
+    private Integer questionSequence;
 
     @Column(name = "user_id", nullable = false)
     private String userId;
@@ -19,7 +19,7 @@ public class ParticipantAnswerId {
     @Column(name = "league_id", nullable = false)
     private String leagueId;
 
-    public ParticipantAnswerId(String surveyId, String questionSequence, String userId, String leagueId) {
+    public ParticipantAnswerId(String surveyId, Integer questionSequence, String userId, String leagueId) {
         this.surveyId = surveyId;
         this.questionSequence = questionSequence;
         this.userId = userId;

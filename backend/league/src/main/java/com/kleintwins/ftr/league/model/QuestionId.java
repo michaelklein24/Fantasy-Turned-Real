@@ -11,6 +11,6 @@ public class QuestionId {
     private String surveyId;
 
     @Column(name = "sequence", nullable = false)
-    private String sequence;
+    private Integer sequence;
 
 }
