@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode
 public class CorrectAnswerModel {
 
     @EmbeddedId
@@ -23,10 +23,17 @@ public class CorrectAnswerModel {
     @JoinTable(
             name = "lge_correct_answer_option",
             joinColumns = {
-                    @JoinColumn(name = "survey_id"),
-                    @JoinColumn(name = "question_sequence")
-            })
+                    @JoinColumn(name = "survey_id", insertable=false, updatable=false),
+                    @JoinColumn(name = "question_sequence", insertable=false, updatable=false),
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "sequence", insertable=false, updatable=false),
+                    @JoinColumn(name = "survey_id", insertable=false, updatable=false),
+                    @JoinColumn(name = "question_sequence", insertable=false, updatable=false)
+            }
+    )
     private List<AnswerOptionModel> correctAnswers;
+
 
     @OneToOne(optional = false)
     @JoinColumns({

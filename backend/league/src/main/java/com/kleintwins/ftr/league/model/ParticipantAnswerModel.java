@@ -10,10 +10,9 @@ import java.util.List;
 @Table(name = "lge_participant_answer")
 @Getter
 @Setter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode
 public class ParticipantAnswerModel {
 
     @EmbeddedId
@@ -26,12 +25,17 @@ public class ParticipantAnswerModel {
     @JoinTable(
             name = "lge_provided_answers",
             joinColumns = {
-                    @JoinColumn(name = "survey_id"),
-                    @JoinColumn(name = "question_sequence"),
-                    @JoinColumn(name = "user_id"),
-                    @JoinColumn(name = "league_id")
-            })
-    @Builder.Default
+                    @JoinColumn(name = "survey_id", columnDefinition = "varchar(255)"),
+                    @JoinColumn(name = "question_sequence", columnDefinition = "integer"),
+                    @JoinColumn(name = "user_id", columnDefinition = "varchar(255)"),
+                    @JoinColumn(name = "league_id", columnDefinition = "varchar(255)")
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "sequence", columnDefinition = "integer", insertable = false, updatable = false),
+                    @JoinColumn(name = "question_sequence", columnDefinition = "integer", insertable = false, updatable = false),
+                    @JoinColumn(name = "survey_id", columnDefinition = "varchar(255)", insertable= false, updatable = false),
+            }
+    )
     private List<AnswerOptionModel> providedAnswers = new ArrayList<>();
 
     @ManyToOne(optional = false)

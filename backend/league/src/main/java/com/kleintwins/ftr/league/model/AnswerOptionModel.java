@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "lge_answer_options")
 @Getter
@@ -12,10 +14,11 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode
 public class AnswerOptionModel {
 
     @EmbeddedId
+    @EqualsAndHashCode.Include
     private AnswerOptionId answerOptionId;
 
     @Column(nullable = false, length = 500)

@@ -17,9 +17,7 @@ import java.util.List;
 @Table(name = "lge_survey")
 @Getter
 @Setter
-@Builder
 @AllArgsConstructor
-@NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class SurveyModel {
 
@@ -51,7 +49,6 @@ public class SurveyModel {
     private List<SurveyStatusModel> statuses = new ArrayList<>();
 
     @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
     private List<QuestionModel> questions = new ArrayList<>();
 
     @ManyToOne(optional = false)
@@ -65,6 +62,9 @@ public class SurveyModel {
         this.startTime = startTime;
         this.endTime = endTime;
         this.questions = questions;
+    }
+
+    public SurveyModel() {
     }
 
     @PrePersist

@@ -8,11 +8,11 @@ import lombok.Data;
 @Data
 public class AnswerOptionId {
     @Column(name = "sequence", nullable = false)
-    private String sequence;
+    private Integer sequence;
 
     @Column(name = "survey_id", nullable = false)
     private String surveyId;
 
     @Column(name = "question_sequence", nullable = false)
-    private String questionSequence;
+    private Integer questionSequence;
 }

@@ -7,7 +7,7 @@ import jakarta.persistence.Table;
 import lombok.*;
 
 @Entity
-@Table(name = "lge_correct_answers")
+@Table(name = "ctx_sequence")
 @Getter
 @Setter
 @Builder
