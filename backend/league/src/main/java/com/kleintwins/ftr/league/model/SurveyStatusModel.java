@@ -1,7 +1,9 @@
 package com.kleintwins.ftr.league.model;
 
 import jakarta.persistence.*;
+import jdk.jfr.Experimental;
 import lombok.*;
+import lombok.experimental.Delegate;
 
 import java.time.LocalDateTime;
 
@@ -15,6 +17,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class SurveyStatusModel {
     @EmbeddedId
+    @Delegate
     private SurveyStatusId surveyStatusId;
 
     @Column(nullable = false, updatable = false)

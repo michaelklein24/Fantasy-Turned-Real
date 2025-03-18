@@ -3,4 +3,5 @@ dependencies {
     implementation project(":show-api")
     implementation project(":user-api")
     implementation project(":notification-api")
+    implementation project(":job")
 }

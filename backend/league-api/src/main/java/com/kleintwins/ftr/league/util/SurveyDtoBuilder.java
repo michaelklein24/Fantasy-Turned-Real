@@ -26,7 +26,7 @@ public class SurveyDtoBuilder {
         survey.setId(surveyModel.getSurveyId());
         survey.setName(surveyModel.getName());
         survey.setType(surveyModel.getType());
-        survey.setStatus(surveyModel.getCurrentStatus().getSurveyStatusId().getSurveyStatus());
+        survey.setStatus(surveyModel.getCurrentStatus().getSurveyStatusId().getStatus());
         survey.setStartTime(surveyModel.getStartTime());
         survey.setEndTime(surveyModel.getEndTime());
         survey.setCreateTime(survey.getCreateTime());

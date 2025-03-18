@@ -13,11 +13,11 @@ import java.io.Serializable;
 public class SurveyStatusId implements Serializable {
     private String surveyId;
     @Enumerated(value = EnumType.STRING)
-    private SurveyStatus surveyStatus;
+    private SurveyStatus status;
 
-    public SurveyStatusId(String surveyId, SurveyStatus surveyStatus) {
+    public SurveyStatusId(String surveyId, SurveyStatus status) {
         this.surveyId = surveyId;
-        this.surveyStatus = surveyStatus;
+        this.status = status;
     }
 
     public SurveyStatusId() {

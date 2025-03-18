@@ -5,4 +5,5 @@ dependencies {
     implementation project(':show-api')
     implementation project(':notification-api')
     implementation project(':socket')
+    implementation project(':job')
 }

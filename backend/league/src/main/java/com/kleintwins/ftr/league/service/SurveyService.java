@@ -2,13 +2,11 @@ package com.kleintwins.ftr.league.service;
 
 import com.kleintwins.ftr.core.exception.EntityNotFound;
 import com.kleintwins.ftr.core.service.AbstractService;
-import com.kleintwins.ftr.core.service.I18nService;
 import com.kleintwins.ftr.core.service.SequenceService;
 import com.kleintwins.ftr.league.code.AnswerOptionType;
 import com.kleintwins.ftr.league.code.QuestionType;
 import com.kleintwins.ftr.league.code.SurveyStatus;
 import com.kleintwins.ftr.league.code.SurveyType;
-import com.kleintwins.ftr.league.exception.CreationNotAllowed;
 import com.kleintwins.ftr.league.model.*;
 import com.kleintwins.ftr.league.repository.ParticipantAnswerRepository;
 import com.kleintwins.ftr.league.repository.QuestionRepository;
@@ -16,6 +14,7 @@ import com.kleintwins.ftr.league.repository.SurveyRepository;
 import com.kleintwins.ftr.league.repository.SurveyStatusRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -48,6 +47,26 @@ public class SurveyService extends AbstractService {
     private SurveyStatusModel createSurveyStatus(SurveyModel survey, SurveyStatus surveyStatus) {
         SurveyStatusModel surveyStatusModel = new SurveyStatusModel(new SurveyStatusId(survey.getSurveyId(), surveyStatus), survey);
         return surveyStatusRepo.save(surveyStatusModel);
+    }
+
+    @Transactional(readOnly = true)
+    public List<SurveyModel> getClosedSurveysReadyToOpen() {
+        LocalDateTime now = LocalDateTime.now();
+        return surveyRepo.findClosedSurveysToBeOpened(now);
+    }
+
+    @Transactional(readOnly = true)
+    public List<SurveyModel> getOpenSurveysReadyToPending() {
+        LocalDateTime now = LocalDateTime.now();
+        return surveyRepo.findOpenedSurveysToBePending(now);
+    }
+
+    public void updateSurveyStatus(SurveyModel surveyModel, SurveyStatus status) {
+        SurveyStatusId surveyStatusId = new SurveyStatusId(surveyModel.getSurveyId(), status);
+        SurveyStatusModel surveyStatusModel = new SurveyStatusModel();
+        surveyStatusModel.setSurveyStatusId(surveyStatusId);
+        surveyStatusModel.setSurvey(surveyModel);
+        surveyStatusRepo.save(surveyStatusModel);
     }
 
     public void updateSurvey(String surveyId, String name, LocalDateTime startTime, LocalDateTime endTime) {

@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import static com.kleintwins.ftr.server.FantasyTurnedReal.basePackage;
 
@@ -12,6 +13,7 @@ import static com.kleintwins.ftr.server.FantasyTurnedReal.basePackage;
 @ComponentScan(basePackages = {basePackage})
 @EnableJpaRepositories(basePackage)
 @EntityScan(basePackage)
+@EnableScheduling
 public class FantasyTurnedReal {
 
     public final static String basePackage = "com.kleintwins.ftr";
